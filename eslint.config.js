@@ -1,3 +1,4 @@
+import jsdoc from "eslint-plugin-jsdoc";
 import markdown from "eslint-plugin-markdown";
 import tsParser from "@typescript-eslint/parser";
 import unicodePolicy from "./eslint-rules/unicode-policy.js";
@@ -57,11 +58,14 @@ export default [
         ecmaFeatures: { jsx: true },
       },
     },
-    plugins: { "unicode-policy": unicodePolicy },
+    plugins: { jsdoc, "unicode-policy": unicodePolicy },
     rules: {
       "unicode-policy/emoji": "error",
       "unicode-policy/unicode-graphics": "error",
       "no-irregular-whitespace": "error",
+      "jsdoc/require-jsdoc": "warn",
+      "jsdoc/require-param": "warn",
+      "jsdoc/require-returns": "warn",
     },
   },
 ];

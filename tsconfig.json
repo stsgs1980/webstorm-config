@@ -2,9 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
   "include": ["src", "**/*.ts", "**/*.tsx"]
 }
