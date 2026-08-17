@@ -1,6 +1,23 @@
-const emojiPattern = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2702}-\u{27B0}]/u;
-const unicodeGraphicsPattern = /[\u{2500}-\u{257F}\u{2580}-\u{259F}\u{25A0}-\u{25FF}\u{2800}-\u{28FF}]/u;
+const emojiPattern = new RegExp(
+  "[\\u{1F600}-\\u{1F64F}" +
+    "\\u{1F300}-\\u{1F5FF}" +
+    "\\u{1F680}-\\u{1F6FF}" +
+    "\\u{1F1E0}-\\u{1F1FF}" +
+    "\\u{2600}-\\u{27BF}" +
+    "\\u{FE00}-\\u{FEFF}" +
+    "\\u{1F900}-\\u{1F9FF}" +
+    "\\u{1FA00}-\\u{1FA6F}" +
+    "\\u{1FA70}-\\u{1FAFF}" +
+    "\\u{2702}-\\u{27B0}]",
+  "u",
+);
 
+const unicodeGraphicsPattern = new RegExp(
+  "[\\u{2500}-\\u{257F}" + "\\u{2580}-\\u{259F}" + "\\u{25A0}-\\u{25FF}" + "\\u{2800}-\\u{28FF}]",
+  "u",
+);
+
+// noinspection JSUnusedGlobalSymbols
 const createRule = (messages, pattern, replaceFn = (t) => t) => ({
   meta: { type: "problem", messages },
   create(context) {
@@ -11,7 +28,10 @@ const createRule = (messages, pattern, replaceFn = (t) => t) => ({
       Program() {
         lines.forEach((line, index) => {
           if (pattern.test(line)) {
-            context.report({ loc: { line: index + 1, column: 0 }, messageId: Object.keys(messages)[0] });
+            context.report({
+              loc: { line: index + 1, column: 0 },
+              messageId: Object.keys(messages)[0],
+            });
           }
         });
       },
@@ -19,16 +39,39 @@ const createRule = (messages, pattern, replaceFn = (t) => t) => ({
   },
 });
 
-const emoji = createRule({ noEmoji: "Emoji are prohibited. Use text tags like [OK], [FAIL] instead." }, emojiPattern);
-const unicodeGraphics = createRule({ noUnicodeGraphics: "Unicode box/line drawing characters are prohibited. Use ASCII." }, unicodeGraphicsPattern);
-const emojiInMd = createRule({ emojiInMd: "Emoji are prohibited in Markdown documentation." }, emojiPattern, (t) => t.replace(/```[\s\S]*?```/g, ""));
-const unicodeGraphicsInMd = createRule({ unicodeGraphicsInMd: "Unicode box/line drawing characters are prohibited in Markdown." }, unicodeGraphicsPattern, (t) => t.replace(/```[\s\S]*?```/g, ""));
+const emoji = createRule(
+  {
+    noEmoji: "Emoji are prohibited. Use text tags like [OK], [FAIL] instead.",
+  },
+  emojiPattern,
+);
+
+const unicodeGraphics = createRule(
+  {
+    noUnicodeGraphics: "Unicode box/line drawing characters are prohibited. Use ASCII.",
+  },
+  unicodeGraphicsPattern,
+);
+
+const emojiInMd = createRule(
+  { emojiInMd: "Emoji are prohibited in Markdown documentation." },
+  emojiPattern,
+  (t) => t.replace(/```[\s\S]*?```/g, ""),
+);
+
+const unicodeGraphicsInMd = createRule(
+  {
+    unicodeGraphicsInMd: "Unicode box/line drawing characters are prohibited in Markdown.",
+  },
+  unicodeGraphicsPattern,
+  (t) => t.replace(/```[\s\S]*?```/g, ""),
+);
 
 export default {
   rules: {
     emoji,
     "unicode-graphics": unicodeGraphics,
     "emoji-in-md": emojiInMd,
-    "unicode-graphics-in-md": unicodeGraphicsInMd
-  }
+    "unicode-graphics-in-md": unicodeGraphicsInMd,
+  },
 };
