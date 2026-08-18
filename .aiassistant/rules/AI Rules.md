@@ -24,7 +24,7 @@ Before any action, classify the user's request:
 
 - TypeScript strict mode. Explicit typing for all parameters and return values (no `any`).
 - Semicolons are required.
-- Strings use single quotes.
+- Strings use double quotes.
 - Trailing commas required in objects and arrays.
 - Indentation is 2 spaces.
 - Max line length is 100 characters.
