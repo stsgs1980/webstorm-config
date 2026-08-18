@@ -1,13 +1,13 @@
 <code_scheme name="WebStorm Config" version="173">
   <JSCodeStyleSettings version="0">
     <option name="FORCE_SEMICOLON_STYLE" value="true" />
-    <option name="USE_DOUBLE_QUOTES" value="false" />
+    <option name="USE_DOUBLE_QUOTES" value="true" />
     <option name="ENFORCE_TRAILING_COMMA" value="Always" />
     <option name="SPACES_WITHIN_IMPORTS" value="true" />
   </JSCodeStyleSettings>
   <TypeScriptCodeStyleSettings version="0">
     <option name="FORCE_SEMICOLON_STYLE" value="true" />
-    <option name="USE_DOUBLE_QUOTES" value="false" />
+    <option name="USE_DOUBLE_QUOTES" value="true" />
     <option name="ENFORCE_TRAILING_COMMA" value="Always" />
     <option name="SPACES_WITHIN_IMPORTS" value="true" />
   </TypeScriptCodeStyleSettings>
