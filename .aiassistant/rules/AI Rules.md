@@ -27,7 +27,7 @@ Before any action, classify the user's request:
 - Strings use double quotes.
 - Trailing commas required in objects and arrays.
 - Indentation is 2 spaces.
-- Max line length is 100 characters.
+- Max line length is 120 characters.
 - Max file length is 250 lines. If exceeded, split into modules.
 - JSDoc with @param and @returns required for every function, method, and React component.
 - Markdown code blocks must specify a language (e.g., ```typescript, not empty).

@@ -61,7 +61,7 @@ npm install
 - **Trailing commas** required in objects/arrays
 - **Max file length**: 250 lines (TS/JS), 200 lines (components)
 - **TypeScript strict mode**, explicit types (no `any`)
-- **Double quotes**, semicolons, 2 spaces, 100 char line limit
+- **Double quotes**, semicolons, 2 spaces, 120 char line limit
 - **Anti-monolith**: auto-split at thresholds (3+ useState, 50-line functions)
 - **Conventional Commits** enforced via commitlint
 
