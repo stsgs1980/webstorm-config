@@ -1,6 +1,6 @@
 # ${PROJECT_NAME}
 
-[![Build Status](https://img.shields.io/badge/build-pending-yellow.svg)](https://github.com)
+[![CI](https://github.com/${GITHUB_USER}/${PROJECT_NAME}/actions/workflows/ci.yml/badge.svg)](https://github.com/${GITHUB_USER}/${PROJECT_NAME}/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![ESLint](https://img.shields.io/badge/ESLint-9.x-4B32C3.svg)](https://eslint.org/)

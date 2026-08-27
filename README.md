@@ -1,6 +1,7 @@
 # webstorm-config
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/stsgs1980/webstorm-config/actions/workflows/ci.yml/badge.svg)](https://github.com/stsgs1980/webstorm-config/actions/workflows/ci.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.12.0-brightgreen.svg)](https://nodejs.org/)
 [![WebStorm](https://img.shields.io/badge/WebStorm-2026.2-orange.svg)](https://www.jetbrains.com/webstorm/)
 [![Stylelint](https://img.shields.io/badge/Stylelint-17.x-263227.svg)](https://stylelint.io/)
@@ -36,6 +37,16 @@ git init
 npm install
 ```
 
+### Package Managers
+
+Template works with any package manager:
+
+| Manager  | Install        | Run            | Lock file           |
+| -------- | -------------- | -------------- | ------------------- |
+| **npm**  | `npm install`  | `npm run dev`  | `package-lock.json` |
+| **pnpm** | `pnpm install` | `pnpm run dev` | `pnpm-lock.yaml`    |
+| **Bun**  | `bun install`  | `bun run dev`  | `bun.lockb`         |
+
 ## What's Included
 
 | Tool                                 | Config                                                                                                    |
@@ -68,10 +79,72 @@ npm install
 
 ## After Creating a Project
 
-1. Update `package.json`: `name`, `description`
-2. Copy `README.template.md` → `README.md` and fill in project details
-3. Adjust `eslint.config.js` if needed (e.g., change JSDoc warnings to errors)
-4. Add project-specific scripts to `package.json`
+### Step 1: Basic Setup
+
+1. Update `package.json`:
+   - `name` — project name (e.g., `my-react-app`)
+   - `description` — project description
+
+2. Copy `README.template.md` → `README.md` and fill in:
+   - Project overview
+   - Features
+   - Architecture
+
+### Step 2: Add Framework Dependencies
+
+Choose your stack from the table below and install:
+
+```bash
+# React/Vite
+npm install vite @vitejs/plugin-react
+
+# Vue/Vite
+npm install vite @vitejs/plugin-vue
+
+# Svelte/SvelteKit
+npm install @sveltejs/kit vite
+
+# Astro
+npm install astro @astrojs/react
+
+# Next.js
+npm install @next/eslint-plugin-next eslint-plugin-testing-library
+```
+
+### Step 3: Add Scripts
+
+Add framework-specific scripts to `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+### Step 4: Create Entry Point
+
+For Vite projects, create:
+
+```text
+index.html
+src/
+  main.tsx
+  App.tsx
+```
+
+### Step 5: Verify Everything Works
+
+```bash
+npm run lint      # ESLint
+npm run lint:css  # Stylelint
+npm run lint:md   # markdownlint
+npm run format    # Prettier
+npm test          # Vitest
+```
 
 ## Recommended Dependencies by Project Type
 
