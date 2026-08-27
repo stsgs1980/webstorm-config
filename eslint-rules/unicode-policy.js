@@ -17,10 +17,9 @@ const unicodeGraphicsPattern = new RegExp(
   "u",
 );
 
-// noinspection JSUnusedGlobalSymbols
 const createRule = (messages, pattern, replaceFn = (t) => t) => ({
   meta: { type: "problem", messages },
-  create(context) {
+  create: (context) => {
     const sourceCode = context.sourceCode || context.getSourceCode();
     const text = replaceFn(sourceCode.getText());
     const lines = text.split("\n");

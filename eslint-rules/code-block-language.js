@@ -5,10 +5,9 @@ export default {
     messages: {
       missingLanguage: "Code block must specify a language. Use 'text' or 'bash' if unknown.",
     },
-  }, // <-- ЗАКРЫВАЮЩАЯ СКОБКА meta ДОЛЖНА БЫТЬ ЗДЕСЬ
+  },
 
-  // noinspection JSUnusedGlobalSymbols
-  create(context) {
+  create: (context) => {
     const sourceCode = context.sourceCode || context.getSourceCode();
     const lines = sourceCode.getText().split("\n");
     const fenceRegex = /^(`{3,})(.*)$/;

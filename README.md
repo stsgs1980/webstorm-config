@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.12.0-brightgreen.svg)](https://nodejs.org/)
 [![WebStorm](https://img.shields.io/badge/WebStorm-2026.2-orange.svg)](https://www.jetbrains.com/webstorm/)
-[![Stylelint](https://img.shields.io/badge/Stylelint-16.x-263227.svg)](https://stylelint.io/)
+[![Stylelint](https://img.shields.io/badge/Stylelint-17.x-263227.svg)](https://stylelint.io/)
 [![markdownlint](https://img.shields.io/badge/markdownlint-0.x-263227.svg)](https://github.com/DavidAnson/markdownlint)
 
 Template repository for WebStorm projects with pre-configured ESLint, Prettier, Stylelint, markdownlint, TypeScript, Husky, and AI rules.
