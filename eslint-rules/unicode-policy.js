@@ -53,10 +53,8 @@ const unicodeGraphics = createRule(
   unicodeGraphicsPattern,
 );
 
-const emojiInMd = createRule(
-  { emojiInMd: "Emoji are prohibited in Markdown documentation." },
-  emojiPattern,
-  (t) => t.replace(/```[\s\S]*?```/g, ""),
+const emojiInMd = createRule({ emojiInMd: "Emoji are prohibited in Markdown documentation." }, emojiPattern, (t) =>
+  t.replace(/```[\s\S]*?```/g, ""),
 );
 
 const unicodeGraphicsInMd = createRule(

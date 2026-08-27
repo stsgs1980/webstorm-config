@@ -3,12 +3,7 @@ import markdownPlugin from "@eslint/markdown";
 const originalProcessor = markdownPlugin.processors.markdown;
 
 const EXCLUDE_PARSING_ERRORS = (message) => {
-  if (
-    message &&
-    message.ruleId === null &&
-    message.message &&
-    message.message.startsWith("Parsing error")
-  ) {
+  if (message && message.ruleId === null && message.message && message.message.startsWith("Parsing error")) {
     return false;
   }
   return true;
