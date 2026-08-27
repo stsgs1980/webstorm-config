@@ -1,32 +1,52 @@
 {
-  "name": "untitled5",
+  "name": "webstorm-config",
   "version": "1.0.0",
-  "description": "",
-  "main": "test.js",
+  "description": "WebStorm template with ESLint, Prettier, Stylelint, markdownlint, TypeScript, Husky, and AI rules",
   "scripts": {
+    "lint": "eslint .",
+    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "webstorm",
+    "eslint",
+    "prettier",
+    "typescript",
+    "husky",
+    "template"
+  ],
+  "author": "stsgs1980",
+  "license": "MIT",
   "type": "module",
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
+    "@eslint/markdown": "8.0.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "@typescript-eslint/parser": "^8.66.0",
+    "@typescript-eslint/parser": "^8.68.0",
     "eslint": "^10.8.1",
     "eslint-plugin-jsdoc": "^64.2.0",
-    "@eslint/markdown": "8.0.3",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
-    "prettier": "^3.9.6"
+    "markdownlint-cli": "^0.49.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "stylelint": "^17.14.1",
+    "stylelint-config-standard": "^40.0.0",
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx,md,json,css,html}": "prettier --write",
-    "*.{js,ts,jsx,tsx,md}": "eslint --fix"
+    "*.{js,ts,jsx,tsx,json,html,md}": "prettier --write",
+    "*.{js,ts,jsx,tsx}": "eslint --fix",
+    "*.css": "stylelint --fix",
+    "*.md": "markdownlint --fix --ignore node_modules"
   },
   "dependencies": {
     "react": "^19.2.8",

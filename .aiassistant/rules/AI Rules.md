@@ -51,9 +51,6 @@ When a threshold is crossed:
 
 - Never hardcode absolute paths in code (use env vars).
 - Always read a file before editing it.
-- This is a pnpm monorepo with packages/ (core, cli, mcp, web).
-  No upward imports: web may import from core, cli and mcp import from core.
-  core has no internal dependencies on other packages.
 
 ## 6. Git & Commits
 
