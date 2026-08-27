@@ -2,8 +2,8 @@
 
 [![Build Status](https://img.shields.io/badge/build-pending-yellow.svg)](https://github.com)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue.svg)](https://www.typescriptlang.org/)
-[![ESLint](https://img.shields.io/badge/ESLint-10.x-4B32C3.svg)](https://eslint.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![ESLint](https://img.shields.io/badge/ESLint-9.x-4B32C3.svg)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-3.x-F7B93E.svg)](https://prettier.io/)
 [![Stylelint](https://img.shields.io/badge/Stylelint-17.x-263227.svg)](https://stylelint.io/)
 [![markdownlint](https://img.shields.io/badge/markdownlint-0.x-263227.svg)](https://github.com/DavidAnson/markdownlint)
@@ -67,7 +67,6 @@
 - `npm run lint:css` — проверка стилей через Stylelint.
 - `npm run lint:md` — проверка Markdown через markdownlint.
 - `npm run format` — форматирование кода через Prettier.
-- `npm run validate` — комплексная проверка (lint + typecheck + test).
 
 ## Architecture
 

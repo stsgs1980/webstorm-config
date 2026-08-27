@@ -54,6 +54,7 @@ npm install
 | **AI Rules**                         | `.aiassistant/rules/AI Rules.md` — project conventions (JSDoc, trailing commas, 250 lines max, TS strict) |
 | **Custom ESLint rules**              | `eslint-rules/` (unicode-policy, code-block-language)                                                     |
 | **Custom processors**                | `eslint-processors/` (markdown snippets)                                                                  |
+| **Testing**                          | Vitest + coverage (v8)                                                                                    |
 
 ## Project Conventions (from `.aiassistant/rules/AI Rules.md`)
 
@@ -74,14 +75,20 @@ npm install
 
 ## Recommended Dependencies by Project Type
 
-| Project Type         | Add to devDependencies                                      |
-| -------------------- | ----------------------------------------------------------- |
-| **React/Next.js**    | `@next/eslint-plugin-next`, `eslint-plugin-testing-library` |
-| **CSS/SCSS**         | `stylelint-config-standard-scss`                            |
-| **Tailwind CSS**     | `prettier-plugin-tailwindcss`                               |
-| **Node.js/Backend**  | `eslint-plugin-n`                                           |
-| **Testing (Vitest)** | `vitest`, `@vitest/coverage-v8`                             |
-| **Testing (Jest)**   | `jest`, `eslint-plugin-jest`                                |
+| Project Type             | Add to devDependencies                                      |
+| ------------------------ | ----------------------------------------------------------- |
+| **React/Vite**           | `vite`, `@vitejs/plugin-react`                              |
+| **Vue/Vite**             | `vite`, `@vitejs/plugin-vue`                                |
+| **Svelte/SvelteKit**     | `@sveltejs/kit`, `vite`                                     |
+| **Astro**                | `astro`, `@astrojs/react`                                   |
+| **React/Next.js**        | `@next/eslint-plugin-next`, `eslint-plugin-testing-library` |
+| **CSS/SCSS**             | `stylelint-config-standard-scss`                            |
+| **Tailwind CSS**         | `prettier-plugin-tailwindcss`                               |
+| **Storybook**            | `storybook`, `@storybook/react-vite`                        |
+| **Node.js/Backend**      | `eslint-plugin-n`                                           |
+| **Testing (Jest)**       | `jest`, `eslint-plugin-jest`                                |
+| **Testing (Playwright)** | `@playwright/test`                                          |
+| **Testing (Cypress)**    | `cypress`                                                   |
 
 ## License
 
