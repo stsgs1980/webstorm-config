@@ -30,7 +30,10 @@ Before any action, classify the user's request:
 - Max line length is 120 characters.
 - Max file length is 250 lines. If exceeded, split into modules.
 - JSDoc with @param and @returns required for every function, method, and React component.
+- Markdown: follow `docs/markdown.md` — 120 chars per line, aligned tables, `npm run lint:md`.
 - Markdown code blocks must specify a language (e.g., ```typescript, not empty).
+- Markdown with JSX in fenced blocks must use `tsx, not`typescript (WebStorm injection).
+- WebStorm IDE setup: `docs/webstorm.md` (codestyle import and on-save tools are manual).
 
 ## 4. Anti-Monolith (Auto-Activation)
 

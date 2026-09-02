@@ -2,4 +2,4 @@
 npx lint-staged
 
 # Запуск проверки на максимальный размер файла (anti-monolith)
-./scripts/check-file-length.sh
+node scripts/check-file-length.mjs
