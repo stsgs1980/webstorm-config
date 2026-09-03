@@ -1,6 +1,6 @@
 {
   "ignores": ["node_modules/**"],
-  "MD013": false,
+  "MD013": { "line_length": 120, "heading_line_length": 120, "code_blocks": false },
   "MD033": false,
   "MD041": false
 }

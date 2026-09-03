@@ -64,8 +64,8 @@ WebStorm часть из них **не подхватывает автомати
 
 ## 6. Markdown и `.editorconfig`
 
-`.editorconfig` отключает `max_line_length` для `*.md` (`[*.md] max_line_length = off`).
-WebStorm может показывать визуальную границу `RIGHT_MARGIN=120` для markdown-файлов — это не ошибка линтера; `.markdownlint` (`MD013: false`) и `.editorconfig` синхронизированы. Игнорируйте предупреждения `RIGHT_MARGIN` в `.md` или отключите инспекцию для этого типа файлов.
+`.editorconfig` устанавливает `max_line_length = 120` для `*.md` (согласно `.aiassistant/rules/AI Rules.md`).
+WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтером (`MD013: true`); `.markdownlint` и `.editorconfig` синхронизированы.
 
 ## 7. Что не коммитится в `.idea/`
 

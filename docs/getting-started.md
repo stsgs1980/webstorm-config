@@ -89,11 +89,10 @@ npm test
 
 ## Markdown правила
 
-Markdown (`.md`) исключён из ограничений по длине строки:
+Markdown (`.md`) ограничен 120 символами на строку (как в `.aiassistant/rules/AI Rules.md`):
 
-- `.editorconfig`: `[*.md] max_line_length = off`
-- `.markdownlint.json` и `.markdownlint-cli.json`: `MD013: false`
-  Это намеренно — длинные строки в документации допустимы.
+- `.editorconfig`: `[*.md] max_line_length = 120`
+- `.markdownlint.json` и `.markdownlint-cli.json`: `MD013: true`
 
 ## Tailwind CSS v4
 
