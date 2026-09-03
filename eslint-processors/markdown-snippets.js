@@ -1,25 +1,24 @@
 import markdownPlugin from "@eslint/markdown";
-import type { Linter } from "eslint";
 
 const originalProcessor = markdownPlugin.processors.markdown;
 
 /**
  * Filter out parsing error messages.
- * @param {Linter.LintMessage} message - ESLint message object.
+ * @param {Object} message - ESLint message object.
  * @returns {boolean} True if message should be excluded.
  */
-const EXCLUDE_PARSING_ERRORS = (message: Linter.LintMessage): boolean =>
-  !(message.ruleId === null && message.message?.startsWith("Parsing error"));
+const EXCLUDE_PARSING_ERRORS = (message) =>
+  !(message?.ruleId === null && message?.message?.startsWith("Parsing error"));
 
 /**
  * Post-process messages by filtering parsing errors.
- * @param {Linter.LintMessage[]} messages - ESLint messages.
+ * @param {Array<Array<Object>>} messages - ESLint messages.
  * @param {string} filename - File name being processed.
- * @returns {Linter.LintMessage[]} Filtered messages.
+ * @returns {Array<Array<Object>>} Filtered messages.
  */
-const postprocess = (messages: Linter.LintMessage[][], filename: string): Linter.LintMessage[][] => {
+const postprocess = (messages, filename) => {
   const originalMessages = originalProcessor.postprocess(messages, filename);
-  return originalMessages.filter(EXCLUDE_PARSING_ERRORS) as unknown as Linter.LintMessage[][];
+  return originalMessages.filter(EXCLUDE_PARSING_ERRORS);
 };
 
 export default {
