@@ -34,6 +34,9 @@ Before any action, classify the user's request:
 - Markdown code blocks must specify a language (e.g., ```typescript, not empty).
 - Markdown with JSX in fenced blocks must use `tsx, not`typescript (WebStorm injection).
 - WebStorm IDE setup: `docs/webstorm.md` (code style import and on-save tools are manual).
+- JSDoc (`@param`, `@return`) обязателен для каждой функции, метода, компонента.
+- `const` по умолчанию; `var` запрещён.
+- Trailing commas (`Always`) в объектах и массивах.
 
 ## 4. Anti-Monolith (Auto-Activation)
 
