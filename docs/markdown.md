@@ -17,7 +17,8 @@ npm install -D jsdom @testing-library/react @testing-library/jest-dom \
 ## Fenced code blocks
 
 - Язык обязателен (см. также AI Rules): ` ```typescript`, ` ```bash`, не пустой fence.
-- **JSX** — только ` ```tsx`, не ` ```typescript`. Иначе WebStorm парсит `<Component />` как оператор сравнения и показывает `> expected`.
+- **JSX** — только ` ```tsx`, не ` ```typescript`. Иначе WebStorm
+  парсит `<Component />` как оператор сравнения и показывает `> expected`.
 - Имя языка должно соответствовать содержимому: `json`, `css`, `text` для деревьев каталогов.
 
 ## Таблицы

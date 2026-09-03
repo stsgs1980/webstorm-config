@@ -33,7 +33,7 @@ Before any action, classify the user's request:
 - Markdown: follow `docs/markdown.md` — 120 chars per line, aligned tables, `npm run lint:md`.
 - Markdown code blocks must specify a language (e.g., ```typescript, not empty).
 - Markdown with JSX in fenced blocks must use `tsx, not`typescript (WebStorm injection).
-- WebStorm IDE setup: `docs/webstorm.md` (codestyle import and on-save tools are manual).
+- WebStorm IDE setup: `docs/webstorm.md` (code style import and on-save tools are manual).
 
 ## 4. Anti-Monolith (Auto-Activation)
 

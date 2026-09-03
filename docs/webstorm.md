@@ -14,12 +14,12 @@ WebStorm часть из них **не подхватывает автомати
 | 5   | Нет           | Vitest — подхватывается из `vitest.config.ts` |
 | 6   | Нет           | EditorConfig — читается из `.editorconfig`    |
 
-## 1. Code Style (codestyle)
+## 1. Code Style (code style)
 
 Путь: `Settings → Editor → Code Style → шестерёнка → Import Scheme → webstorm-codestyle.xml`
 
 Схема согласована с `.prettierrc`: двойные кавычки, trailing comma, 2 пробела,
-120 символов. Для TS/JS основной форматтер — **Prettier**; codestyle — запасная
+120 символов. Для TS/JS основной форматтер — **Prettier**; code style — запасная
 согласованность и языки без Prettier.
 
 > Импорт **не выполняется сам** при `git clone` — только вручную или через
@@ -65,7 +65,8 @@ WebStorm часть из них **не подхватывает автомати
 ## 6. Markdown и `.editorconfig`
 
 `.editorconfig` устанавливает `max_line_length = 120` для `*.md` (согласно `.aiassistant/rules/AI Rules.md`).
-WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтером (`MD013: true`); `.markdownlint` и `.editorconfig` синхронизированы.
+WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтером
+(`MD013: true`); `.markdownlint` и `.editorconfig` синхронизированы.
 
 ## 7. Что не коммитится в `.idea/`
 
