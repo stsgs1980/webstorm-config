@@ -95,6 +95,11 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save — 
 2. `git commit -m "feat: add your feature"`
 3. `git push origin feat/your-feature`
 
+## Conventions
+
+Стиль кода: 2 пробела, точка с запятой, двойные кавычки, trailing commas,
+JSDoc (`@param`, `@return`), `const`/`let`. См. `.aiassistant/rules/AI Rules.md`.
+
 ## License
 
 MIT
