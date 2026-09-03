@@ -1,3 +1,4 @@
+// noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction
 import markdown from "@eslint/markdown";
 import tsParser from "@typescript-eslint/parser";
 import jsdoc from "eslint-plugin-jsdoc";
