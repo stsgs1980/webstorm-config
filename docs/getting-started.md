@@ -87,6 +87,14 @@ npm test
 | Testing (Playwright) | `@playwright/test`                                          |
 | Testing (Cypress)    | `cypress`                                                   |
 
+## Markdown правила
+
+Markdown (`.md`) исключён из ограничений по длине строки:
+
+- `.editorconfig`: `[*.md] max_line_length = off`
+- `.markdownlint.json` и `.markdownlint-cli.json`: `MD013: false`
+  Это намеренно — длинные строки в документации допустимы.
+
 ## Tailwind CSS v4
 
 Линтеры в шаблоне уже настроены под Tailwind v4 — не подгоняйте Tailwind-код под линтер.

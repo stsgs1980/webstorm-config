@@ -1,3 +1,6 @@
 {
-  "ignores": ["node_modules/**"]
+  "ignores": ["node_modules/**"],
+  "MD013": false,
+  "MD033": false,
+  "MD041": false
 }

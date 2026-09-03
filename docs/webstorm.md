@@ -62,7 +62,12 @@ WebStorm часть из них **не подхватывает автомати
 > В шаблоне **нет** папки `src/` и примеров тестов — это нормально.
 > `passWithNoTests: true` позволяет `npm test` проходить до Step 4 в getting-started.md.
 
-## 6. Что не коммитится в `.idea/`
+## 6. Markdown и `.editorconfig`
+
+`.editorconfig` отключает `max_line_length` для `*.md` (`[*.md] max_line_length = off`).
+WebStorm может показывать визуальную границу `RIGHT_MARGIN=120` для markdown-файлов — это не ошибка линтера; `.markdownlint` (`MD013: false`) и `.editorconfig` синхронизированы. Игнорируйте предупреждения `RIGHT_MARGIN` в `.md` или отключите инспекцию для этого типа файлов.
+
+## 7. Что не коммитится в `.idea/`
 
 Каталог `.idea/` в git **намеренно отсутствует** — личные настройки IDE не в репозитории.
 В репо только переносимые файлы: `webstorm-codestyle.xml`, ESLint, Prettier и т.д.
