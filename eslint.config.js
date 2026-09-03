@@ -4,7 +4,7 @@ import jsdoc from "eslint-plugin-jsdoc";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
-import markdownSnippetsProcessor from "./eslint-processors/markdown-snippets.js";
+import markdownSnippetsProcessor from "./eslint-processors/markdown-snippets.ts";
 import codeBlockLanguage from "./eslint-rules/code-block-language.js";
 import unicodePolicy from "./eslint-rules/unicode-policy.js";
 
