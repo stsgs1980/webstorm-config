@@ -10,11 +10,12 @@ const MAX_LINES = 250;
  * @returns {void}
  */
 function main() {
-  const output = execSync("git diff --cached --name-only --diff-filter=ACM", {
+  /** @type {string} */
+  const outputString = execSync("git diff --cached --name-only --diff-filter=ACM", {
     encoding: "utf8",
   });
 
-  const files = output
+  const files = outputString
     .split("\n")
     .map((file) => file.trim())
     .filter((file) => /\.(ts|tsx|js|jsx)$/.test(file));
