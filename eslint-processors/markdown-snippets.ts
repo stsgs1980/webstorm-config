@@ -25,6 +25,6 @@ const postprocess = (messages: Linter.LintMessage[][], filename: string): Linter
 export default {
   meta: { name: "markdown-snippets-processor", version: "1.0.0" },
   preprocess: originalProcessor.preprocess,
-  postprocess: postprocess,
+  postprocess,
   supportsAutofix: originalProcessor.supportsAutofix,
 };
