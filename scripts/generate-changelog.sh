@@ -9,6 +9,7 @@ if [ "$CURRENT_BRANCH" != "main" ]; then
 fi
 
 echo "Generating CHANGELOG.md..."
+rm -f CHANGELOG.md
 npx conventional-changelog -p angular -i CHANGELOG.md -s
 
 if git diff --quiet CHANGELOG.md 2>/dev/null; then
