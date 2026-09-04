@@ -15,6 +15,7 @@
 - prevent CHANGELOG duplication and add pre-push comment ([2b0ea36](https://github.com/stsgs1980/webstorm-config/commit/2b0ea366ac9664a5fd6203897a3ebb5327bef3ba))
 - remove broken sed normalization ([8cadfca](https://github.com/stsgs1980/webstorm-config/commit/8cadfca1a4a87ee1abe93922ff9e585b8002ed85))
 - remove CHANGELOG.md exclusions, add markdownlint-disable comment ([ef6a671](https://github.com/stsgs1980/webstorm-config/commit/ef6a671b147cb3c4bdc30d7bf194d906ced45bc6))
+- rename TMPFILE to TEMP_FILE for clarity ([3ccc4b5](https://github.com/stsgs1980/webstorm-config/commit/3ccc4b51bd66f8a01dbc52027cf73e834f913303))
 - restore .js with proper JSDoc, remove broken .d.ts ([7b02afd](https://github.com/stsgs1980/webstorm-config/commit/7b02afd8ec8c3e889a02c084f7f7b05b601b06d9))
 - set MD013 line_length=120 per AI Rules.md ([64000b8](https://github.com/stsgs1980/webstorm-config/commit/64000b89adf32024d6319743a001857b4208d0bb))
 - suppress WebStorm false positive for @eslint/markdown import ([d7d237a](https://github.com/stsgs1980/webstorm-config/commit/d7d237ab7141c674c1da118c50ec506aada94189))
