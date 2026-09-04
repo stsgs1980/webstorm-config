@@ -13,10 +13,10 @@ rm -f CHANGELOG.md
 npx conventional-changelog -p angular -i CHANGELOG.md -s
 
 # Prepend markdownlint disable comment
-TMPFILE=$(mktemp)
-echo "<!-- markdownlint-disable -->" > "$TMPFILE"
-cat CHANGELOG.md >> "$TMPFILE"
-mv "$TMPFILE" CHANGELOG.md
+TEMP_FILE=$(mktemp)
+echo "<!-- markdownlint-disable -->" > "$TEMP_FILE"
+cat CHANGELOG.md >> "$TEMP_FILE"
+mv "$TEMP_FILE" CHANGELOG.md
 
 # Convert asterisk to dash for consistency with prettier
 sed -i 's/^\* /- /g' CHANGELOG.md
