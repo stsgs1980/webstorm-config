@@ -63,6 +63,10 @@
     "prepare": "husky",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
+  "engines": {
+    "node": ">=24.15.0",
+    "npm": ">=11.0.0"
+  },
   "type": "module",
   "version": "1.0.0"
 }
