@@ -21,9 +21,6 @@ mv "$TMPFILE" CHANGELOG.md
 # Convert asterisk to dash for consistency with prettier
 sed -i 's/^\* /- /g' CHANGELOG.md
 
-# Normalize multiple blank lines to single
-sed -i '/^$/N;/^\n$/d' CHANGELOG.md
-
 if git diff --quiet CHANGELOG.md 2>/dev/null; then
   echo "CHANGELOG.md is up to date."
   exit 0
