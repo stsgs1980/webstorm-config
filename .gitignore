@@ -19,6 +19,7 @@ coverage/
 
 # IDE (WebStorm / IntelliJ)
 .idea/
+!.idea/codeStyles/
 
 # OS files
 .DS_Store
