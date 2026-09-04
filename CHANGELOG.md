@@ -10,6 +10,7 @@
 - extract functions before export to satisfy WebStorm static analysis ([dfc76dd](https://github.com/stsgs1980/webstorm-config/commit/dfc76ddfb59b24f70b810ded69cd74f7f330b2c7))
 - fix long lines and structure in eslint-rules files ([ac522be](https://github.com/stsgs1980/webstorm-config/commit/ac522beb42faac080a55e3b38bcd6a932c16b18f))
 - prevent CHANGELOG duplication and add pre-push comment ([2b0ea36](https://github.com/stsgs1980/webstorm-config/commit/2b0ea366ac9664a5fd6203897a3ebb5327bef3ba))
+- remove CHANGELOG.md exclusions, add markdownlint-disable comment ([ef6a671](https://github.com/stsgs1980/webstorm-config/commit/ef6a671b147cb3c4bdc30d7bf194d906ced45bc6))
 - restore .js with proper JSDoc, remove broken .d.ts ([7b02afd](https://github.com/stsgs1980/webstorm-config/commit/7b02afd8ec8c3e889a02c084f7f7b05b601b06d9))
 - set MD013 line_length=120 per AI Rules.md ([64000b8](https://github.com/stsgs1980/webstorm-config/commit/64000b89adf32024d6319743a001857b4208d0bb))
 - suppress WebStorm false positive for @eslint/markdown import ([d7d237a](https://github.com/stsgs1980/webstorm-config/commit/d7d237ab7141c674c1da118c50ec506aada94189))
