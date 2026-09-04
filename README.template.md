@@ -44,7 +44,7 @@
 
 ### Prerequisites
 
-- Node.js >= 20.12.0
+- Node.js >= 22.0.0
 
 ### Installation
 
