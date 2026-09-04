@@ -54,6 +54,18 @@ cd <project-directory>
 npm install
 ```
 
+### CHANGELOG.md (важно для шаблона)
+
+При клонировании шаблона `CHANGELOG.md` содержит историю **webstorm-config**, а не вашего проекта.
+
+```bash
+rm CHANGELOG.md
+git add CHANGELOG.md
+git commit -m "chore: reset changelog for new project"
+```
+
+Pre-push hook будет генерировать CHANGELOG.md автоматически на основе conventional commits вашего проекта.
+
 Первый запуск в новом проекте из шаблона — [docs/getting-started.md](docs/getting-started.md)
 (фреймворк, `src/`, скрипты `dev`/`build`).
 
