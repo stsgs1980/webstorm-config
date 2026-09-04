@@ -49,13 +49,13 @@
     "*.{js,ts,jsx,tsx,json,html,md}": "prettier --write",
     "*.{js,ts,jsx,tsx}": "eslint --fix",
     "*.css": "stylelint --fix",
-    "*.md": "markdownlint --fix --ignore node_modules --ignore CHANGELOG.md"
+    "*.md": "markdownlint --fix --ignore node_modules"
   },
   "name": "webstorm-config",
   "scripts": {
     "lint": "eslint .",
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
-    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules --ignore CHANGELOG.md",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",

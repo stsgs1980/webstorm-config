@@ -12,6 +12,12 @@ echo "Generating CHANGELOG.md..."
 rm -f CHANGELOG.md
 npx conventional-changelog -p angular -i CHANGELOG.md -s
 
+# Prepend markdownlint disable comment
+TMPFILE=$(mktemp)
+echo "<!-- markdownlint-disable -->" > "$TMPFILE"
+cat CHANGELOG.md >> "$TMPFILE"
+mv "$TMPFILE" CHANGELOG.md
+
 if git diff --quiet CHANGELOG.md 2>/dev/null; then
   echo "CHANGELOG.md is up to date."
   exit 0
