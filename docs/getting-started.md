@@ -148,6 +148,7 @@ npm install -D \
   markdownlint-cli \
   husky lint-staged \
   @commitlint/cli @commitlint/config-conventional \
+  conventional-changelog-cli conventional-changelog-angular \
   vitest @vitest/coverage-v8 typescript
 ```
 
@@ -164,6 +165,7 @@ npx husky init
 ```text
 .husky/commit-msg
 .husky/pre-commit
+.husky/pre-push
 ```
 
 ### 4. WebStorm
@@ -184,7 +186,8 @@ npx husky init
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky"
+    "prepare": "husky",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   }
 }
 ```
