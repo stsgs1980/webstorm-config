@@ -93,4 +93,4 @@ git commit       →  Husky + lint-staged (те же инструменты из
 ## Windows
 
 Husky pre-commit использует `node scripts/check-file-length.ts` (кроссплатформенно).
-Нужны: Node.js >= 22.0.0, Git.
+Нужны: Node.js >= 24.0.0, Git.
