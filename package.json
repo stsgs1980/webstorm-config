@@ -18,6 +18,7 @@
     "@types/react-dom": "^19.2.4",
     "@typescript-eslint/parser": "^8.68.0",
     "@vitest/coverage-v8": "^4.1.10",
+    "conventional-changelog-angular": "^8.3.1",
     "conventional-changelog-cli": "^5.0.0",
     "eslint": "^9.39.0",
     "eslint-plugin-jsdoc": "^64.2.0",
@@ -48,18 +49,19 @@
     "*.{js,ts,jsx,tsx,json,html,md}": "prettier --write",
     "*.{js,ts,jsx,tsx}": "eslint --fix",
     "*.css": "stylelint --fix",
-    "*.md": "markdownlint --fix --ignore node_modules"
+    "*.md": "markdownlint --fix --ignore node_modules --ignore CHANGELOG.md"
   },
   "name": "webstorm-config",
   "scripts": {
     "lint": "eslint .",
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
-    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules --ignore CHANGELOG.md",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky"
+    "prepare": "husky",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "type": "module",
   "version": "1.0.0"
