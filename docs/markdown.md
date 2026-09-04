@@ -46,5 +46,4 @@ npm install -D jsdom @testing-library/react @testing-library/jest-dom \
 
 - Используйте ASCII: `->` вместо `→`, `...` вместо `…`
 - Emoji запрещены: используйте текстовые теги `[OK]`, `[FAIL]`, `[TODO]`
-- CHANGELOG.md — автогенерированный, исключён из markdownlint/prettier/lint-staged,
-  но WebStorm inspections (typo, character substitution) могут показывать warnings
+- CHANGELOG.md — автогенерированный, содержит `<!-- markdownlint-disable -->` в начале
