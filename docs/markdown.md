@@ -40,3 +40,10 @@ npm install -D jsdom @testing-library/react @testing-library/jest-dom \
 1. `npm run lint:md`
 2. В WebStorm: нет ошибок в Problems для изменённых `.md`
 3. JSX-примеры в `tsx`, строки prose ≤ 120 символов
+4. Нет emoji или Unicode graphics (ESLint `unicode-policy`)
+
+## Символы
+
+- Используйте ASCII: `->` вместо `→`, `...` вместо `…`
+- Emoji запрещены: используйте текстовые теги `[OK]`, `[FAIL]`, `[TODO]`
+- CHANGELOG.md — автогенерированный, исключён из проверок
