@@ -26,6 +26,7 @@
 ### Features
 
 - add anti-monolith script ([4b31ecf](https://github.com/stsgs1980/webstorm-config/commit/4b31ecf6e7a01e1e12d467a7b2b025b604ed1e04))
+- add Live Templates, File Templates, and Copyright ([cdf117c](https://github.com/stsgs1980/webstorm-config/commit/cdf117cea4e9d3e4264253392230d8c2e33301d6))
 - add pre-push changelog guard hook ([29c6898](https://github.com/stsgs1980/webstorm-config/commit/29c689866fa356bcead688e030d763022617c53b))
 - add project AI rules and cleanup ([7cafc36](https://github.com/stsgs1980/webstorm-config/commit/7cafc365bac4d16d968b5e78f025964b33c05056))
 - add test variable ([a21dd4f](https://github.com/stsgs1980/webstorm-config/commit/a21dd4f85aab5986116f3ba5c9cdbdb2797440a3))
