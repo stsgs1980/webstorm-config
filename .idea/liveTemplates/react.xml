@@ -1,0 +1,93 @@
+<templateSet group="React">
+  <template name="rafce" value="import React from &quot;react&quot;;&#10;&#10;interface $NAME$Props {}&#10;&#10;export const $NAME$: React.FC&lt;$NAME$Props&gt; = (${}) => {&#10;  return (&#10;    &lt;div&gt;&#10;      $NAME$&#10;    &lt;/div&gt;&#10;  );&#10;};&#10;&#10;export default $NAME$;" description="React Arrow Function Component" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useState" value="const [$NAME$, set$NAME$] = useState$INIT$();" description="React useState" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="INIT" expression="" defaultValue="()" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useEffect" value="useEffect(() => {&#10;  $END$&#10;}, [$DEPS$]);" description="React useEffect" toReformat="false" toShortenFQClassNames="true">
+    <variable name="DEPS" expression="" defaultValue="[]" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useCallback" value="const $NAME$ = useCallback(($PARAMS$) => {&#10;  $END$&#10;}, [$DEPS$]);" description="React useCallback" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="DEPS" expression="" defaultValue="[]" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useMemo" value="const $NAME$ = useMemo(() => {&#10;  $END$&#10;}, [$DEPS$]);" description="React useMemo" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="DEPS" expression="" defaultValue="[]" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useRef" value="const $NAME$ = useRef$INIT$();" description="React useRef" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="INIT" expression="" defaultValue="(null)" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useContext" value="const $NAME$ = useContext($CONTEXT$);" description="React useContext" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="CONTEXT" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+  <template name="useReducer" value="const [$STATE$, dispatch] = useReducer($REDUCER$, $INIT$);" description="React useReducer" toReformat="false" toShortenFQClassNames="true">
+    <variable name="STATE" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="REDUCER" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="INIT" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JSX,TSX" />
+  </template>
+</templateSet>
+<templateSet group="TypeScript">
+  <template name="interface" value="interface $NAME$ {$END$}" description="TypeScript interface" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="type" value="type $NAME$ = $END$;" description="TypeScript type" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="enum" value="enum $NAME$ {$END$}" description="TypeScript enum" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+</templateSet>
+<templateSet group="Testing">
+  <template name="describe" value="describe(&quot;$NAME$&quot;, () => {$END$});" description="Vitest describe" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="it" value="it(&quot;should $DESC$&quot;, () => {$END$});" description="Vitest it" toReformat="false" toShortenFQClassNames="true">
+    <variable name="DESC" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="test" value="test(&quot;$NAME$&quot;, () => {$END$});" description="Vitest test" toReformat="false" toShortenFQClassNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="expect" value="expect($VALUE$).$METHOD$($EXPECTED$);" description="Vitest expect" toReformat="false" toShortenFQClassNames="true">
+    <variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="METHOD" expression="complete(&quot;toBe,toEqual,toBeTruthy,toBeFalsy,toContain,toHaveLength&quot;)" defaultValue="toBe" alwaysStopAt="true" />
+    <variable name="EXPECTED" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+</templateSet>
+<templateSet group="Utilities">
+  <template name="try" value="try {$END$} catch ($ERROR$) {$CATCH$}" description="try-catch block" toReformat="false" toShortenFQClassNames="true">
+    <variable name="ERROR" expression="" defaultValue="error" alwaysStopAt="true" />
+    <variable name="CATCH" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="for" value="for (let $I$ = 0; $I$ &lt; $LENGTH$; $I$++) {$END$}" description="for loop" toReformat="false" toShortenFQClassNames="true">
+    <variable name="I" expression="" defaultValue="i" alwaysStopAt="true" />
+    <variable name="LENGTH" expression="" defaultValue="" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+  <template name="forEach" value="$ARRAY$.forEach(($ITEM$) => {$END$});" description="forEach loop" toReformat="false" toShortenFQClassNames="true">
+    <variable name="ARRAY" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="ITEM" expression="" defaultValue="item" alwaysStopAt="true" />
+    <option name="LANGUAGES" value="JS,TS,JSX,TSX" />
+  </template>
+</templateSet>

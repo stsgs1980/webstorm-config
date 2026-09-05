@@ -22,6 +22,9 @@ coverage/
 !.idea/codeStyles/
 !.idea/inspectionProfiles/
 !.idea/watcherTasks.xml
+!.idea/liveTemplates/
+!.idea/fileTemplates/
+!.idea/copyright/
 
 # OS files
 .DS_Store
