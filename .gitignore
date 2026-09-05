@@ -17,6 +17,12 @@ coverage/
 .env.local
 .env.*.local
 
+# Husky
+.husky/
+
+# React Buddy
+dev/
+
 # IDE (WebStorm / IntelliJ)
 .idea/
 !.idea/codeStyles/
@@ -24,6 +30,11 @@ coverage/
 !.idea/watcherTasks.xml
 !.idea/liveTemplates/
 !.idea/fileTemplates/
+!.idea/saveactions_settings.xml
+!.idea/webstorm-config.iml
+
+# OpenCode
+.agents/
 
 # OS files
 .DS_Store

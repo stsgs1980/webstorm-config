@@ -13,6 +13,7 @@ WebStorm часть из них **не подхватывает автомати
 | 4   | Если есть CSS | Включить Stylelint                            |
 | 5   | Нет           | Vitest — подхватывается из `vitest.config.ts` |
 | 6   | Нет           | EditorConfig — читается из `.editorconfig`    |
+| 7   | Рекомендуется | Включить анализ кода при коммите              |
 
 ## 1. Code Style (code style)
 
@@ -76,10 +77,62 @@ WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтеро
 - Trailing commas (`Always`) в объектах и массивах.
 - Максимальная длина строки — 120 символов (`RIGHT_MARGIN` в `webstorm-codestyle.xml`).
 
-## 7. Что не коммитится в `.idea/`
+## 7. Анализ кода при коммите (рекомендуется)
+
+Путь: `Commit tool window (Alt+0) → Settings (⚙) → Commit Checks → Analyze code`
+
+Включите опцию **Analyze code** и выберите профиль **Project Default**.
+
+### Что делает
+
+- Анализирует изменённые файлы inspection profile перед коммитом
+- Показывает уведомление, если найдены ошибки/предупреждения
+- Позволяет исправить проблемы перед коммитом или проигнорировать
+
+### Альтернатива (через .idea/workspace.xml)
+
+Если хотите зафиксировать настройку в репозитории, добавьте в `.idea/workspace.xml`:
+
+```xml
+<component name="CommitConfigs">
+  <option name="ANALYZE_CODE" value="true" />
+  <option name="ANALYZE_CODE_PROFILE" value="Project Default" />
+  <option name="RUN_CLEANUP" value="true" />
+  <option name="RUN_CLEANUP_PROFILE" value="Project Default" />
+</component>
+```
+
+> **Примечание:** Это проектная настройка (в `workspace.xml`). Для каждого нового проекта
+> нужно включать отдельно или использовать UI (Alt+0 → Settings).
+
+## 8. React Buddy (превью компонентов)
+
+Плагин установлен. Настройка при первом использовании:
+
+1. ПКМ на файле компонента → **React Buddy** → **Add to Palette**
+2. При появлении диалога **Настройка React Buddy Toolbox**:
+   - **Файл package.json** — оставьте по умолчанию
+   - **Директория тулбокса** — `dev/` (создаётся автоматически)
+   - **Корневой компонент** — укажите `src/App.tsx` или `src/main.tsx`
+3. Нажмите **OK**
+
+### Что создаётся
+
+- Папка `dev/` — палитра компонентов (добавлена в `.gitignore`)
+- Файлы конфигурации React Buddy
+
+### Использование
+
+- ПКМ на компоненте → **React Buddy** → **Preview Component**
+- Палитра: `View → Tool Windows → React Buddy Palette`
+
+## 9. Что не коммитится в `.idea/`
 
 Каталог `.idea/` в git **намеренно отсутствует** — личные настройки IDE не в репозитории.
 В репо только переносимые файлы: `webstorm-codestyle.xml`, ESLint, Prettier и т.д.
+
+**Исключение:** `.idea/workspace.xml` может содержать общие настройки проекта
+(например, анализ кода при коммите), которые полезно сохранить в репозитории.
 
 ## Согласованность IDE и CI
 
