@@ -82,7 +82,7 @@ npm install
 | **Testing**      | Vitest — `vitest.config.ts`                 |
 
 **Docs (едут в fork):** [getting-started](docs/getting-started.md),
-[webstorm](docs/webstorm.md), [testing](docs/testing.md), [markdown](docs/markdown.md).
+[WebStorm](docs/webstorm.md), [testing](docs/testing.md), [markdown](docs/markdown.md).
 
 ## After fork (кратко)
 
