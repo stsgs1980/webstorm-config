@@ -20,6 +20,8 @@ coverage/
 # IDE (WebStorm / IntelliJ)
 .idea/
 !.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/watcherTasks.xml
 
 # OS files
 .DS_Store
