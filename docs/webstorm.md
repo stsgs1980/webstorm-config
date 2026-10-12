@@ -154,6 +154,11 @@ WebStorm часть из них **не подхватывает автомати
 XML-файлы там это склад. Импорт: откройте нужный XML, скопируйте тело шаблона,
 `Settings → Editor → Live Templates` → `+` → вставьте.
 
+Состав групп (React 8 шаблонов, Testing 4, TypeScript 3, Utilities 3), требования
+к контексту и частые проблемы — в [docs/live-templates/README.md](live-templates/README.md).
+Отдельно смотрите [шаблон компонента](live-templates/README.md): `rafce` больше не
+генерирует `React.FC` и пустые Props.
+
 ## Согласованность IDE и CI
 
 ```text

@@ -71,22 +71,23 @@ npm install
 
 ## What's Included
 
-| Tool             | Config                                      |
-| ---------------- | ------------------------------------------- |
-| **ESLint**       | `eslint.config.js` — TS/JS/JSX, React, a11y |
-| **Stylelint**    | `.stylelintrc.json` — Tailwind v4 at-rules  |
-| **Prettier**     | `.prettierrc`, `.prettierignore`            |
-| **markdownlint** | `.markdownlint.json`                        |
-| **TypeScript**   | `tsconfig.json` (strict)                    |
-| **Git hooks**    | Husky + lint-staged                         |
-| **Commitlint**   | Conventional Commits                        |
-| **EditorConfig** | `.editorconfig`                             |
-| **WebStorm**     | `webstorm-codestyle.xml`                    |
-| **AI Rules**     | `.aiassistant/rules/AI Rules.md`            |
-| **Testing**      | Vitest — `vitest.config.ts`                 |
+| Tool             | Config                                       |
+| ---------------- | -------------------------------------------- |
+| **ESLint**       | `eslint.config.js` — TS/JS/JSX, React, a11y  |
+| **Stylelint**    | `.stylelintrc.json` — Tailwind v4 at-rules   |
+| **Prettier**     | `.prettierrc`, `.prettierignore`             |
+| **markdownlint** | `.markdownlint.json`                         |
+| **TypeScript**   | `tsconfig.json` (strict)                     |
+| **Git hooks**    | Husky + lint-staged                          |
+| **Commitlint**   | Conventional Commits                         |
+| **EditorConfig** | `.editorconfig`                              |
+| **WebStorm**     | `webstorm-codestyle.xml`, `.idea/` templates |
+| **AI Rules**     | `.aiassistant/rules/AI Rules.md`             |
+| **Testing**      | Vitest — `vitest.config.ts`                  |
 
 **Docs (едут в fork):** [getting-started](docs/getting-started.md),
-[WebStorm](docs/webstorm.md), [testing](docs/testing.md), [markdown](docs/markdown.md).
+[WebStorm](docs/webstorm.md), [testing](docs/testing.md), [markdown](docs/markdown.md),
+[live templates](docs/live-templates/README.md).
 
 ## After fork (кратко)
 
