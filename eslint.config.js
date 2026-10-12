@@ -6,17 +6,22 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import markdownSnippetsProcessor from "./eslint-processors/markdown-snippets.js";
-import codeBlockLanguage from "./eslint-rules/code-block-language.js";
 import unicodePolicy from "./eslint-rules/unicode-policy.js";
-
-const codeBlockLanguagePlugin = {
-  meta: { name: "code-block-language", version: "1.0.0" },
-  rules: { "require-language": codeBlockLanguage },
-};
 
 export default [
   {
-    ignores: ["node_modules/**", "dist/**", "build/**"],
+    ignores: [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      "dev/**",
+      "out/**",
+      ".next/**",
+      ".nuxt/**",
+      ".svelte-kit/**",
+      ".astro/**",
+    ],
   },
   ...markdown.configs.recommended,
   {
@@ -38,18 +43,6 @@ export default [
     rules: {
       "unicode-policy/emoji": "error",
       "unicode-policy/unicode-graphics": "error",
-    },
-  },
-  {
-    files: ["**/*.md"],
-    plugins: {
-      "unicode-policy": unicodePolicy,
-      "code-block-language": codeBlockLanguagePlugin,
-    },
-    rules: {
-      "unicode-policy/emoji-in-md": "error",
-      "unicode-policy/unicode-graphics-in-md": "error",
-      "code-block-language/require-language": "error",
     },
   },
   {

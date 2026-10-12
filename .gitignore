@@ -18,13 +18,13 @@ coverage/
 .env.*.local
 
 # Husky
-.husky/
+.husky/_/
 
 # React Buddy
-dev/
+/dev/
 
 # IDE (WebStorm / IntelliJ)
-.idea/
+.idea/*
 !.idea/codeStyles/
 !.idea/inspectionProfiles/
 !.idea/watcherTasks.xml

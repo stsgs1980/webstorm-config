@@ -57,6 +57,7 @@
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

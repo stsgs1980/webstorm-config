@@ -92,7 +92,7 @@ npm test
 Markdown (`.md`) ограничен 120 символами на строку (как в `.aiassistant/rules/AI Rules.md`):
 
 - `.editorconfig`: `[*.md] max_line_length = 120`
-- `.markdownlint.json` и `.markdownlint-cli.json`: `MD013: true`
+- `.markdownlint.json`: `MD013` (лимит 120 символов)
 
 ## Tailwind CSS v4
 
@@ -130,7 +130,6 @@ eslint-processors/
 .prettierrc
 .stylelintrc.json
 .markdownlint.json
-.markdownlint-cli.json
 .editorconfig
 tsconfig.base.json
 vitest.config.ts
