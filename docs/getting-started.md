@@ -26,7 +26,7 @@
 уберите `jsx: react-jsx` из `tsconfig.json` (или переключите под свой стек), отключите
 React-правила в `eslint.config.js`, затем выполните `npm run lint` и `npm run typecheck`.
 
-Выберите стек и установите:
+Выберите стек и установите (сборщики и плагины нужны только для разработки, поэтому `-D`):
 
 ```bash
 # React/Vite
@@ -36,13 +36,13 @@ npm install -D vite @vitejs/plugin-react
 npm install -D vite @vitejs/plugin-vue
 
 # Svelte/SvelteKit
-npm install @sveltejs/kit vite
+npm install -D @sveltejs/kit vite
 
 # Astro
-npm install astro @astrojs/react
+npm install -D astro @astrojs/react
 
 # Next.js
-npm install @next/eslint-plugin-next eslint-plugin-testing-library
+npm install -D @next/eslint-plugin-next eslint-plugin-testing-library
 ```
 
 ## Step 3: Scripts
@@ -83,7 +83,7 @@ npm run lint:css
 npm run lint:md
 npm run format:check
 npm test
-node scripts/check-file-length.ts
+npm run check:file-length
 ```
 
 ## Superpowers scratch dirs
@@ -226,7 +226,7 @@ npm run lint:css
 npm run lint:md
 npm run format:check
 npm test
-node scripts/check-file-length.ts
+npm run check:file-length
 ```
 
 Исправьте ошибки линтеров до зелёного состояния.
