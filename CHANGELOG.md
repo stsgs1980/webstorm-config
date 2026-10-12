@@ -36,4 +36,5 @@
 - add test variable ([a21dd4f](https://github.com/stsgs1980/webstorm-config/commit/a21dd4f85aab5986116f3ba5c9cdbdb2797440a3))
 - add Vitest, fix dependency versions, update docs ([a5851ef](https://github.com/stsgs1980/webstorm-config/commit/a5851ef87f55e1cc8902e4e1f477b8ea269ffbb1))
 - audit package 2 - typescript-eslint recommended, no-var, jsdoc error, typecheck in CI ([644bf7a](https://github.com/stsgs1980/webstorm-config/commit/644bf7adba7fde18e2c77be30bad205ac42c980e))
+- enable TypeScriptExplicitMemberType to match AI Rules ([3cbdfda](https://github.com/stsgs1980/webstorm-config/commit/3cbdfda897a971d4a7beeb42ef4729b76cf29f07))
 - make linters Tailwind v4-aware and document setup ([0f067a7](https://github.com/stsgs1980/webstorm-config/commit/0f067a71af84e0c9338f47918f3120b57b5f2ee6))
