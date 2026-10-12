@@ -53,23 +53,9 @@ const unicodeGraphics = createRule(
   unicodeGraphicsPattern,
 );
 
-const emojiInMd = createRule({ emojiInMd: "Emoji are prohibited in Markdown documentation." }, emojiPattern, (t) =>
-  t.replace(/```[\s\S]*?```/g, ""),
-);
-
-const unicodeGraphicsInMd = createRule(
-  {
-    unicodeGraphicsInMd: "Unicode box/line drawing characters are prohibited in Markdown.",
-  },
-  unicodeGraphicsPattern,
-  (t) => t.replace(/```[\s\S]*?```/g, ""),
-);
-
 export default {
   rules: {
     emoji,
     "unicode-graphics": unicodeGraphics,
-    "emoji-in-md": emojiInMd,
-    "unicode-graphics-in-md": unicodeGraphicsInMd,
   },
 };

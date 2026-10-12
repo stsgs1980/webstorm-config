@@ -7,11 +7,13 @@ const MAX_LINES = 250;
 
 /**
  * Pre-commit check: staged TS/JS files must not exceed MAX_LINES.
+ * With --all: all tracked TS/JS files (for CI).
  * @returns {void}
  */
 function main() {
+  const command = process.argv.includes("--all") ? "git ls-files" : "git diff --cached --name-only --diff-filter=ACM";
   /** @type {string} */
-  const outputString = execSync("git diff --cached --name-only --diff-filter=ACM", {
+  const outputString = execSync(command, {
     encoding: "utf8",
   });
 

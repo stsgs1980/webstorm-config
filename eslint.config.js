@@ -92,4 +92,23 @@ export default [
       "jsx-a11y/no-redundant-roles": "error",
     },
   },
+  {
+    // Template's own tooling tests: vitest globals + intentional fixtures.
+    // Must stay last: overrides the code rules above for tests/**.
+    files: ["tests/**"],
+    languageOptions: {
+      globals: {
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+      },
+    },
+    rules: {
+      "unicode-policy/emoji": "off",
+      "unicode-policy/unicode-graphics": "off",
+    },
+  },
 ];
