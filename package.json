@@ -28,7 +28,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "markdownlint-cli": "^0.49.1",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.9",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "stylelint": "^17.14.1",
