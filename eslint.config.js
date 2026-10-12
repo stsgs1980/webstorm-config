@@ -23,6 +23,10 @@ export default [
       ".nuxt/**",
       ".svelte-kit/**",
       ".astro/**",
+      ".output/**",
+      ".vite/**",
+      // File templates use ${NAME} placeholders, they are not valid source files.
+      ".idea/**",
     ],
   },
   ...markdown.configs.recommended,

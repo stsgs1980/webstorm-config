@@ -58,6 +58,7 @@
     "lint": "eslint . --max-warnings=0",
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "check:file-length": "node scripts/check-file-length.ts --all",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

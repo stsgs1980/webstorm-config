@@ -3,24 +3,54 @@
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 
-const MAX_LINES = 250;
+const DEFAULT_MAX_LINES = 250;
+const EXTENSIONS = /\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
+
+const args = process.argv.slice(2);
+const checkAll = args.includes("--all");
+const maxLinesArg = args.find((arg) => arg.startsWith("--max-lines="));
 
 /**
- * Pre-commit check: staged TS/JS files must not exceed MAX_LINES.
- * With --all: all tracked TS/JS files (for CI).
+ * Parse and strictly validate the --max-lines flag.
+ * @param raw - raw flag value without the prefix
+ * @returns validated line limit
+ */
+function parseMaxLines(raw: string | undefined): number {
+  if (raw === undefined) {
+    return DEFAULT_MAX_LINES;
+  }
+
+  const parsed = Number(raw.slice("--max-lines=".length));
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    console.error(`[FAIL] Invalid --max-lines value: '${raw}'. Expected a positive integer.`);
+    process.exit(2);
+  }
+
+  return parsed;
+}
+
+const MAX_LINES = parseMaxLines(maxLinesArg);
+
+/**
+ * Pre-commit check by default (staged files), full-tree check with --all.
+ * @returns {string[]} file paths to check
+ */
+function listFiles() {
+  const command = checkAll ? "git ls-files" : "git diff --cached --name-only --diff-filter=ACM";
+
+  return execSync(command, { encoding: "utf8" })
+    .split("\n")
+    .map((file) => file.trim())
+    .filter((file) => EXTENSIONS.test(file));
+}
+
+/**
+ * Anti-monolith check: TS/JS files must not exceed MAX_LINES.
  * @returns {void}
  */
 function main() {
-  const command = process.argv.includes("--all") ? "git ls-files" : "git diff --cached --name-only --diff-filter=ACM";
-  /** @type {string} */
-  const outputString = execSync(command, {
-    encoding: "utf8",
-  });
-
-  const files = outputString
-    .split("\n")
-    .map((file) => file.trim())
-    .filter((file) => /\.(ts|tsx|js|jsx)$/.test(file));
+  const files = listFiles();
 
   let failed = 0;
 
@@ -41,6 +71,8 @@ function main() {
     console.error("[Anti-Monolith] Commit rejected.");
     process.exit(1);
   }
+
+  console.log(`[OK] Checked files: ${files.length}. Limit: ${MAX_LINES} lines.`);
 }
 
 main();

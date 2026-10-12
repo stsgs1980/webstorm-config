@@ -7,6 +7,10 @@ build/
 out/
 .next/
 .nuxt/
+.svelte-kit/
+.astro/
+.output/
+.vite/
 .cache/
 
 # Test coverage
