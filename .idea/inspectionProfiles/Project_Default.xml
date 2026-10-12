@@ -29,7 +29,7 @@
     </inspection_tool>
     <inspection_tool class="Stylelint" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="TrailingSpacesInProperty" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="TypeScriptExplicitMemberType" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="TypeScriptExplicitMemberType" enabled="true" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="TypeScriptMissingAugmentationImport" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="TypeScriptStrictTypeCheckings" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="NoFloatingPromisesJS" enabled="true" level="ERROR" enabled_by_default="true" />
