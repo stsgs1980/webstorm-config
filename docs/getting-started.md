@@ -86,6 +86,12 @@ npm test
 node scripts/check-file-length.ts
 ```
 
+## Superpowers scratch dirs
+
+`docs/superpowers/plans/` и `docs/superpowers/specs/` — рабочие папки агента для планов
+и спеков (пустые в шаблоне, метки `.gitkeep` везут их в fork). Файлы планов коммитить
+не обязательно.
+
 ## Recommended dependencies
 
 | Project type         | Add to devDependencies                                      |
