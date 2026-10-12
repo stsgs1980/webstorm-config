@@ -22,7 +22,9 @@
 ## Step 2: Framework dependencies
 
 `react` и `react-dom` уже в `dependencies` (шаблон React-centric). Если проект **без React**:
-удалите их из `dependencies` и добавьте свой фреймворк.
+удалите их из `dependencies` и добавьте свой фреймворк. После удаления проверьте конфиги:
+уберите `jsx: react-jsx` из `tsconfig.json` (или переключите под свой стек), отключите
+React-правила в `eslint.config.js`, затем выполните `npm run lint` и `npm run typecheck`.
 
 Выберите стек и установите:
 

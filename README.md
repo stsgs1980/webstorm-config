@@ -27,7 +27,9 @@
 | `react` в deps (для ESLint/TSX) | Vite / Next (Step 2)     |
 
 `react` и `react-dom` в `dependencies` — **для линтинга и TypeScript (JSX)**, не для запуска
-приложения. Сборщик добавляете на Step 2.
+приложения. Сборщик добавляете на Step 2. Проект без React: удалите их и поправьте
+`tsconfig.json` (`jsx`) и `eslint.config.js` (React-правила) — детали в Step 2
+[getting-started](docs/getting-started.md).
 
 ## Quick Start (создать проект из шаблона)
 
