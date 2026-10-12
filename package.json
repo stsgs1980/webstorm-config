@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.3.0"
   },
   "description": "WebStorm template with ESLint, Prettier, Stylelint, markdownlint, TypeScript, Husky, and AI rules",
   "devDependencies": {
@@ -15,7 +15,7 @@
     "@commitlint/config-conventional": "^21.2.0",
     "@eslint/markdown": "8.0.3",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
+    "@types/react-dom": "^19.3.0",
     "@typescript-eslint/parser": "^8.68.0",
     "@vitest/coverage-v8": "^4.1.10",
     "conventional-changelog-angular": "^8.3.1",
