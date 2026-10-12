@@ -1,10 +1,11 @@
 <!-- markdownlint-disable -->
 
-# 1.0.0 (2026-09-05)
+# 1.0.0 (2026-10-12)
 
 ### Bug Fixes
 
 - add passWithNoTests to vitest config for CI ([b83d3a2](https://github.com/stsgs1980/webstorm-config/commit/b83d3a2e3e1055d4e8418d895c9c47a6af22140e))
+- audit package 1 - gitignore, format:check, markdownlint, live templates, eslint ignores ([6eac2af](https://github.com/stsgs1980/webstorm-config/commit/6eac2aff03e4a3e647ae50d98c0b63cc381b576b))
 - convert asterisk to dash in changelog generation ([56aa7a8](https://github.com/stsgs1980/webstorm-config/commit/56aa7a86b8d826ef86096dd309c552553c056540))
 - convert markdown-snippets.js to .ts with proper types ([ba7ad1f](https://github.com/stsgs1980/webstorm-config/commit/ba7ad1f0eedbca84707bf681d783d5543ec05363))
 - explicit String type in check-file-length.mjs ([0241e01](https://github.com/stsgs1980/webstorm-config/commit/0241e01b69c94a5abad18f48f87e5c4f63f51393))
