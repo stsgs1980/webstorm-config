@@ -32,6 +32,9 @@ coverage/
 !.idea/fileTemplates/
 !.idea/saveactions_settings.xml
 !.idea/jsonSchemas.xml
+!.idea/prettier.xml
+!.idea/vcs.xml
+!.idea/modules.xml
 !.idea/webstorm-config.iml
 
 # OpenCode
