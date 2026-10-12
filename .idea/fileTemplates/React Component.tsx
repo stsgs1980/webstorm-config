@@ -1,15 +1,16 @@
-import React from "react";
-
 interface Props {
   title: string;
 }
 
-export const Component: React.FC<Props> = () => {
-  return (
-    <div>
-      Component
-    </div>
-  );
+/**
+ * ${NAME} component.
+ *
+ * @param props - component props
+ * @param props.title - component title
+ * @returns JSX element
+ */
+export const ${NAME} = ({ title }: Props) => {
+  return <div>{title}</div>;
 };
 
-export default Component;
+export default ${NAME};
