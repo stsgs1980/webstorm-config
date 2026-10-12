@@ -72,12 +72,16 @@ src/
 
 ## Step 5: Verify
 
+Полный набор как в CI (`.github/workflows/ci.yml`):
+
 ```bash
 npm run lint
+npm run typecheck
 npm run lint:css
 npm run lint:md
-npm run format
+npm run format:check
 npm test
+node scripts/check-file-length.ts
 ```
 
 ## Recommended dependencies
@@ -189,9 +193,11 @@ npx husky init
 {
   "scripts": {
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -203,12 +209,16 @@ npx husky init
 
 ### 6. Verify
 
+Полный набор как в CI (`.github/workflows/ci.yml`):
+
 ```bash
 npm run lint
+npm run typecheck
 npm run lint:css
 npm run lint:md
-npm run format
+npm run format:check
 npm test
+node scripts/check-file-length.ts
 ```
 
 Исправьте ошибки линтеров до зелёного состояния.
