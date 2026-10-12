@@ -1,10 +1,12 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction
+import js from "@eslint/js";
 import markdown from "@eslint/markdown";
 import tsParser from "@typescript-eslint/parser";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import tseslint from "typescript-eslint";
 import markdownSnippetsProcessor from "./eslint-processors/markdown-snippets.js";
 import unicodePolicy from "./eslint-rules/unicode-policy.js";
 
@@ -24,6 +26,11 @@ export default [
     ],
   },
   ...markdown.configs.recommended,
+  {
+    files: ["**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts}"],
+    ...js.configs.recommended,
+  },
+  ...tseslint.configs.recommended,
   {
     files: ["**/*.md"],
     processor: markdownSnippetsProcessor,
@@ -46,7 +53,7 @@ export default [
     },
   },
   {
-    files: ["**/*.{ts,tsx,js,jsx}"],
+    files: ["**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts}"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -69,9 +76,11 @@ export default [
       "unicode-policy/emoji": "error",
       "unicode-policy/unicode-graphics": "error",
       "no-irregular-whitespace": "error",
-      "jsdoc/require-jsdoc": "warn",
-      "jsdoc/require-param": "warn",
-      "jsdoc/require-returns": "warn",
+      "no-var": "error",
+      "prefer-const": "error",
+      "jsdoc/require-jsdoc": "error",
+      "jsdoc/require-param": "error",
+      "jsdoc/require-returns": "error",
       "react/jsx-uses-react": "error",
       "react/jsx-uses-vars": "error",
       "react-hooks/rules-of-hooks": "error",

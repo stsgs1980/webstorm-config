@@ -1,3 +1,4 @@
+/* eslint-disable no-misleading-character-class -- intentional emoji ranges: this file defines what to prohibit elsewhere. */
 const emojiPattern = new RegExp(
   "[\\u{1F600}-\\u{1F64F}" +
     "\\u{1F300}-\\u{1F5FF}" +

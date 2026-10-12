@@ -34,6 +34,7 @@
     "stylelint": "^17.14.1",
     "stylelint-config-standard": "^40.0.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.71.1",
     "vitest": "^4.1.10"
   },
   "keywords": [
@@ -53,9 +54,10 @@
   },
   "name": "webstorm-config",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
