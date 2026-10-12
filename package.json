@@ -74,7 +74,8 @@
   "type": "module",
   "overrides": {
     "katex": "^0.19.0",
-    "smol-toml": "^1.9.1"
+    "smol-toml": "^1.9.1",
+    "js-yaml": "^5.4.3"
   },
   "version": "1.0.0"
 }
