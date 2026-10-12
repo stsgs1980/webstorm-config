@@ -4,6 +4,7 @@
 
 ### Bug Fixes
 
+- accept IDE-canonical code style files (USE_PER_PROJECT_SETTINGS) ([692e37c](https://github.com/stsgs1980/webstorm-config/commit/692e37cd35948273ec1f977e609ceb54444dbde0))
 - add passWithNoTests to vitest config for CI ([b83d3a2](https://github.com/stsgs1980/webstorm-config/commit/b83d3a2e3e1055d4e8418d895c9c47a6af22140e))
 - audit package 1 - gitignore, format:check, markdownlint, live templates, eslint ignores ([6eac2af](https://github.com/stsgs1980/webstorm-config/commit/6eac2aff03e4a3e647ae50d98c0b63cc381b576b))
 - convert asterisk to dash in changelog generation ([56aa7a8](https://github.com/stsgs1980/webstorm-config/commit/56aa7a86b8d826ef86096dd309c552553c056540))
