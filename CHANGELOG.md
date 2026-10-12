@@ -39,3 +39,4 @@
 - audit package 2 - typescript-eslint recommended, no-var, jsdoc error, typecheck in CI ([644bf7a](https://github.com/stsgs1980/webstorm-config/commit/644bf7adba7fde18e2c77be30bad205ac42c980e))
 - enable TypeScriptExplicitMemberType to match AI Rules ([3cbdfda](https://github.com/stsgs1980/webstorm-config/commit/3cbdfda897a971d4a7beeb42ef4729b76cf29f07))
 - make linters Tailwind v4-aware and document setup ([0f067a7](https://github.com/stsgs1980/webstorm-config/commit/0f067a71af84e0c9338f47918f3120b57b5f2ee6))
+- strictness leftovers - check-file-length in CI, RuleTester tests, drop dead md rules ([c57ea4a](https://github.com/stsgs1980/webstorm-config/commit/c57ea4aec18d8847fabd142a390506e4e3a73b7d))
