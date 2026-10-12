@@ -200,9 +200,9 @@ npx husky init
 ```json
 {
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
+    "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
