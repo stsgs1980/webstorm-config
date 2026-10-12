@@ -5,9 +5,19 @@
 
 ## Step 1: Basic setup
 
+Порядок шагов единый с `README.md` After fork.
+
 1. Обновите `package.json`: `name`, `description`.
-2. Скопируйте `README.template.md` → `README.md`, заполните Overview, Features, Architecture.
-3. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
+2. Скопируйте `README.template.md` -> `README.md`, заполните Overview, Features, Architecture.
+3. Сбросьте `CHANGELOG.md` (история шаблона, не вашего проекта):
+
+   ```bash
+   rm CHANGELOG.md
+   git add CHANGELOG.md
+   git commit -m "chore: reset changelog for new project"
+   ```
+
+4. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
 
 ## Step 2: Framework dependencies
 

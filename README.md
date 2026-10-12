@@ -31,6 +31,8 @@
 
 ## Quick Start (создать проект из шаблона)
 
+После любого Option выполните обязательные шаги из [After fork](#after-fork-кратко).
+
 ### Option 1: GitHub Template (recommended)
 
 ```bash
@@ -86,15 +88,16 @@ npm install
 
 ## After fork (кратко)
 
-1. `README.template.md` → `README.md`, заполнить Overview / Features / Architecture.
-2. Удалить `CHANGELOG.md` (история шаблона, не вашего проекта):
+1. Обновите `package.json`: `name`, `description`.
+2. `README.template.md` -> `README.md`, заполнить Overview / Features / Architecture.
+3. Удалить `CHANGELOG.md` (история шаблона, не вашего проекта):
 
    ```bash
-   rm CHANGELOG.md && git add CHANGELOG.md && git commit -m "chore: reset changelog"
+   rm CHANGELOG.md && git add CHANGELOG.md && git commit -m "chore: reset changelog for new project"
    ```
 
-3. WebStorm — [docs/webstorm.md](docs/webstorm.md).
-4. Фреймворк, `src/`, скрипты — [docs/getting-started.md](docs/getting-started.md) (Steps 2–5).
+4. WebStorm — [docs/webstorm.md](docs/webstorm.md).
+5. Фреймворк, `src/`, скрипты — [docs/getting-started.md](docs/getting-started.md) (Steps 2–5).
 
 ## Conventions
 
