@@ -15,6 +15,7 @@
 - fix long lines and structure in eslint-rules files ([ac522be](https://github.com/stsgs1980/webstorm-config/commit/ac522beb42faac080a55e3b38bcd6a932c16b18f))
 - format changelog with prettier ([82120fd](https://github.com/stsgs1980/webstorm-config/commit/82120fdbc7a1ae64166fa547d1574d3f78704032))
 - normalize blank lines in changelog ([5a87010](https://github.com/stsgs1980/webstorm-config/commit/5a87010ba6740de49161639da5cdc8dea55bab33))
+- override katex and smol-toml past vulnerable ranges ([c2cb1ae](https://github.com/stsgs1980/webstorm-config/commit/c2cb1ae4a1a83885a9aafb20f8bf4120f707c925))
 - pin shared inspection profile (USE_PROJECT_PROFILE=true) ([94bf0d1](https://github.com/stsgs1980/webstorm-config/commit/94bf0d1d74e7cd1f0ab397f90bcd107bafd33b2b))
 - prevent CHANGELOG duplication and add pre-push comment ([2b0ea36](https://github.com/stsgs1980/webstorm-config/commit/2b0ea366ac9664a5fd6203897a3ebb5327bef3ba))
 - remove broken sed normalization ([8cadfca](https://github.com/stsgs1980/webstorm-config/commit/8cadfca1a4a87ee1abe93922ff9e585b8002ed85))
