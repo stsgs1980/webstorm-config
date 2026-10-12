@@ -208,3 +208,20 @@ npm test
 - `eslint-plugin-vitest` — ESLint для тестовых файлов.
 - `types: ["vitest/globals"]` в `tsconfig.json` — если используете `describe`/`it` без импортов
   (см. [testing.md](testing.md)).
+
+## Добавить стек (Astro / Vue / Svelte)
+
+Шаблон из коробки — React. Остальное добавляется по рецепту (~10 минут на стек):
+
+- **Astro**: `npm i -D prettier-plugin-astro`, добавить плагин в `plugins` в `.prettierrc`;
+  добавить `.astro/` в `.gitignore` и в `ignores` в `eslint.config.js`.
+  Для ESLint-правил внутри `.astro` нужен `@astrojs/eslint-plugin` — подключать
+  отдельным шагом и проверять на реальных файлах.
+- **Vue**: `npm i -D eslint-plugin-vue vue-eslint-parser`, flat-конфиг `recommended`
+  - `parserOptions.parser: tsParser`; для стилей — `stylelint-config-standard-vue`.
+    Prettier справляется без плагинов. A11y-правила Vue включать отдельно.
+- **Svelte**: `npm i -D prettier-plugin-svelte` (иначе Prettier падает с exit 2!),
+  `eslint-plugin-svelte` строго в flat-форме `svelte.configs["flat/recommended"]` + tsParser.
+  A11y в ESLint для Svelte нет вовсе — только `svelte-check`/компилятор.
+- Всем стекам: расширить `lint-staged` (`*.{vue,svelte,astro,scss,mts,cts}`),
+  `lint:css` — на `**/*.{css,scss}` + `stylelint-config-standard-scss`.
