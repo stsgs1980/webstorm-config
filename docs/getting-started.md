@@ -18,10 +18,10 @@
 
 ```bash
 # React/Vite
-npm install vite @vitejs/plugin-react
+npm install -D vite @vitejs/plugin-react
 
 # Vue/Vite
-npm install vite @vitejs/plugin-vue
+npm install -D vite @vitejs/plugin-vue
 
 # Svelte/SvelteKit
 npm install @sveltejs/kit vite

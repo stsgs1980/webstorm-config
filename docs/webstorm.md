@@ -66,10 +66,10 @@ WebStorm часть из них **не подхватывает автомати
 ## 6. Markdown и `.editorconfig`
 
 `.editorconfig` устанавливает `max_line_length = 120` для `*.md` (согласно `.aiassistant/rules/AI Rules.md`).
-WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтером
-(`MD013: true`); `.markdownlint` и `.editorconfig` синхронизированы.
+Визуальная направляющая `SOFT_MARGINS=120` для Markdown задана в `.idea/codeStyles/Project.xml`;
+жёсткий лимит держит markdownlint (`MD013` с `line_length: 120` в `.markdownlint.json`).
 
-## 6.5. Конвенции стиля
+## 7. Конвенции стиля
 
 - 2 пробела, точка с запятой, двойные кавычки (`USE_DOUBLE_QUOTES` в `webstorm-codestyle.xml`).
 - `const`/`let` по умолчанию; `var` запрещён.
@@ -77,7 +77,7 @@ WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтеро
 - Trailing commas (`Always`) в объектах и массивах.
 - Максимальная длина строки — 120 символов (`RIGHT_MARGIN` в `webstorm-codestyle.xml`).
 
-## 7. Анализ кода при коммите (рекомендуется)
+## 8. Анализ кода при коммите (рекомендуется)
 
 Путь: `Commit tool window (Alt+0) → Settings (⚙) → Commit Checks → Analyze code`
 
@@ -105,7 +105,7 @@ WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтеро
 > **Примечание:** Это проектная настройка (в `workspace.xml`). Для каждого нового проекта
 > нужно включать отдельно или использовать UI (Alt+0 → Settings).
 
-## 8. React Buddy (превью компонентов)
+## 9. React Buddy (превью компонентов)
 
 Плагин установлен. Настройка при первом использовании:
 
@@ -126,13 +126,33 @@ WebStorm `RIGHT_MARGIN=120` для markdown совпадает с линтеро
 - ПКМ на компоненте → **React Buddy** → **Preview Component**
 - Палитра: `View → Tool Windows → React Buddy Palette`
 
-## 9. Что не коммитится в `.idea/`
+## 10. Что коммитится в `.idea/`
 
-Каталог `.idea/` в git **намеренно отсутствует** — личные настройки IDE не в репозитории.
-В репо только переносимые файлы: `webstorm-codestyle.xml`, ESLint, Prettier и т.д.
+В git лежат только переносимые настройки (белый список в `.gitignore`):
 
-**Исключение:** `.idea/workspace.xml` может содержать общие настройки проекта
-(например, анализ кода при коммите), которые полезно сохранить в репозитории.
+- `codeStyles/` — схема Project;
+- `inspectionProfiles/` + `profiles_settings.xml` — общие инспекции (профиль `Project Default`);
+- `fileTemplates/`, `liveTemplates/` — шаблоны (склад для ручного импорта, см. §12);
+- `watcherTasks.xml` — только вкл/выкл вотчеров (сами определения — локально, см. §11);
+- `saveactions_settings.xml`, `jsonSchemas.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
+
+Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
+
+## 11. File Watchers (ручная настройка, 5 минут)
+
+Определения вотчеров живут в `workspace.xml` и не коммитятся, поэтому на новой машине
+`Settings → Tools → File Watchers` пуст. Создайте вручную:
+
+1. **Stylelint**: Program — `stylelint`, Arguments — `$FilePath$`, File type — CSS/SCSS.
+2. **Markdownlint**: Program — `markdownlint`, Arguments — `$FilePath$`, File type — Markdown.
+3. Вотчер длины файла **не создавайте**: скрипт `check-file-length.ts` проверяет
+   staged-файлы, при сейве ему нечего проверять, а в pre-commit хуке он уже работает.
+
+## 12. Live Templates (импорт)
+
+Каталог `.idea/liveTemplates/` IDE не читает (известное ограничение, YouTrack IDEABKL-5033) —
+XML-файлы там это склад. Импорт: откройте нужный XML, скопируйте тело шаблона,
+`Settings → Editor → Live Templates` → `+` → вставьте.
 
 ## Согласованность IDE и CI
 
@@ -146,4 +166,4 @@ git commit       →  Husky + lint-staged (те же инструменты из
 ## Windows
 
 Husky pre-commit использует `node scripts/check-file-length.ts` (кроссплатформенно).
-Нужны: Node.js >= 24.0.0, Git.
+Нужны: Node.js >= 24.15.0, Git.
