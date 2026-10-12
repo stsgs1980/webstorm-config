@@ -60,7 +60,7 @@ WebStorm часть из них **не подхватывает автомати
 После создания `src/` и файлов `*.test.ts` WebStorm показывает Run/Debug в gutter.
 Конфиг: `vitest.config.ts`. Подробнее — [testing.md](testing.md).
 
-> В шаблоне **нет** папки `src/` и примеров тестов — это нормально.
+> В шаблоне есть `tests/` (проверки тулчейна, не удалять), но нет папки `src/` — это нормально.
 > `passWithNoTests: true` позволяет `npm test` проходить до Step 4 в getting-started.md.
 
 ## 6. Markdown и `.editorconfig`
@@ -131,7 +131,7 @@ WebStorm часть из них **не подхватывает автомати
 В git лежат только переносимые настройки (белый список в `.gitignore`):
 
 - `codeStyles/` — схема Project;
-- `inspectionProfiles/` + `profiles_settings.xml` — общие инспекции (профиль `Project Default`);
+- `inspectionProfiles/` — общие инспекции (профиль `Project Default`);
 - `fileTemplates/`, `liveTemplates/` — шаблоны (склад для ручного импорта, см. §12);
 - `watcherTasks.xml` — только вкл/выкл вотчеров (сами определения — локально, см. §11);
 - `saveactions_settings.xml`, `jsonSchemas.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
@@ -166,4 +166,4 @@ git commit       →  Husky + lint-staged (те же инструменты из
 ## Windows
 
 Husky pre-commit использует `node scripts/check-file-length.ts` (кроссплатформенно).
-Нужны: Node.js >= 24.15.0, Git.
+Нужны: Node.js >= 24.15.0, Git. Pre-commit останавливается на первой ошибке.

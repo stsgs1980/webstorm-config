@@ -5,14 +5,26 @@
 
 ## Step 1: Basic setup
 
+Порядок шагов единый с `README.md` After fork.
+
 1. Обновите `package.json`: `name`, `description`.
-2. Скопируйте `README.template.md` → `README.md`, заполните Overview, Features, Architecture.
-3. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
+2. Скопируйте `README.template.md` -> `README.md`, заполните Overview, Features, Architecture.
+3. Сбросьте `CHANGELOG.md` (история шаблона, не вашего проекта):
+
+   ```bash
+   rm CHANGELOG.md
+   git add CHANGELOG.md
+   git commit -m "chore: reset changelog for new project"
+   ```
+
+4. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
 
 ## Step 2: Framework dependencies
 
 `react` и `react-dom` уже в `dependencies` (шаблон React-centric). Если проект **без React**:
-удалите их из `dependencies` и добавьте свой фреймворк.
+удалите их из `dependencies` и добавьте свой фреймворк. После удаления проверьте конфиги:
+уберите `jsx: react-jsx` из `tsconfig.json` (или переключите под свой стек), отключите
+React-правила в `eslint.config.js`, затем выполните `npm run lint` и `npm run typecheck`.
 
 Выберите стек и установите:
 
@@ -62,13 +74,23 @@ src/
 
 ## Step 5: Verify
 
+Полный набор как в CI (`.github/workflows/ci.yml`):
+
 ```bash
 npm run lint
+npm run typecheck
 npm run lint:css
 npm run lint:md
-npm run format
+npm run format:check
 npm test
+node scripts/check-file-length.ts
 ```
+
+## Superpowers scratch dirs
+
+`docs/superpowers/plans/` и `docs/superpowers/specs/` — рабочие папки агента для планов
+и спеков (пустые в шаблоне, метки `.gitkeep` везут их в fork). Файлы планов коммитить
+не обязательно.
 
 ## Recommended dependencies
 
@@ -178,10 +200,12 @@ npx husky init
 ```json
 {
   "scripts": {
-    "lint": "eslint .",
-    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -193,12 +217,16 @@ npx husky init
 
 ### 6. Verify
 
+Полный набор как в CI (`.github/workflows/ci.yml`):
+
 ```bash
 npm run lint
+npm run typecheck
 npm run lint:css
 npm run lint:md
-npm run format
+npm run format:check
 npm test
+node scripts/check-file-length.ts
 ```
 
 Исправьте ошибки линтеров до зелёного состояния.

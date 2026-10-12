@@ -44,7 +44,9 @@
 
 ### Prerequisites
 
-- Node.js >= 24.15.0
+- Node.js >= 24.15.0 (обязателен для `node scripts/check-file-length.ts` в pre-commit)
+
+Pre-commit останавливается на первой ошибке: сначала `lint-staged`, затем проверка длины файлов.
 
 ### Installation
 
@@ -64,7 +66,8 @@ git add CHANGELOG.md
 git commit -m "chore: reset changelog for new project"
 ```
 
-Pre-push hook будет генерировать CHANGELOG.md автоматически на основе conventional commits вашего проекта.
+Pre-push hook генерирует CHANGELOG.md только на ветке main (на других ветках молча пропускается)
+на основе conventional commits вашего проекта.
 
 Первый запуск в новом проекте из шаблона — [docs/getting-started.md](docs/getting-started.md)
 (фреймворк, `src/`, скрипты `dev`/`build`).
@@ -76,9 +79,11 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | Команда                 | Описание                                  |
 | ----------------------- | ----------------------------------------- |
 | `npm run lint`          | ESLint                                    |
+| `npm run typecheck`     | TypeScript (`tsc --noEmit`)               |
 | `npm run lint:css`      | Stylelint                                 |
 | `npm run lint:md`       | markdownlint                              |
-| `npm run format`        | Prettier                                  |
+| `npm run format`        | Prettier (запись)                         |
+| `npm run format:check`  | Prettier (проверка, как в CI)             |
 | `npm test`              | Vitest                                    |
 | `npm run test:watch`    | Vitest (watch)                            |
 | `npm run test:coverage` | Vitest + coverage                         |

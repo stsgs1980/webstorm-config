@@ -30,9 +30,9 @@ Before any action, classify the user's request:
 - Max line length is 120 characters.
 - Max file length is 250 lines. If exceeded, split into modules.
 - JSDoc with @param and @returns required for every function, method, and React component.
-- Markdown: follow \docs/markdown.md\ — 120 chars per line, aligned tables, pm run lint:md\.
+- Markdown: follow `docs/markdown.md` — 120 chars per line, aligned tables, `npm run lint:md`.
 - Markdown code blocks must specify a language (e.g., ```typescript, not empty).
-- Markdown with JSX in fenced blocks must use \ sx\, not \ ypescript\ (WebStorm injection).
+- Markdown with JSX in fenced blocks must use `tsx`, not `typescript` (WebStorm injection).
 - WebStorm IDE setup: `docs/webstorm.md` (code style import and on-save tools are manual).
 
 ## 4. Anti-Monolith (Auto-Activation)
@@ -62,8 +62,8 @@ When a threshold is crossed:
 - Allowed types: feat, fix, docs, style, refactor, test, chore, perf, ci, build.
 - Do not commit directly to main without verification.
 - Pre-commit hooks (Husky + lint-staged) must pass before commit.
-- Pre-push hook generates CHANGELOG.md on main branch. If file changed, push
-  blocked — commit CHANGELOG first: `git add CHANGELOG.md && git commit -m "docs: update changelog"`.
+- Pre-push hook generates CHANGELOG.md only on main branch (on other branches it skips silently).
+  If file changed, push blocked — commit CHANGELOG first: `git add CHANGELOG.md && git commit -m "docs: update changelog"`.
 
 ## 7. Systematic Debugging & Work Cycle
 
