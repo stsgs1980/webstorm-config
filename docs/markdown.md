@@ -21,6 +21,13 @@ npm install -D jsdom @testing-library/react @testing-library/jest-dom \
   парсит `<Component />` как оператор сравнения и показывает `> expected`.
 - Имя языка должно соответствовать содержимому: `json`, `css`, `text` для деревьев каталогов.
 
+## Что проверяет ESLint в .md
+
+ESLint проверяет **только код внутри fenced-блоков** (сниппеты: unicode-policy,
+jsx-a11y, синтаксис TS/JS). Прозу документации линтит markdownlint (длина строк,
+структура), но эмодзи-политика на **тексте** `.md` не действует — не полагайтесь
+на неё для прозы; проверяйте глазами по чеклисту ниже.
+
 ## Таблицы
 
 - Колонки **выровнять по `|`** (стиль aligned tables).
@@ -40,7 +47,7 @@ npm install -D jsdom @testing-library/react @testing-library/jest-dom \
 1. `npm run lint:md`
 2. В WebStorm: нет ошибок в Problems для изменённых `.md`
 3. JSX-примеры в `tsx`, строки prose ≤ 120 символов
-4. Нет emoji или Unicode graphics (ESLint `unicode-policy`)
+4. Нет emoji или Unicode graphics (ESLint unicode-policy — в коде и сниппетах; проза — вручную)
 
 ## Символы
 

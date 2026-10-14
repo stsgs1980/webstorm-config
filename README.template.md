@@ -44,9 +44,10 @@
 
 ### Prerequisites
 
-- Node.js >= 24.15.0 (обязателен для `node scripts/check-file-length.ts` в pre-commit)
+- Node.js >= 24.15.0 (обязателен для `npm run check:file-length` в pre-commit)
 
 Pre-commit останавливается на первой ошибке: сначала `lint-staged`, затем проверка длины файлов.
+Перед пушем pre-push дополнительно прогоняет `npm run typecheck` и `npm test`.
 
 ### Installation
 
