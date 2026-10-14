@@ -23,6 +23,7 @@ Before any action, classify the user's request:
 ## 3. Code Style & Formatting
 
 - TypeScript strict mode. Explicit typing for all parameters and return values (no `any`).
+  Checked by ESLint rule @typescript-eslint/explicit-function-return-type and no-console.
 - Semicolons are required.
 - Strings use double quotes.
 - Trailing commas required in objects and arrays.
