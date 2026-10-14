@@ -10,7 +10,7 @@ lint-staged, честное unicode-policy правило, верификато�
 тестами RuleTester, новый Node-скрипт верификации доков + шаг CI, точечные правки документации и AI Rules,
 коммит/удаление IDE-файлов.
 
-**Tech Stack:** Node ≥24.15 (type stripping для `.ts`-скриптов), ESLint 9 flat + RuleTester, Vitest, Husky v9 (sh -e),
+**Tech Stack:** Node ≥24.15 (type stripping для `.ts` -скриптов), ESLint 9 flat + RuleTester, Vitest, Husky v9 (sh -e),
 lint-staged 17, GitHub Actions, markdownlint/Prettier.
 
 **Spec:** `docs/superpowers/specs/2026-10-14-template-hardening-design.md`
@@ -20,8 +20,12 @@ lint-staged 17, GitHub Actions, markdownlint/Prettier.
 - Node >= 24.15.0, npm >= 11.0.0 (engines); `.nvmrc` после Task 5 — `24.15.0`.
 - Каждый коммит — Conventional Commits (`type(scope): description`).
 - После каждого задачного набора зелёный полный прогон:
-  `npm run lint && npm run typecheck && npm run lint:css && npm run lint:md && npm run format:check && npm run
-check:file-length && npm test`.
+
+  ```bash
+  npm run lint && npm run typecheck && npm run lint:css && \
+    npm run lint:md && npm run format:check && npm run check:file-length && npm test
+  ```
+
 - НЕ менять: набор стеков (Vue/Svelte/Astro-плагины), мажорные версии (ESLint 10, TS 6), `recommendedTypeChecked`, R17
   (источник стиля), R16 (live templates).
 - Windows: `.sh`-скрипты и хуки — через Git Bash; хуки Husky v9 идут через `sh -e`.
@@ -29,13 +33,13 @@ check:file-length && npm test`.
 
 ## Review Focus
 
-1. **engine-strict (Task 4):** `.npmrc` с `engine-strict=true` на Node ниже минимума `engines` должен ронять `npm
-install` с EBADENGINE, а на текущем Node 24.18 — проходить без предупреждений. Тест задачи: `npm install --dry-run`
-   EXIT 0.
+1. **engine-strict (Task 4):** `.npmrc` с `engine-strict=true` на Node ниже минимума `engines` должен ронять
+   `npm install` с EBADENGINE, а на текущем Node 24.18 — проходить без предупреждений. Тест задачи:
+   `npm install --dry-run` EXIT 0.
 2. **unicode-policy column (Task 6):** RuleTester в 1-based колонках; `pattern.exec(line).index` — 0-based. Off-by-one
    даст падение теста. Тест задачи: фикстуры с точными `column` для `const s = '⏰';`.
-3. **lint-staged --max-warnings=0 (Task 3):** warn-правило `react-hooks/exhaustive-deps` должно реально ронять `npx
-lint-staged`. Тест задачи: пробный файл с пустым dep-array, ожидаем EXIT 1.
+3. **lint-staged --max-warnings=0 (Task 3):** warn-правило `react-hooks/exhaustive-deps` должно реально ронять
+   `npx lint-staged`. Тест задачи: пробный файл с пустым dep-array, ожидаем EXIT 1.
 4. **check-docs regex (Task 11):** сканер ищет `` `npm run X` `` и inline-пути в `.md` — ложные срабатывания на
    упоминаниях будущих скриптов. Тест задачи: allowlist `dev` + зелёный прогон по реальным докам + негативный пробник с
    испорченным бейджем Node.
@@ -78,8 +82,14 @@ on: [push, pull_request]
 
 - [ ] **Step 2: Проверить валидность YAML**
 
-Run: `node -e "const s=require('fs').readFileSync('.github/workflows/ci.yml','utf8'); if(!/^on: \[push,
-pull_request\]/m.test(s)) process.exit(1); console.log('OK')"`
+Run:
+
+```bash
+node -e "const s=require('fs').readFileSync('.github/workflows/ci.yml','utf8');
+if (!/^on: \[push, pull_request\]/m.test(s)) process.exit(1);
+console.log('OK')"
+```
+
 Expected: `OK`
 
 - [ ] **Step 3: Commit**
@@ -121,8 +131,8 @@ Run: `sh -n .husky/pre-push`
 Expected: без вывода, EXIT 0.
 
 Run: `bash .husky/pre-push` (в Git Bash; ветка не main → changelog пропускает)
-Expected: `[OK]` typecheck молчит (EXIT 0), vitest — все тесты прошли, затем `Not on main branch (X), skipping changelog
-generation.`
+Expected: `[OK]` typecheck молчит (EXIT 0), vitest — все тесты прошли, затем
+`Not on main branch (X), skipping changelog generation.`
 
 - [ ] **Step 3: Commit**
 
@@ -246,7 +256,7 @@ git commit -m "chore: enforce engines with engine-strict"
 
 - Consumes: `engines.node = ">=24.15.0"`; CI читает `.nvmrc` через `node-version-file`.
 - Produces: `nvm use` ставит ровно `24.15.0` — версию, равную минимуму engines (R3); `types: ["vitest/globals"]` —
-  глобальные `describe`/`it` типизированы для будущих `src/**/*.test.ts` (R10).
+  глобальные `describe` / `it` типизированы для будущих `src/**/*.test.ts` (R10).
 
 - [ ] **Step 1: Заменить содержимое `.nvmrc`**
 
@@ -262,8 +272,15 @@ git commit -m "chore: enforce engines with engine-strict"
 
 - [ ] **Step 3: Проверить согласованность и типы**
 
-Run: `node -e "const nvm=require('fs').readFileSync('.nvmrc','utf8').trim(); const
-eng=require('./package.json').engines.node; if(nvm!=='24.15.0'||!eng.includes(nvm)) process.exit(1); console.log('OK')"`
+Run:
+
+```bash
+node -e "const nvm=require('fs').readFileSync('.nvmrc','utf8').trim();
+const eng=require('./package.json').engines.node;
+if (nvm !== '24.15.0' || !eng.includes(nvm)) process.exit(1);
+console.log('OK')"
+```
+
 Expected: `OK`
 
 Run: `npm run typecheck`
@@ -467,12 +484,14 @@ pre-push дополнительно прогоняет `npm run typecheck` и `n
 - [ ] **Step 3: docs/webstorm.md**
 
 - Чеклист, строка 3: заменить «Включить ESLint (fix on save)» на «ESLint — fix on save (уже в `.idea/jsLinters/`)».
-- §3: после списка «Mode: Automatic…» добавить: `Настройка закоммичена в .idea/jsLinters/eslint.xml — после клона
-откройте проект, галочки уже активны. Ручные шаги нужны только если файл удалён.`
+- §3: после списка «Mode: Automatic…» добавить абзац: настройка закоммичена в
+  `.idea/jsLinters/eslint.xml` — после клона откройте проект, галочки уже активны.
+  Ручные шаги нужны только если файл удалён.
 - §10: из списка коммитящихся файлов убрать `watcherTasks.xml` и `saveactions_settings.xml`, добавить `jsLinters/`; в
-  конец раздела добавить абзац (R14): `Белый список осознанный: новый файл настроек .idea/ не попадёт в git без !-строки
-в .gitignore. Это отличается от рекомендации JetBrains (коммитить все XML, кроме workspace.xml) — так надёжнее для
-форков.`
+  конец раздела добавить абзац (R14):
+  Белый список осознанный: новый файл настроек `.idea/` не попадёт в git без `!`-строки
+  в `.gitignore`. Это отличается от рекомендации JetBrains (коммитить все XML, кроме
+  `workspace.xml`) — так надёжнее для форков.
 - §11: в пункте 1 убрать ссылку на watcherTasks.xml («сами определения — локально, см. §11» — фразу удалить из §10 было
   сделано выше; в §11 оставить ручную настройку без упоминания удалённого файла).
 - «Согласованность IDE и CI»: добавить строку `git push       →  typecheck + тесты (pre-push)`.
@@ -481,10 +500,12 @@ pre-push дополнительно прогоняет `npm run typecheck` и `n
 - [ ] **Step 4: docs/getting-started.md**
 
 - Step 5 и Migrating §6: в набор команд добавить строку `npm run check:docs` после `npm run check:file-length`.
-- После кодового блока Step 5 добавить (R21): `Anti-monolith (check:file-length) смотрит git ls-files — неотслеживаемые
-(не добавленные в индекс) файлы не проверяются. В CI это не имеет значения: там проверяются все tracked-файлы.`
-- «Optional later»: пункт про `types: ["vitest/globals"]` заменить на «Включено в `tsconfig.json` — `describe`/`it` без
-  импортов типизированы.»
+- После кодового блока Step 5 добавить (R21):
+  Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотслеживаемые (не
+  добавленные в индекс) файлы не проверяются. В CI это не имеет значения: там
+  проверяются все tracked-файлы.
+- «Optional later»: пункт про `types: ["vitest/globals"]` заменить на «Включено в `tsconfig.json` — `describe` / `it`
+  без импортов типизированы.»
 
 - [ ] **Step 5: docs/markdown.md — оговорка о границах проверки (R8)**
 
@@ -538,8 +559,8 @@ git commit -m "docs: sync docs with gates, IDE decisions and machine-checked rul
 **Interfaces:**
 
 - Consumes: AI Rules §3 (требования явных типов и запрета произвольного console).
-- Produces: `"@typescript-eslint/explicit-function-return-type": ["error", { allowExpressions: true,
-allowTypedFunctionExpressions: true }]` и `"no-console": ["error", { allow: ["warn", "error"] }]` в конфиге (R9).
+- Produces: правила `explicit-function-return-type` (`error`, allowExpressions +
+  allowTypedFunctionExpressions) и `no-console` (`error`, allow: warn/error) в конфиге (R9).
 
 - [ ] **Step 1: Негативный пробник (правило ещё не включено)**
 
@@ -619,14 +640,14 @@ git commit -m "feat(eslint): enforce explicit return types and no-console"
 
 Три проверки:
 
-1. Сканировать `README.md`, `README.template.md`, `docs/**/*.md` (кроме `docs/superpowers/`, `CHANGELOG.md`): извлекать
-   `npm run X` (regex `/npm run ([a-z:.-]+)/g`), пропускать `KNOWN_FUTURE_SCRIPTS = ["dev"]`, остальные должны быть
-   ключами `package.json.scripts`.
+1. Сканировать `README.md`, `README.template.md`, `docs/**/*.md` (кроме `docs/superpowers/`, `CHANGELOG.md`):
+   извлекать `npm run X` (regex `/npm run ([a-z:.-]+)/g`), пропускать `KNOWN_FUTURE_SCRIPTS = ["dev"]`, остальные
+   должны быть ключами `package.json.scripts`.
 2. Major из `.nvmrc` должен совпадать с числом перед точкой минимальной версии `engines.node` (regex
    `/(\d+)\.(\d+)\.(\d+)/`), и `README.md` должен содержать `24.15.0` (бейдж).
-3. Упоминания путей в inline-code (`/`([^`]+\/[^`]*)`/g`), начинающихся с `docs/`, `.idea/`, `scripts/`, `.husky/`,
-   `eslint-rules/`, `eslint-processors/` — существовать в репо (без учёта якорей `file.md#section` и путей с
-   `$`/шаблонными строками — пропускать такие).
+3. Упоминания путей в inline-code (``/`([^`]+\/[^`]*)`/g``), начинающихся с `docs/`, `.idea/`,
+   `scripts/`, `.husky/`, `eslint-rules/`, `eslint-processors/` — существовать в репо (без учёта
+   якорей `file.md#section` и путей с `$`/шаблонными строками — пропускать такие).
 
 Стиль: JSDoc на функциях, `console.error` для `[FAIL]`, `process.stdout.write` для `[OK]`, `process.exit(1)` при любых
 нарушениях (как в `check-file-length.ts`).
@@ -635,8 +656,8 @@ git commit -m "feat(eslint): enforce explicit return types and no-console"
 
 `package.json` scripts: `"check:docs": "node scripts/check-docs.ts",` (после `check:file-length`).
 `ci.yml` lint-джоб: шаг `- run: npm run check:docs` после `- run: npm run check:file-length`.
-`README.template.md` Scripts-таблица: строка `| \`npm run check:docs\` | Сверка доков с конфигами (шаблон) |` — с
-выравниванием колонок.
+`README.template.md` Scripts-таблица: строка с `npm run check:docs` и описанием «Сверка
+доков с конфигами (шаблон)» — с выравниванием колонок.
 
 - [ ] **Step 3: Зелёный прогон**
 
@@ -648,8 +669,8 @@ Expected: `[OK]` EXIT 0 (allowlist гасит `dev`).
 Пробник A: временно в README.md бейдж `24.15.0` заменить на `24.0.0`, запустить `npm run check:docs` — Expected: FAIL с
 сообщением о версии. Вернуть бейдж (git checkout README.md).
 
-Пробник B: временно добавить в README.md строку `Run \`npm run nonexistent\` to debug` — запустить — Expected: FAIL с
-именем скрипта. Вернуть файл.
+Пробник B: временно добавить в README.md строку «Run `npm run nonexistent` to debug» —
+запустить — Expected: FAIL с именем скрипта. Вернуть файл.
 
 - [ ] **Step 5: Зелёный прогон и Commit**
 
@@ -676,8 +697,14 @@ git commit -m "feat(scripts): add check-docs verifier for docs-vs-config drift"
 
 - [ ] **Step 1: Полный CI-набор**
 
-Run: `npm run lint && npm run typecheck && npm run lint:css && npm run lint:md && npm run format:check && npm run
-check:file-length && npm run check:docs && npm test`
+Run:
+
+```bash
+npm run lint && npm run typecheck && npm run lint:css && \
+  npm run lint:md && npm run format:check && npm run check:file-length && \
+  npm run check:docs && npm test
+```
+
 Expected: все команды EXIT 0.
 
 - [ ] **Step 2: Проверка хуков и дерева**
