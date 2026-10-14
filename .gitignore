@@ -30,6 +30,7 @@ coverage/
 # IDE (WebStorm / IntelliJ)
 .idea/*
 !.idea/codeStyles/
+!.idea/jsLinters/
 !.idea/inspectionProfiles/
 !.idea/watcherTasks.xml
 !.idea/liveTemplates/
