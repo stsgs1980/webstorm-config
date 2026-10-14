@@ -49,7 +49,7 @@
   "license": "MIT",
   "lint-staged": {
     "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts,json,html,md,vue,svelte,astro,scss,css,less,yaml}": "prettier --write",
-    "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts}": "eslint --fix",
+    "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts}": "eslint --fix --max-warnings=0",
     "*.{css,scss}": "stylelint --fix",
     "*.md": "markdownlint --fix --ignore node_modules"
   },
