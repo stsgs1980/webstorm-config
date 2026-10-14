@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
+# Гейты перед пушем: типы и тесты
+npm run typecheck
+npm test
 # Generate CHANGELOG on main and block if changed
 bash scripts/generate-changelog.sh
