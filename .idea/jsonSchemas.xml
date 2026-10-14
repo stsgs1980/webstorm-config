@@ -7,7 +7,7 @@
           <value>
             <SchemaInfo>
               <option name="name" value="Markdownlint" />
-              <option name="relativePathToSchema" value="https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json" />
+              <option name="relativePathToSchema" value="https://raw.githubusercontent.com/DavidAnson/markdownlint/v0.41.1/schema/markdownlint-config-schema.json" />
               <option name="schemaVersion" value="JSON Schema 2020.12" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
