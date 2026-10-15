@@ -39,7 +39,6 @@
 .prettierignore text eol=lf
 .nvmrc text eol=lf
 .npmrc text eol=lf
-*.jpg binary
 *.jpeg binary
 *.gif binary
 *.ico binary

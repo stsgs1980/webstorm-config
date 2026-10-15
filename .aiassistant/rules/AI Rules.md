@@ -42,6 +42,7 @@ Before any action, classify the user's request:
 This skill MUST activate automatically when ANY of these conditions are detected:
 
 - File exceeds 250 lines (TS/JS) — enforced by `npm run check:file-length`.
+- Component exceeds 200 lines (extract subcomponents).
 - Function exceeds 50 lines or cyclomatic complexity > 15 — enforced by
   WebStorm inspections (`OverlyLongFunctionJS`, `CyclomaticComplexityJS`).
 - 3+ `useState` in one component (extract to custom hook).

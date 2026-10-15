@@ -27,7 +27,7 @@ export default [
       ".vite/**",
       // File templates use ${NAME} placeholders, they are not valid source files.
       ".idea/**",
-      // Agent workspace (gitignored, never present in CI).
+      // Agent workspace (superpowers briefs/ledger; never present in CI).
       ".superpowers/**",
     ],
   },
@@ -106,7 +106,7 @@ export default [
   {
     // Custom ESLint rules and other tooling run in plain Node: TS annotations are
     // not parseable there. Return documentation is enforced by jsdoc/require-returns.
-    files: ["**/*.{js,mjs,cjs,jsx}"],
+    files: ["**/*.{js,mjs,cjs}"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
     },

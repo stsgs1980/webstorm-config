@@ -87,7 +87,8 @@ function main(): void {
     const text = readFileSync(file, "utf8");
 
     for (const match of text.matchAll(scriptPattern)) {
-      const name = match[1];
+      // Strip trailing sentence punctuation: "…run `npm run lint.`".
+      const name = match[1].replace(/[.-]+$/, "");
       const at = match.index ?? 0;
       if (KNOWN_FUTURE_SCRIPTS.includes(name)) {
         continue;
@@ -100,7 +101,8 @@ function main(): void {
     for (const match of text.matchAll(pathPattern)) {
       let path = match[1];
       const at = match.index ?? 0;
-      if (path.includes("$")) {
+      if (path.includes("$") || path.includes("*")) {
+        // Template variables and globs are not concrete paths.
         continue;
       }
       const anchor = path.indexOf("#");
