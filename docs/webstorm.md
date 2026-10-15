@@ -1,19 +1,20 @@
 # WebStorm setup
 
 Одноразовая настройка IDE после `npm install`. Файлы конфигурации уже в репозитории;
-WebStorm часть из них **не подхватывает автоматически**.
+WebStorm часть из них **не подхватывает автоматически**. Политика уязвимостей — в
+[SECURITY.md](../SECURITY.md).
 
 ## Чеклист
 
-| Шаг | Обязательно   | Действие                                      |
-| --- | ------------- | --------------------------------------------- |
-| 1   | Да            | Импортировать `webstorm-codestyle.xml`        |
-| 2   | Да            | Включить Prettier (format on save)            |
-| 3   | Да            | Включить ESLint (fix on save)                 |
-| 4   | Если есть CSS | Включить Stylelint                            |
-| 5   | Нет           | Vitest — подхватывается из `vitest.config.ts` |
-| 6   | Нет           | EditorConfig — читается из `.editorconfig`    |
-| 7   | Рекомендуется | Включить анализ кода при коммите              |
+| Шаг | Обязательно   | Действие                                        |
+| --- | ------------- | ----------------------------------------------- |
+| 1   | Да            | Импортировать `webstorm-codestyle.xml`          |
+| 2   | Да            | Включить Prettier (format on save)              |
+| 3   | Да            | ESLint — fix on save (уже в `.idea/jsLinters/`) |
+| 4   | Если есть CSS | Включить Stylelint                              |
+| 5   | Нет           | Vitest — подхватывается из `vitest.config.ts`   |
+| 6   | Нет           | EditorConfig — читается из `.editorconfig`      |
+| 7   | Рекомендуется | Включить анализ кода при коммите                |
 
 ## 1. Code Style (code style)
 
@@ -44,6 +45,10 @@ WebStorm часть из них **не подхватывает автомати
 - **Run eslint --fix on save**
 
 Использует flat config `eslint.config.js`.
+
+Настройка закоммичена в `.idea/jsLinters/eslint.xml` — после клона откройте проект,
+галочки уже активны. Проверка — открытием проекта в IDE: при расхождении формата
+WebStorm молча проигнорирует файл. Ручные шаги нужны, если файл удалён.
 
 ## 4. Stylelint
 
@@ -133,10 +138,14 @@ WebStorm часть из них **не подхватывает автомати
 - `codeStyles/` — схема Project;
 - `inspectionProfiles/` — общие инспекции (профиль `Project Default`);
 - `fileTemplates/`, `liveTemplates/` — шаблоны (склад для ручного импорта, см. §12);
-- `watcherTasks.xml` — только вкл/выкл вотчеров (сами определения — локально, см. §11);
-- `saveactions_settings.xml`, `jsonSchemas.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
+- `jsLinters/` — ESLint Automatic + fix on save;
+- `jsonSchemas.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
 
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
+
+Белый список осознанный: новый файл настроек `.idea/` не попадёт в git без `!`-строки
+в `.gitignore`. Это отличается от рекомендации JetBrains (коммитить все XML, кроме
+`workspace.xml`) — так надёжнее для форков.
 
 ## 11. File Watchers (ручная настройка, 5 минут)
 
@@ -164,11 +173,12 @@ XML-файлы там это склад. Импорт: откройте нужн
 ```text
 Save в WebStorm  →  Prettier + ESLint + Stylelint
 git commit       →  Husky + lint-staged (те же инструменты из CLI)
+git push         →  typecheck + тесты (pre-push)
 ```
 
 Если при коммите много неожиданных правок — проверьте шаги 2–4.
 
 ## Windows
 
-Husky pre-commit использует `node scripts/check-file-length.ts` (кроссплатформенно).
+Husky pre-commit использует `npm run check:file-length` (кроссплатформенно).
 Нужны: Node.js >= 24.15.0, Git. Pre-commit останавливается на первой ошибке.

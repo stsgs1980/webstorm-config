@@ -84,6 +84,7 @@ npm install
 | **WebStorm**     | `webstorm-codestyle.xml`, `.idea/` templates |
 | **AI Rules**     | `.aiassistant/rules/AI Rules.md`             |
 | **Testing**      | Vitest — `vitest.config.ts`                  |
+| **Security**     | `SECURITY.md` — политика уязвимостей         |
 
 **Docs (едут в fork):** [getting-started](docs/getting-started.md),
 [WebStorm](docs/webstorm.md), [testing](docs/testing.md), [markdown](docs/markdown.md),

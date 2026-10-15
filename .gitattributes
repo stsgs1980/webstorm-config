@@ -30,6 +30,15 @@
 # Binary
 *.png binary
 *.jpg binary
+
+# Extensionless config files — LF regardless of core.autocrlf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+.prettierrc text eol=lf
+.prettierignore text eol=lf
+.nvmrc text eol=lf
+.npmrc text eol=lf
 *.jpeg binary
 *.gif binary
 *.ico binary

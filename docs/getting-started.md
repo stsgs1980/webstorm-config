@@ -84,7 +84,12 @@ npm run lint:md
 npm run format:check
 npm test
 npm run check:file-length
+npm run check:docs
 ```
+
+Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотслеживаемые (не
+добавленные в индекс) файлы не проверяются. В CI это не имеет значения: там
+проверяются все tracked-файлы.
 
 ## Superpowers scratch dirs
 
@@ -227,6 +232,7 @@ npm run lint:md
 npm run format:check
 npm test
 npm run check:file-length
+npm run check:docs
 ```
 
 Исправьте ошибки линтеров до зелёного состояния.
@@ -234,8 +240,7 @@ npm run check:file-length
 ## Optional later
 
 - `eslint-plugin-vitest` — ESLint для тестовых файлов.
-- `types: ["vitest/globals"]` в `tsconfig.json` — если используете `describe`/`it` без импортов
-  (см. [testing.md](testing.md)).
+- Включено в `tsconfig.json` — `describe` / `it` без импортов типизированы.
 
 ## Добавить стек (Astro / Vue / Svelte)
 

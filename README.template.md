@@ -44,9 +44,10 @@
 
 ### Prerequisites
 
-- Node.js >= 24.15.0 (обязателен для `node scripts/check-file-length.ts` в pre-commit)
+- Node.js >= 24.15.0 (обязателен для `npm run check:file-length` в pre-commit)
 
 Pre-commit останавливается на первой ошибке: сначала `lint-staged`, затем проверка длины файлов.
+Перед пушем pre-push дополнительно прогоняет `npm run typecheck` и `npm test`.
 
 ### Installation
 
@@ -84,6 +85,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | `npm run lint:md`       | markdownlint                              |
 | `npm run format`        | Prettier (запись)                         |
 | `npm run format:check`  | Prettier (проверка, как в CI)             |
+| `npm run check:docs`    | Сверка доков с конфигами (шаблон)         |
 | `npm test`              | Vitest                                    |
 | `npm run test:watch`    | Vitest (watch)                            |
 | `npm run test:coverage` | Vitest + coverage                         |

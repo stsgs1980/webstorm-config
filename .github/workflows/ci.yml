@@ -1,10 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 permissions:
   contents: read
@@ -30,6 +26,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run check:file-length
+      - run: npm run check:docs
       - run: npm run lint:css
       - run: npm run lint:md
       - run: npm run format:check

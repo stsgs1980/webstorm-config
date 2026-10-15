@@ -49,7 +49,7 @@
   "license": "MIT",
   "lint-staged": {
     "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts,json,html,md,vue,svelte,astro,scss,css,less,yaml}": "prettier --write",
-    "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts}": "eslint --fix",
+    "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts}": "eslint --fix --max-warnings=0",
     "*.{css,scss}": "stylelint --fix",
     "*.md": "markdownlint --fix --ignore node_modules"
   },
@@ -59,6 +59,7 @@
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
     "check:file-length": "node scripts/check-file-length.ts --all",
+    "check:docs": "node scripts/check-docs.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -27,6 +27,8 @@ export default [
       ".vite/**",
       // File templates use ${NAME} placeholders, they are not valid source files.
       ".idea/**",
+      // Agent workspace (superpowers briefs/ledger; never present in CI).
+      ".superpowers/**",
     ],
   },
   ...markdown.configs.recommended,
@@ -85,6 +87,11 @@ export default [
       "jsdoc/require-jsdoc": "error",
       "jsdoc/require-param": "error",
       "jsdoc/require-returns": "error",
+      "@typescript-eslint/explicit-function-return-type": [
+        "error",
+        { allowExpressions: true, allowTypedFunctionExpressions: true },
+      ],
+      "no-console": ["error", { allow: ["warn", "error"] }],
       "react/jsx-uses-react": "error",
       "react/jsx-uses-vars": "error",
       "react-hooks/rules-of-hooks": "error",
@@ -94,6 +101,14 @@ export default [
       "jsx-a11y/anchor-is-valid": "error",
       "jsx-a11y/label-has-associated-control": "error",
       "jsx-a11y/no-redundant-roles": "error",
+    },
+  },
+  {
+    // Custom ESLint rules and other tooling run in plain Node: TS annotations are
+    // not parseable there. Return documentation is enforced by jsdoc/require-returns.
+    files: ["**/*.{js,mjs,cjs}"],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
     },
   },
   {

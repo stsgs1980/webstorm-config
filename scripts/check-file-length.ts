@@ -36,7 +36,7 @@ const MAX_LINES = parseMaxLines(maxLinesArg);
  * Pre-commit check by default (staged files), full-tree check with --all.
  * @returns {string[]} file paths to check
  */
-function listFiles() {
+function listFiles(): string[] {
   const command = checkAll ? "git ls-files" : "git diff --cached --name-only --diff-filter=ACM";
 
   return execSync(command, { encoding: "utf8" })
@@ -49,7 +49,7 @@ function listFiles() {
  * Anti-monolith check: TS/JS files must not exceed MAX_LINES.
  * @returns {void}
  */
-function main() {
+function main(): void {
   const files = listFiles();
 
   let failed = 0;
@@ -72,7 +72,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`[OK] Checked files: ${files.length}. Limit: ${MAX_LINES} lines.`);
+  process.stdout.write(`[OK] Checked files: ${files.length}. Limit: ${MAX_LINES} lines.\n`);
 }
 
 main();
