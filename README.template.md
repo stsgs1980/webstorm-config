@@ -96,6 +96,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | Документ                                      | О чём                                 |
 | --------------------------------------------- | ------------------------------------- |
 | [getting-started.md](docs/getting-started.md) | Фреймворк, `src/`, Tailwind, проверка |
+| [kickoff.md](docs/kickoff.md)                 | Стартовый промт для AI Assistant      |
 | [webstorm.md](docs/webstorm.md)               | Настройка WebStorm                    |
 | [testing.md](docs/testing.md)                 | Vitest, `jsdom`, Testing Library      |
 | [markdown.md](docs/markdown.md)               | Правила оформления `.md`              |

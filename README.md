@@ -87,8 +87,8 @@ npm install
 | **Security**     | `SECURITY.md` — политика уязвимостей         |
 
 **Docs (едут в fork):** [getting-started](docs/getting-started.md),
-[WebStorm](docs/webstorm.md), [testing](docs/testing.md), [markdown](docs/markdown.md),
-[live templates](docs/live-templates/README.md).
+[kickoff](docs/kickoff.md), [WebStorm](docs/webstorm.md), [testing](docs/testing.md),
+[markdown](docs/markdown.md), [live templates](docs/live-templates/README.md).
 
 ## After fork (кратко)
 
