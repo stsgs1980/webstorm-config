@@ -1,12 +1,14 @@
 <!-- markdownlint-disable -->
 
-# 1.0.0 (2026-10-12)
+# 1.0.0 (2026-10-15)
 
 ### Bug Fixes
 
 - accept IDE-canonical code style files (USE_PER_PROJECT_SETTINGS) ([692e37c](https://github.com/stsgs1980/webstorm-config/commit/692e37cd35948273ec1f977e609ceb54444dbde0))
 - add passWithNoTests to vitest config for CI ([b83d3a2](https://github.com/stsgs1980/webstorm-config/commit/b83d3a2e3e1055d4e8418d895c9c47a6af22140e))
 - audit package 1 - gitignore, format:check, markdownlint, live templates, eslint ignores ([6eac2af](https://github.com/stsgs1980/webstorm-config/commit/6eac2aff03e4a3e647ae50d98c0b63cc381b576b))
+- **changelog:** upgrade to conventional-changelog core v8 with writer v9 ([9b450b3](https://github.com/stsgs1980/webstorm-config/commit/9b450b314faed67ebeb57f9e26fef4a6d02792b5))
+- close review findings from branch code review ([4e14112](https://github.com/stsgs1980/webstorm-config/commit/4e14112b1c0271672ff7323b53ff5ba326a12795))
 - convert asterisk to dash in changelog generation ([56aa7a8](https://github.com/stsgs1980/webstorm-config/commit/56aa7a86b8d826ef86096dd309c552553c056540))
 - convert markdown-snippets.js to .ts with proper types ([ba7ad1f](https://github.com/stsgs1980/webstorm-config/commit/ba7ad1f0eedbca84707bf681d783d5543ec05363))
 - drop dead .codex/config.toml mapping, whitelist jsonSchemas.xml ([6edfc6c](https://github.com/stsgs1980/webstorm-config/commit/6edfc6cf6a74eac39cb597325ab2990a7776697a))
@@ -14,6 +16,7 @@
 - extract functions before export to satisfy WebStorm static analysis ([dfc76dd](https://github.com/stsgs1980/webstorm-config/commit/dfc76ddfb59b24f70b810ded69cd74f7f330b2c7))
 - fix long lines and structure in eslint-rules files ([ac522be](https://github.com/stsgs1980/webstorm-config/commit/ac522beb42faac080a55e3b38bcd6a932c16b18f))
 - format changelog with prettier ([82120fd](https://github.com/stsgs1980/webstorm-config/commit/82120fdbc7a1ae64166fa547d1574d3f78704032))
+- **gitattributes:** enforce LF for extensionless config files ([514b7fa](https://github.com/stsgs1980/webstorm-config/commit/514b7fa1613783907b45ea9b4eb49f0a90a518ac))
 - normalize blank lines in changelog ([5a87010](https://github.com/stsgs1980/webstorm-config/commit/5a87010ba6740de49161639da5cdc8dea55bab33))
 - override js-yaml past vulnerable range ([a7882df](https://github.com/stsgs1980/webstorm-config/commit/a7882df687aea53a3628a42dcce0f1a120e1830d))
 - override katex and smol-toml past vulnerable ranges ([c2cb1ae](https://github.com/stsgs1980/webstorm-config/commit/c2cb1ae4a1a83885a9aafb20f8bf4120f707c925))
@@ -41,6 +44,10 @@
 - add Vitest, fix dependency versions, update docs ([a5851ef](https://github.com/stsgs1980/webstorm-config/commit/a5851ef87f55e1cc8902e4e1f477b8ea269ffbb1))
 - audit package 2 - typescript-eslint recommended, no-var, jsdoc error, typecheck in CI ([644bf7a](https://github.com/stsgs1980/webstorm-config/commit/644bf7adba7fde18e2c77be30bad205ac42c980e))
 - enable TypeScriptExplicitMemberType to match AI Rules ([3cbdfda](https://github.com/stsgs1980/webstorm-config/commit/3cbdfda897a971d4a7beeb42ef4729b76cf29f07))
+- **eslint-rules:** exact unicode-policy via Extended_Pictographic ([f6daf82](https://github.com/stsgs1980/webstorm-config/commit/f6daf82cd5b4da4318d12b32b4130c05af59021a))
+- **eslint:** enforce explicit return types and no-console ([c54cf57](https://github.com/stsgs1980/webstorm-config/commit/c54cf5751a878d9707262b1fc8d4044c61fc48ab))
+- **ide:** share ESLint fix-on-save via jsLinters/eslint.xml ([db47356](https://github.com/stsgs1980/webstorm-config/commit/db473563703f99a46165cc1d056e16e0efd0c2e7))
 - make linters Tailwind v4-aware and document setup ([0f067a7](https://github.com/stsgs1980/webstorm-config/commit/0f067a71af84e0c9338f47918f3120b57b5f2ee6))
 - package 4 - tailwind v4 stylelint, scss support, wider lint-staged, vitest 5 ([0b9531a](https://github.com/stsgs1980/webstorm-config/commit/0b9531a8fee075f75a775036e31fbc0ce7395b01))
+- **scripts:** add check-docs verifier for docs-vs-config drift ([79eebf5](https://github.com/stsgs1980/webstorm-config/commit/79eebf5e0cf37bed776fb1dfa5108a82a1c17fce))
 - strictness leftovers - check-file-length in CI, RuleTester tests, drop dead md rules ([c57ea4a](https://github.com/stsgs1980/webstorm-config/commit/c57ea4aec18d8847fabd142a390506e4e3a73b7d))
