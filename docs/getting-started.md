@@ -214,8 +214,7 @@ npx husky init
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "prepare": "husky"
   }
 }
 ```
