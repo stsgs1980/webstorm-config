@@ -60,7 +60,7 @@ lint-staged 17, GitHub Actions, markdownlint/Prettier.
 - Produces: ветки с PR получают два прогона CI (push — ветка, pull_request — merge-ref); это принятое решение, ничего
   further не потребует.
 
-- [ ] **Step 1: Заменить блок `on:` в `ci.yml`**
+- [x] **Step 1: Заменить блок `on:` в `ci.yml`**
 
 Было:
 
@@ -80,7 +80,7 @@ on: [push, pull_request]
 
 (Блоки `permissions`, `concurrency`, `env` не трогать.)
 
-- [ ] **Step 2: Проверить валидность YAML**
+- [x] **Step 2: Проверить валидность YAML**
 
 Run:
 
@@ -92,7 +92,7 @@ console.log('OK')"
 
 Expected: `OK`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .github/workflows/ci.yml
@@ -112,7 +112,7 @@ git commit -m "ci: run workflow on every branch, not only main"
 - Consumes: npm-скрипты `typecheck` и `test` из `package.json` (уже есть).
 - Produces: перед каждым `git push` выполняются `npm run typecheck` && `npm test`; changelog-логика (строки 2-3) не меняется.
 
-- [ ] **Step 1: Добавить проверки в `.husky/pre-push` перед changelog-скриптом**
+- [x] **Step 1: Добавить проверки в `.husky/pre-push` перед changelog-скриптом**
 
 Итоговое содержимое файла:
 
@@ -125,7 +125,7 @@ npm test
 bash scripts/generate-changelog.sh
 ```
 
-- [ ] **Step 2: Проверить синтаксис и фактический запуск**
+- [x] **Step 2: Проверить синтаксис и фактический запуск**
 
 Run: `sh -n .husky/pre-push`
 Expected: без вывода, EXIT 0.
@@ -134,7 +134,7 @@ Run: `bash .husky/pre-push` (в Git Bash; ветка не main → changelog п�
 Expected: `[OK]` typecheck молчит (EXIT 0), vitest — все тесты прошли, затем
 `Not on main branch (X), skipping changelog generation.`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .husky/pre-push
@@ -154,11 +154,11 @@ git commit -m "ci(hooks): gate typecheck and tests on pre-push"
 - Consumes: правило `react-hooks/exhaustive-deps: "warn"` из `eslint.config.js` (используется как warn-фикстура).
 - Produces: `eslint --fix --max-warnings=0` — все warn-правила блокируют коммит.
 
-- [ ] **Step 1: Негативный пробник (доказать, что warn сейчас проходит)**
+- [x] **Step 1: Негативный пробник (доказать, что warn сейчас проходит)**
 
 Создать файл `probe-warn.ts` в корне (с JSDoc, чтобы единственный сигнал был warn `exhaustive-deps`, а не jsdoc-ошибки):
 
-```ts
+```text
 import { useEffect } from "react";
 
 const outside = 1;
@@ -178,7 +178,7 @@ export function Probe() {
 Run: `git add probe-warn.ts && npx lint-staged; echo "exit=$?"`
 Expected (ДО правки): `exit=0` — warn не блокирует.
 
-- [ ] **Step 2: Правка в package.json**
+- [x] **Step 2: Правка в package.json**
 
 В блоке `"lint-staged"` заменить строку:
 
@@ -192,7 +192,7 @@ Expected (ДО правки): `exit=0` — warn не блокирует.
 "*.{js,ts,jsx,tsx,mjs,cjs,mts,cts}": "eslint --fix --max-warnings=0",
 ```
 
-- [ ] **Step 3: Негативный пробник (после правки warn блокирует)**
+- [x] **Step 3: Негативный пробник (после правки warn блокирует)**
 
 Run: `npx lint-staged; echo "exit=$?"` (файл всё ещё staged)
 Expected: `exit=1`, вывод содержит `exhaustive-deps`.
@@ -200,12 +200,12 @@ Expected: `exit=1`, вывод содержит `exhaustive-deps`.
 Run: `git rm --cached probe-warn.ts && rm probe-warn.ts`
 Expected: дерево чистое (`git status --porcelain` пусто).
 
-- [ ] **Step 4: Зелёный прогон**
+- [x] **Step 4: Зелёный прогон**
 
 Run: `npm run lint && npm test`
 Expected: EXIT 0.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add package.json
@@ -225,18 +225,18 @@ git commit -m "chore(lint-staged): block eslint warnings on pre-commit"
 - Consumes: `engines` из `package.json` (`node >=24.15.0`, `npm >=11.0.0`).
 - Produces: `npm install`/`npm ci` падают с EBADENGINE на Node ниже минимума.
 
-- [ ] **Step 1: Создать `.npmrc`**
+- [x] **Step 1: Создать `.npmrc`**
 
 ```ini
 engine-strict=true
 ```
 
-- [ ] **Step 2: Проверить, что на текущем Node установка проходит**
+- [x] **Step 2: Проверить, что на текущем Node установка проходит**
 
 Run: `npm install --dry-run`
 Expected: EXIT 0, без EBADENGINE (Node 24.18.x удовлетворяет engines).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .npmrc
@@ -258,11 +258,11 @@ git commit -m "chore: enforce engines with engine-strict"
 - Produces: `nvm use` ставит ровно `24.15.0` — версию, равную минимуму engines (R3); `types: ["vitest/globals"]` —
   глобальные `describe` / `it` типизированы для будущих `src/**/*.test.ts` (R10).
 
-- [ ] **Step 1: Заменить содержимое `.nvmrc`**
+- [x] **Step 1: Заменить содержимое `.nvmrc`**
 
 Было: `24`. Стало: `24.15.0`
 
-- [ ] **Step 2: Добавить vitest types в `tsconfig.json`**
+- [x] **Step 2: Добавить vitest types в `tsconfig.json`**
 
 В `compilerOptions` (после `"lib"`) добавить:
 
@@ -270,7 +270,7 @@ git commit -m "chore: enforce engines with engine-strict"
 "types": ["vitest/globals"]
 ```
 
-- [ ] **Step 3: Проверить согласованность и типы**
+- [x] **Step 3: Проверить согласованность и типы**
 
 Run:
 
@@ -286,7 +286,7 @@ Expected: `OK`
 Run: `npm run typecheck`
 Expected: EXIT 0 (если typecheck падает на `node:`-импортах `scripts/*.ts` — добавить `"node"` в массив `types`).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .nvmrc tsconfig.json
@@ -314,7 +314,7 @@ git commit -m "chore: pin .nvmrc to 24.15.0 and type vitest globals"
 ловятся эмодзи-правилом: `⏰⭐⬛🀄🅰 ⚙ ✔ ♥ ©®™⚠`; не ловится: `★ → — …`;
 графика-правило ловит: `─ █`; не ловит: `★ ✔ ♥ +---+`.
 
-- [ ] **Step 1: Переписать тест с новыми ожиданиями (FAIL до реализации)**
+- [x] **Step 1: Переписать тест с новыми ожиданиями (FAIL до реализации)**
 
 В `tests/unicode-policy.test.mjs`, `describe("unicode-policy/emoji")`: валидные фикстуры —
 `"export const ok = '[OK]';"`, `"const s = '->';"`, `"const star = '★';"` (не Epicto),
@@ -335,12 +335,12 @@ index + 1. Символ `⏰` U+23F0 — BMP, одна UTF-16-единица; д
 Кейс «два эмодзи в одной строке дают одну ошибку» сохранить (со `⭐`).
 Графику не трогать, кроме как убедиться, что `★ ✔ ♥` теперь в **valid** emoji-фикстурах.
 
-- [ ] **Step 2: Запустить тесты, убедиться в FAIL**
+- [x] **Step 2: Запустить тесты, убедиться в FAIL**
 
 Run: `npm test`
 Expected: FAIL в `emoji` — `★` больше не даёт ошибку / старые ожидания не выполняются.
 
-- [ ] **Step 3: Переписать `eslint-rules/unicode-policy.js`**
+- [x] **Step 3: Переписать `eslint-rules/unicode-policy.js`**
 
 Новое тело (сохранить JSDoc-комментарии, структуру экспорта и messageId):
 
@@ -354,17 +354,17 @@ const unicodeGraphicsPattern = /[\u{2500}-\u{257F}\u{2580}-\u{259F}\u{25A0}-\u{2
 `context.report({ loc: { line: index + 1, column: match.index + 1 }, messageId })`.
 Убрать `eslint-disable no-misleading-character-class` (ручные классы больше нет).
 
-- [ ] **Step 4: Запустить тесты, убедиться в PASS**
+- [x] **Step 4: Запустить тесты, убедиться в PASS**
 
 Run: `npm test`
 Expected: все тесты прошли (emoji + graphics).
 
-- [ ] **Step 5: Зелёный прогон по репо**
+- [x] **Step 5: Зелёный прогон по репо**
 
 Run: `npm run lint && npm test && npm run lint:md`
 Expected: EXIT 0 (в репо нет запрещённых символов в коде; `tests/**` — правила выключены).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add eslint-rules/unicode-policy.js tests/unicode-policy.test.mjs
@@ -385,7 +385,7 @@ git commit -m "feat(eslint-rules): exact unicode-policy via Extended_Pictographi
 - Consumes: схема `.idea/*` whitelist в `.gitignore`.
 - Produces: `!.idea/jsLinters/` в whitelist; файл в git — после клона ESLint Automatic + fix on save активны (R4).
 
-- [ ] **Step 1: Добавить строку в whitelist `.gitignore`**
+- [x] **Step 1: Добавить строку в whitelist `.gitignore`**
 
 После `!.idea/codeStyles/` добавить:
 
@@ -393,7 +393,7 @@ git commit -m "feat(eslint-rules): exact unicode-policy via Extended_Pictographi
 !.idea/jsLinters/
 ```
 
-- [ ] **Step 2: Проверить, что файл перестал игнорироваться, и закоммитить его**
+- [x] **Step 2: Проверить, что файл перестал игнорироваться, и закоммитить его**
 
 Run: `git check-ignore -v .idea/jsLinters/eslint.xml; echo "exit=$?"`
 Expected: `exit=1` (не игнорируется).
@@ -402,7 +402,7 @@ Run: `git add .idea/jsLinters/eslint.xml .gitignore`
 Run: `git ls-files .idea/jsLinters/`
 Expected: `.idea/jsLinters/eslint.xml`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git commit -m "feat(ide): share ESLint fix-on-save via jsLinters/eslint.xml"
@@ -424,17 +424,17 @@ git commit -m "feat(ide): share ESLint fix-on-save via jsLinters/eslint.xml"
 - Produces: файлов нет в git и на диске; схема markdownlint с тега `v0.41.1` (как в `.markdownlint.json`); доки
   поправятся в Task 9.
 
-- [ ] **Step 1: Удалить файлы и строки whitelist**
+- [x] **Step 1: Удалить файлы и строки whitelist**
 
 Run: `git rm .idea/watcherTasks.xml .idea/saveactions_settings.xml`
 В `.gitignore` удалить две строки whitelist (`!.idea/watcherTasks.xml`, `!.idea/saveactions_settings.xml`).
 
-- [ ] **Step 2: Проверить, что удалённые файлы теперь игнорируются**
+- [x] **Step 2: Проверить, что удалённые файлы теперь игнорируются**
 
 Run: `git check-ignore -v .idea/watcherTasks.xml; echo "exit=$?"`
 Expected: `exit=0` (паттерном `.idea/*`).
 
-- [ ] **Step 3: Пин схемы markdownlint (R15)**
+- [x] **Step 3: Пин схемы markdownlint (R15)**
 
 В `.idea/jsonSchemas.xml` заменить в URL `relativePathToSchema` часть `/main/` на `/v0.41.1/`:
 
@@ -444,7 +444,7 @@ https://raw.githubusercontent.com/DavidAnson/markdownlint/v0.41.1/schema/markdow
 
 (версия `v0.41.1` совпадает с `$schema` в `.markdownlint.json` и с установленной библиотекой).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add .gitignore .idea/jsonSchemas.xml
@@ -466,7 +466,7 @@ git commit -m "chore(ide): remove dead IDE files, pin markdownlint schema to v0.
 - Consumes: решения Task 1-8 (удаленные файлы, eslint.xml, `.nvmrc`, pre-push гейты).
 - Produces: документы без противоречий репо; check-docs (Task 11) должен пройти по этим файлам.
 
-- [ ] **Step 1: README.md — SECURITY в карту репозитория (R2)**
+- [x] **Step 1: README.md — SECURITY в карту репозитория (R2)**
 
 В таблицу «What's Included» добавить строку:
 
@@ -474,14 +474,14 @@ git commit -m "chore(ide): remove dead IDE files, pin markdownlint schema to v0.
 | **Security**    | `SECURITY.md` — политика уязвимостей           |
 ```
 
-- [ ] **Step 2: README.template.md — единая форма anti-monolith (R6)**
+- [x] **Step 2: README.template.md — единая форма anti-monolith (R6)**
 
 Строка 47 заменить на текст: Node.js >= 24.15.0 (обязателен для
 `npm run check:file-length` в pre-commit).
 Строку 49 («Pre-commit останавливается…») дополнить предложением: перед пушем
 pre-push дополнительно прогоняет `npm run typecheck` и `npm test`.
 
-- [ ] **Step 3: docs/webstorm.md**
+- [x] **Step 3: docs/webstorm.md**
 
 - Чеклист, строка 3: заменить «Включить ESLint (fix on save)» на «ESLint — fix on save (уже в `.idea/jsLinters/`)».
 - §3: после списка «Mode: Automatic…» добавить абзац: настройка закоммичена в
@@ -497,7 +497,7 @@ pre-push дополнительно прогоняет `npm run typecheck` и `n
 - «Согласованность IDE и CI»: добавить строку `git push       →  typecheck + тесты (pre-push)`.
 - Windows (строка ~173): `node scripts/check-file-length.ts` → `npm run check:file-length` (R6).
 
-- [ ] **Step 4: docs/getting-started.md**
+- [x] **Step 4: docs/getting-started.md**
 
 - Step 5 и Migrating §6: в набор команд добавить строку `npm run check:docs` после `npm run check:file-length`.
 - После кодового блока Step 5 добавить (R21):
@@ -507,7 +507,7 @@ pre-push дополнительно прогоняет `npm run typecheck` и `n
 - «Optional later»: пункт про `types: ["vitest/globals"]` заменить на «Включено в `tsconfig.json` — `describe` / `it`
   без импортов типизированы.»
 
-- [ ] **Step 5: docs/markdown.md — оговорка о границах проверки (R8)**
+- [x] **Step 5: docs/markdown.md — оговорка о границах проверки (R8)**
 
 Добавить раздел после «Fenced code blocks»:
 
@@ -522,7 +522,7 @@ jsx-a11y, синтаксис TS/JS). Прозу документации лин�
 
 В чеклисте пункт 4 уточнить: `Нет emoji или Unicode graphics (ESLint unicode-policy — в коде и сниппетах; проза — вручную)`.
 
-- [ ] **Step 6: AI Rules.md**
+- [x] **Step 6: AI Rules.md**
 
 - §3, строка 31 (`Max file length is 250 lines…`): дополнить `(проверяется npm run check:file-length в pre-commit и CI)`.
 - §4: блок порогов (строки 42-44) переформулировать со ссылкой на исполнителей:
@@ -534,12 +534,12 @@ jsx-a11y, синтаксис TS/JS). Прозу документации лин�
 - 3+ `useState` in one component (extract to custom hook).
 ```
 
-- [ ] **Step 7: Зелёный прогон markdown**
+- [x] **Step 7: Зелёный прогон markdown**
 
 Run: `npm run lint:md && npm run format:check`
 Expected: EXIT 0 (проверить выравнивание новых строк таблиц MD055/MD056 и длину ≤120).
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add README.md README.template.md docs/webstorm.md docs/getting-started.md docs/markdown.md ".aiassistant/rules/AI Rules.md"
@@ -562,11 +562,11 @@ git commit -m "docs: sync docs with gates, IDE decisions and machine-checked rul
 - Produces: правила `explicit-function-return-type` (`error`, allowExpressions +
   allowTypedFunctionExpressions) и `no-console` (`error`, allow: warn/error) в конфиге (R9).
 
-- [ ] **Step 1: Негативный пробник (правило ещё не включено)**
+- [x] **Step 1: Негативный пробник (правило ещё не включено)**
 
 Создать `probe-return.ts` (с JSDoc, чтобы до правки единственный сигнал был возврат без типа, а не jsdoc-ошибки):
 
-```ts
+```text
 /**
  * Probe function for the return-type gate check.
  * @param a - number
@@ -580,7 +580,7 @@ export function probe(a: number) {
 Run: `npx eslint probe-return.ts; echo "exit=$?"`
 Expected (ДО правки): `exit=0` — возврат без типа не ловится.
 
-- [ ] **Step 2: Добавить два правила в `eslint.config.js`**
+- [x] **Step 2: Добавить два правила в `eslint.config.js`**
 
 В блок rules (после `jsdoc/require-returns`) добавить:
 
@@ -592,7 +592,7 @@ Expected (ДО правки): `exit=0` — возврат без типа не �
 "no-console": ["error", { allow: ["warn", "error"] }],
 ```
 
-- [ ] **Step 3: Прогон по репо, погасить шум**
+- [x] **Step 3: Прогон по репо, погасить шум**
 
 Run: `npx eslint probe-return.ts; echo "exit=$?"`
 Expected: `exit=1` — `Missing return type on function`.
@@ -605,17 +605,17 @@ Expected: если есть ошибки — исправить в этом же
   добавить аннотации возврата: `function listFiles(): string[]` и `function main(): void` (explicit-function-return-type);
 - в тестах шума не будет (`allowExpressions` покрывает коллбэки).
 
-- [ ] **Step 4: Удалить пробник, зелёный прогон**
+- [x] **Step 4: Удалить пробник, зелёный прогон**
 
 Run: `rm probe-return.ts && npm run lint && npm run typecheck && npm test`
 Expected: EXIT 0.
 
-- [ ] **Step 5: Зафиксировать проверяемость в AI Rules (R9)**
+- [x] **Step 5: Зафиксировать проверяемость в AI Rules (R9)**
 
 В `.aiassistant/rules/AI Rules.md` §3, после строки про explicit typing (строка 25), добавить:
 `Checked by ESLint rule @typescript-eslint/explicit-function-return-type and no-console.`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add eslint.config.js scripts/check-file-length.ts ".aiassistant/rules/AI Rules.md"
@@ -636,7 +636,7 @@ git commit -m "feat(eslint): enforce explicit return types and no-console"
 - Consumes: `package.json` scripts/engines, `.nvmrc`, README-бейдж, перечень `*.md`.
 - Produces: `"check:docs": "node scripts/check-docs.ts"`; команда `npm run check:docs`; allowlist `["dev"]` внутри скрипта.
 
-- [ ] **Step 1: Написать `scripts/check-docs.ts`**
+- [x] **Step 1: Написать `scripts/check-docs.ts`**
 
 Три проверки:
 
@@ -652,19 +652,19 @@ git commit -m "feat(eslint): enforce explicit return types and no-console"
 Стиль: JSDoc на функциях, `console.error` для `[FAIL]`, `process.stdout.write` для `[OK]`, `process.exit(1)` при любых
 нарушениях (как в `check-file-length.ts`).
 
-- [ ] **Step 2: Добавить npm-скрипт и шаг CI**
+- [x] **Step 2: Добавить npm-скрипт и шаг CI**
 
 `package.json` scripts: `"check:docs": "node scripts/check-docs.ts",` (после `check:file-length`).
 `ci.yml` lint-джоб: шаг `- run: npm run check:docs` после `- run: npm run check:file-length`.
 `README.template.md` Scripts-таблица: строка с `npm run check:docs` и описанием «Сверка
 доков с конфигами (шаблон)» — с выравниванием колонок.
 
-- [ ] **Step 3: Зелёный прогон**
+- [x] **Step 3: Зелёный прогон**
 
 Run: `npm run check:docs`
 Expected: `[OK]` EXIT 0 (allowlist гасит `dev`).
 
-- [ ] **Step 4: Негативные пробники (обе ключевые проверки)**
+- [x] **Step 4: Негативные пробники (обе ключевые проверки)**
 
 Пробник A: временно в README.md бейдж `24.15.0` заменить на `24.0.0`, запустить `npm run check:docs` — Expected: FAIL с
 сообщением о версии. Вернуть бейдж (git checkout README.md).
@@ -672,7 +672,7 @@ Expected: `[OK]` EXIT 0 (allowlist гасит `dev`).
 Пробник B: временно добавить в README.md строку «Run `npm run nonexistent` to debug» —
 запустить — Expected: FAIL с именем скрипта. Вернуть файл.
 
-- [ ] **Step 5: Зелёный прогон и Commit**
+- [x] **Step 5: Зелёный прогон и Commit**
 
 Run: `npm run lint && npm run typecheck && npm run format:check && npm test`
 Expected: EXIT 0.
