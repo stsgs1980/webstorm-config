@@ -85,6 +85,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | `npm run lint:md`       | markdownlint                              |
 | `npm run format`        | Prettier (запись)                         |
 | `npm run format:check`  | Prettier (проверка, как в CI)             |
+| `npm run check:docs`    | Сверка доков с конфигами (шаблон)         |
 | `npm test`              | Vitest                                    |
 | `npm run test:watch`    | Vitest (watch)                            |
 | `npm run test:coverage` | Vitest + coverage                         |
