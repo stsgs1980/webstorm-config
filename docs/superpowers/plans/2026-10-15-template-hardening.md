@@ -695,7 +695,7 @@ git commit -m "feat(scripts): add check-docs verifier for docs-vs-config drift"
 - Consumes: все задачи 1-11.
 - Produces: доказательство зелёного состояния перед сдачей.
 
-- [ ] **Step 1: Полный CI-набор**
+- [x] **Step 1: Полный CI-набор**
 
 Run:
 
@@ -707,12 +707,12 @@ npm run lint && npm run typecheck && npm run lint:css && \
 
 Expected: все команды EXIT 0.
 
-- [ ] **Step 2: Проверка хуков и дерева**
+- [x] **Step 2: Проверка хуков и дерева**
 
 Run: `sh -n .husky/pre-commit && sh -n .husky/pre-push && sh -n .husky/commit-msg; git status --porcelain`
 Expected: без вывода (синтаксис ок, дерево чистое).
 
-- [ ] **Step 3: Сверка лога**
+- [x] **Step 3: Сверка лога**
 
 Run: `git log --oneline aedc954..HEAD`
 Expected: 11 коммитов (Task 1-11), все Conventional Commits.
