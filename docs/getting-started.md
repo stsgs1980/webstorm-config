@@ -174,7 +174,7 @@ npm install -D \
   markdownlint-cli \
   husky lint-staged \
   @commitlint/cli @commitlint/config-conventional \
-  conventional-changelog-cli conventional-changelog-angular \
+  conventional-changelog conventional-changelog-angular \
   vitest @vitest/coverage-v8 typescript
 ```
 
