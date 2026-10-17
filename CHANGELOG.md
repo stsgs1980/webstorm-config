@@ -39,6 +39,7 @@
 - suppress WebStorm false positive for @eslint/markdown import ([d7d237a](https://github.com/stsgs1980/webstorm-config/commit/d7d237ab7141c674c1da118c50ec506aada94189))
 - suppress WebStorm false positives in markdown-snippets.js ([ab1f233](https://github.com/stsgs1980/webstorm-config/commit/ab1f233243a9db655603591eae25b7e45c08c76e))
 - sync .markdownlint-cli.json with .markdownlint.json, document markdown rules ([afb2f04](https://github.com/stsgs1980/webstorm-config/commit/afb2f0424d51e4aaf9edd229544adb9fc1bf4b32))
+- **tests:** resolve WebStorm findings in tooling tests ([fa45091](https://github.com/stsgs1980/webstorm-config/commit/fa450910627bae3010614d04b93d9f21e3434721))
 - typo 'codestyle' -> 'code style' in docs/webstorm.md and AI Rules ([1528049](https://github.com/stsgs1980/webstorm-config/commit/1528049bbc17e11bf796a7162acbf391f0141018))
 - whitelist prettier/vcs/modules/iml, extend iml excludes and prettier pattern ([9b087eb](https://github.com/stsgs1980/webstorm-config/commit/9b087ebd9871582a54196139ef20a81fd929c76b))
 
