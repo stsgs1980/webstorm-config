@@ -18,6 +18,8 @@
 - fix long lines and structure in eslint-rules files ([ac522be](https://github.com/stsgs1980/webstorm-config/commit/ac522beb42faac080a55e3b38bcd6a932c16b18f))
 - format changelog with prettier ([82120fd](https://github.com/stsgs1980/webstorm-config/commit/82120fdbc7a1ae64166fa547d1574d3f78704032))
 - **gitattributes:** enforce LF for extensionless config files ([514b7fa](https://github.com/stsgs1980/webstorm-config/commit/514b7fa1613783907b45ea9b4eb49f0a90a518ac))
+- **ide:** scope webstorm noinspection comments to statements ([b70fb1b](https://github.com/stsgs1980/webstorm-config/commit/b70fb1b7cff27a68c62830c50ddb7018c9d857cf))
+- **ide:** suppress NpmUsedModulesInstalled false positives in JS tooling ([e246139](https://github.com/stsgs1980/webstorm-config/commit/e246139bb1921985c805ba5f73c44c6bd6174710))
 - normalize blank lines in changelog ([5a87010](https://github.com/stsgs1980/webstorm-config/commit/5a87010ba6740de49161639da5cdc8dea55bab33))
 - override js-yaml past vulnerable range ([a7882df](https://github.com/stsgs1980/webstorm-config/commit/a7882df687aea53a3628a42dcce0f1a120e1830d))
 - override katex and smol-toml past vulnerable ranges ([c2cb1ae](https://github.com/stsgs1980/webstorm-config/commit/c2cb1ae4a1a83885a9aafb20f8bf4120f707c925))
