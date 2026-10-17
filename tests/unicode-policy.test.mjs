@@ -37,9 +37,22 @@ describe("unicode-policy/emoji", () => {
         ],
       },
       {
+        name: "колонки считаются в UTF-16-единицах после суррогатной пары",
+        code: "const s = '🅰⏰';",
+        errors: [
+          { messageId: "noEmoji", line: 1, column: 12 },
+          { messageId: "noEmoji", line: 1, column: 14 },
+        ],
+      },
+      {
         name: "номер строки определяется верно",
         code: "export const ok = '[OK]';\nexport const bad = '⏰';",
         errors: [{ messageId: "noEmoji", line: 2 }],
+      },
+      {
+        name: "позиция верна при CRLF-переносах",
+        code: "const ok = 1;\r\nconst s = '⏰';\r\n",
+        errors: [{ messageId: "noEmoji", line: 2, column: 12 }],
       },
       {
         name: "текстовый copyright ловится",
@@ -49,7 +62,7 @@ describe("unicode-policy/emoji", () => {
       {
         name: "буквенный бейдж U+1F170 ловится",
         code: "const badge = '🅰';",
-        errors: [{ messageId: "noEmoji", line: 1, data: { codePoint: "U+1F170" } }],
+        errors: [{ messageId: "noEmoji", line: 1, column: 16, data: { codePoint: "U+1F170" } }],
       },
       {
         name: "column указывает на первый запрещённый символ",
@@ -94,7 +107,7 @@ describe("unicode-policy/unicode-graphics", () => {
       {
         name: "псевдографика в комментарии",
         code: "// █ progress bar",
-        errors: [{ messageId: "noUnicodeGraphics", line: 1 }],
+        errors: [{ messageId: "noUnicodeGraphics", line: 1, data: { codePoint: "U+2588" } }],
       },
       {
         name: "несколько символов псевдографики в строке дают несколько ошибок",
