@@ -1,4 +1,5 @@
 import { RuleTester } from "eslint";
+import { describe } from "vitest";
 
 import unicodePolicy from "../eslint-rules/unicode-policy.js";
 
