@@ -169,7 +169,9 @@ const lintMarkdown = async (text) =>
   });
 
   it("markdown- и plain-фенсы не проверяются", async () => {
-    const messages = await lintMarkdown("# Demo\n\n```markdown\n# заголовок \u{1F600}\n```\n\n```\nпросто \u{1F600}\n```\n");
+    const messages = await lintMarkdown(
+      "# Demo\n\n```markdown\n# заголовок \u{1F600}\n```\n\n```\nпросто \u{1F600}\n```\n",
+    );
 
     assert.equal(messages.length, 0);
   });
@@ -287,7 +289,15 @@ ESLint проверяет **только код внутри fenced-блоков
 - [ ] **Step 5: Добавить `eslint-parsers/` в `PATH_PREFIXES` (`scripts/check-docs.ts`)**
 
 ```text
-const PATH_PREFIXES = ["docs/", ".idea/", "scripts/", ".husky/", "eslint-rules/", "eslint-processors/", "eslint-parsers/"];
+const PATH_PREFIXES = [
+  "docs/",
+  ".idea/",
+  "scripts/",
+  ".husky/",
+  "eslint-rules/",
+  "eslint-processors/",
+  "eslint-parsers/",
+];
 ```
 
 - [ ] **Step 6: Прогнать тесты и lint — ожидаем зелёные**
@@ -361,9 +371,14 @@ Expected: всё зелёное.
 ```powershell
 Remove-Item -Recurse -Force C:\Users\stsgr\AppData\Local\Temp\opencode\ws-inspect-run -ErrorAction SilentlyContinue
 $env:WEBIDE_PROPERTIES = "C:\Users\stsgr\AppData\Local\Temp\opencode\ws-inspect.properties"
-& "C:\Program Files\JetBrains\WebStorm 2026.2.0.1\bin\webstorm.bat" inspect "C:\Users\stsgr\My Projects\webstorm-config" "C:\Users\stsgr\AppData\Local\Temp\opencode\npm-inspection-profile.xml" "C:\Users\stsgr\AppData\Local\Temp\opencode\ws-inspect-run"
+& "C:\Program Files\JetBrains\WebStorm 2026.2.0.1\bin\webstorm.bat" inspect `
+  "C:\Users\stsgr\My Projects\webstorm-config" `
+  "C:\Users\stsgr\AppData\Local\Temp\opencode\npm-inspection-profile.xml" `
+  "C:\Users\stsgr\AppData\Local\Temp\opencode\ws-inspect-run"
 Remove-Item Env:WEBIDE_PROPERTIES
-node C:\Users\stsgr\AppData\Local\Temp\opencode\compare-inspections.mjs C:\Users\stsgr\AppData\Local\Temp\opencode\inspect-v5 C:\Users\stsgr\AppData\Local\Temp\opencode\ws-inspect-run
+node C:\Users\stsgr\AppData\Local\Temp\opencode\compare-inspections.mjs `
+  C:\Users\stsgr\AppData\Local\Temp\opencode\inspect-v5 `
+  C:\Users\stsgr\AppData\Local\Temp\opencode\ws-inspect-run
 ```
 
 Expected: в выводе компаратора нет новых находок относительно `inspect-v5`. Если находки

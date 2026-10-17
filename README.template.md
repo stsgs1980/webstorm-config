@@ -1,6 +1,6 @@
 # ${PROJECT_NAME}
 
-[![CI](https://github.com/${GITHUB_USER}/${PROJECT_NAME}/actions/workflows/ci.yml/badge.svg)](https://github.com/${GITHUB_USER}/${PROJECT_NAME}/actions/workflows/ci.yml)
+[![CI][ci-badge]][ci-workflow]
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescript.org/)
 [![ESLint](https://img.shields.io/badge/ESLint-9.x-4B32C3.svg)](https://eslint.org/)
@@ -123,3 +123,6 @@ JSDoc для публичного API, `const`/`let`. См. `.aiassistant/rules/
 ## License
 
 MIT
+
+[ci-badge]: https://github.com/${GITHUB_USER}/${PROJECT_NAME}/actions/workflows/ci.yml/badge.svg
+[ci-workflow]: https://github.com/${GITHUB_USER}/${PROJECT_NAME}/actions/workflows/ci.yml

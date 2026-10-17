@@ -1,7 +1,7 @@
 # webstorm-config
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/stsgs1980/webstorm-config/actions/workflows/ci.yml/badge.svg)](https://github.com/stsgs1980/webstorm-config/actions/workflows/ci.yml)
+[![CI][ci-badge]][ci-workflow]
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.22.2-brightgreen.svg)](https://nodejs.org/)
 [![WebStorm](https://img.shields.io/badge/WebStorm-2026.2-orange.svg)](https://www.jetbrains.com/webstorm/)
 
@@ -111,3 +111,6 @@ anti-monolith (250 lines; test files are exempt).
 ## License
 
 MIT
+
+[ci-badge]: https://github.com/stsgs1980/webstorm-config/actions/workflows/ci.yml/badge.svg
+[ci-workflow]: https://github.com/stsgs1980/webstorm-config/actions/workflows/ci.yml
