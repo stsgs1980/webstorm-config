@@ -9,6 +9,21 @@ const KNOWN_FUTURE_SCRIPTS = ["dev"];
 /** Inline-code path prefixes that must exist in the repository. */
 const PATH_PREFIXES = ["docs/", ".idea/", "scripts/", ".husky/", "eslint-rules/", "eslint-processors/"];
 
+/** `npm run <name>` references inside docs. */
+const SCRIPT_PATTERN = /npm run ([a-z:.-]+)/g;
+
+/** Inline-code values shaped like repository paths. */
+const PATH_PATTERN = /`([^`]+\/[^`]*)`/g;
+
+/** "Node.js >= x.y.z" markers, including the percent-encoded badge form. */
+const NODE_VERSION_PATTERN = /Node\.js-?\s*(?:%3E%3D|>=)\s*(\d+\.\d+\.\d+)/g;
+
+/** Strict x.y.z version, as required inside .nvmrc. */
+const EXACT_VERSION_PATTERN = /^(\d+)\.(\d+)\.(\d+)$/;
+
+/** First x.y.z version found in a range, e.g. engines.node. */
+const VERSION_PATTERN = /(\d+)\.(\d+)\.(\d+)/;
+
 /**
  * Recursively collect .md files under a directory.
  * @param dir - directory to walk
@@ -34,7 +49,7 @@ function collectMarkdown(dir: string): string[] {
 }
 
 /**
- * Markdown files the verifier scans (root READMEs plus docs/, agent workspace excluded).
+ * Markdown files the verifier scans (root README files plus docs/, agent workspace excluded).
  * @returns list of file paths
  */
 function getDocFiles(): string[] {
@@ -75,6 +90,107 @@ function compareVersions(a: string, b: string): number {
 }
 
 /**
+ * Check that the .nvmrc version satisfies engines.node.
+ * @param nvmVersion - exact version from .nvmrc, if parseable
+ * @param enginesNode - engines.node range from package.json
+ * @param failures - collector for error lines
+ * @returns min version extracted from engines.node, if parseable
+ */
+function checkVersionAlignment(
+  nvmVersion: string | undefined,
+  enginesNode: string,
+  failures: string[],
+): string | undefined {
+  const engineMin = VERSION_PATTERN.exec(enginesNode)?.[0];
+
+  if (nvmVersion === undefined || engineMin === undefined) {
+    failures.push("[FAIL] Cannot parse version from .nvmrc or engines.node.");
+  } else if (compareVersions(nvmVersion, engineMin) < 0) {
+    failures.push(`[FAIL] .nvmrc ${nvmVersion} does not satisfy engines.node ${enginesNode}.`);
+  }
+
+  return engineMin;
+}
+
+/**
+ * Check that every `npm run <name>` in a doc file is a real script.
+ * @param file - doc file being checked
+ * @param text - file content
+ * @param scripts - package.json scripts
+ * @param failures - collector for error lines
+ */
+function checkScriptNames(file: string, text: string, scripts: Record<string, string>, failures: string[]): void {
+  for (const match of text.matchAll(SCRIPT_PATTERN)) {
+    // Strip trailing sentence punctuation: "…run `npm run lint.`".
+    const name = match[1].replace(/[.-]+$/, "");
+    const at = match.index ?? 0;
+
+    if (KNOWN_FUTURE_SCRIPTS.includes(name)) {
+      continue;
+    }
+    if (!(name in scripts)) {
+      failures.push(`[FAIL] ${file}:${lineOf(text, at)} npm run ${name} is not in package.json scripts.`);
+    }
+  }
+}
+
+/**
+ * Check that file paths in a doc file's inline code exist.
+ * @param file - doc file being checked
+ * @param text - file content
+ * @param failures - collector for error lines
+ */
+function checkPaths(file: string, text: string, failures: string[]): void {
+  for (const match of text.matchAll(PATH_PATTERN)) {
+    let path = match[1];
+    const at = match.index ?? 0;
+
+    if (path.includes("$") || path.includes("*")) {
+      // Template variables and globs are not concrete paths.
+      continue;
+    }
+    const anchor = path.indexOf("#");
+    if (anchor !== -1) {
+      path = path.slice(0, anchor);
+    }
+    if (!PATH_PREFIXES.some((prefix) => path.startsWith(prefix))) {
+      continue;
+    }
+    if (!existsSync(path)) {
+      failures.push(`[FAIL] ${file}:${lineOf(text, at)} path ${path} does not exist.`);
+    }
+  }
+}
+
+/**
+ * Count Node.js version markers in a doc file and flag version mismatches.
+ * @param file - doc file being checked
+ * @param text - file content
+ * @param engineMin - min version from engines.node, if parseable
+ * @param failures - collector for error lines
+ * @returns marker count for README.md, otherwise 0
+ */
+function checkNodeVersionMarkers(
+  file: string,
+  text: string,
+  engineMin: string | undefined,
+  failures: string[],
+): number {
+  let markers = 0;
+
+  for (const match of text.matchAll(NODE_VERSION_PATTERN)) {
+    markers += 1;
+
+    if (engineMin !== undefined && match[1] !== engineMin) {
+      const at = match.index ?? 0;
+      failures.push(`[FAIL] ${file}:${lineOf(text, at)} Node.js version ${match[1]} != engines.node min ${engineMin}.`);
+    }
+  }
+
+  return file === "README.md" ? markers : 0;
+}
+
+/**
  * Verify docs against configs: npm run names, Node.js version markers, real paths.
  * @returns void; exits with code 1 on any violation
  */
@@ -83,69 +199,18 @@ function main(): void {
     scripts: Record<string, string>;
     engines: { node: string };
   };
-  const nvmrc = readFileSync(".nvmrc", "utf8").trim();
+  const nvmVersion = EXACT_VERSION_PATTERN.exec(readFileSync(".nvmrc", "utf8").trim())?.[0];
   const files = getDocFiles();
   const failures: string[] = [];
-
-  const scriptPattern = /npm run ([a-z:.-]+)/g;
-  const pathPattern = /`([^`]+\/[^`]*)`/g;
-  const nodeVersionPattern = /Node\.js-?\s*(?:%3E%3D|>=)\s*(\d+\.\d+\.\d+)/g;
-
-  const nvmVersion = /^(\d+)\.(\d+)\.(\d+)$/.exec(nvmrc)?.[0];
-  const engineMin = /(\d+)\.(\d+)\.(\d+)/.exec(pkg.engines.node)?.[0];
+  const engineMin = checkVersionAlignment(nvmVersion, pkg.engines.node, failures);
   let readmeMarkers = 0;
-
-  if (nvmVersion === undefined || engineMin === undefined) {
-    failures.push("[FAIL] Cannot parse version from .nvmrc or engines.node.");
-  } else if (compareVersions(nvmVersion, engineMin) < 0) {
-    failures.push(`[FAIL] .nvmrc ${nvmVersion} does not satisfy engines.node ${pkg.engines.node}.`);
-  }
 
   for (const file of files) {
     const text = readFileSync(file, "utf8");
 
-    for (const match of text.matchAll(scriptPattern)) {
-      // Strip trailing sentence punctuation: "…run `npm run lint.`".
-      const name = match[1].replace(/[.-]+$/, "");
-      const at = match.index ?? 0;
-      if (KNOWN_FUTURE_SCRIPTS.includes(name)) {
-        continue;
-      }
-      if (!(name in pkg.scripts)) {
-        failures.push(`[FAIL] ${file}:${lineOf(text, at)} npm run ${name} is not in package.json scripts.`);
-      }
-    }
-
-    for (const match of text.matchAll(pathPattern)) {
-      let path = match[1];
-      const at = match.index ?? 0;
-      if (path.includes("$") || path.includes("*")) {
-        // Template variables and globs are not concrete paths.
-        continue;
-      }
-      const anchor = path.indexOf("#");
-      if (anchor !== -1) {
-        path = path.slice(0, anchor);
-      }
-      if (!PATH_PREFIXES.some((prefix) => path.startsWith(prefix))) {
-        continue;
-      }
-      if (!existsSync(path)) {
-        failures.push(`[FAIL] ${file}:${lineOf(text, at)} path ${path} does not exist.`);
-      }
-    }
-
-    for (const match of text.matchAll(nodeVersionPattern)) {
-      const found = match[1];
-      const at = match.index ?? 0;
-
-      if (file === "README.md") {
-        readmeMarkers += 1;
-      }
-      if (engineMin !== undefined && found !== engineMin) {
-        failures.push(`[FAIL] ${file}:${lineOf(text, at)} Node.js version ${found} != engines.node min ${engineMin}.`);
-      }
-    }
+    checkScriptNames(file, text, pkg.scripts, failures);
+    checkPaths(file, text, failures);
+    readmeMarkers += checkNodeVersionMarkers(file, text, engineMin, failures);
   }
 
   if (readmeMarkers === 0) {
