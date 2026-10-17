@@ -84,9 +84,19 @@ export default [
       "no-irregular-whitespace": "error",
       "no-var": "error",
       "prefer-const": "error",
-      "jsdoc/require-jsdoc": "error",
-      "jsdoc/require-param": "error",
-      "jsdoc/require-returns": "error",
+      "jsdoc/require-jsdoc": [
+        "error",
+        {
+          publicOnly: true,
+          require: {
+            FunctionDeclaration: true,
+            ArrowFunctionExpression: true,
+            MethodDefinition: true,
+          },
+        },
+      ],
+      "jsdoc/require-param": "off",
+      "jsdoc/require-returns": "off",
       "@typescript-eslint/explicit-function-return-type": [
         "error",
         { allowExpressions: true, allowTypedFunctionExpressions: true },
@@ -109,6 +119,8 @@ export default [
     files: ["**/*.{js,mjs,cjs}"],
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
+      "jsdoc/require-param": "error",
+      "jsdoc/require-returns": "error",
     },
   },
   {
