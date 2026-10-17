@@ -34,6 +34,7 @@ coverage/
 !.idea/inspectionProfiles/
 !.idea/liveTemplates/
 !.idea/fileTemplates/
+!.idea/jsonCatalog.xml
 !.idea/jsonSchemas.xml
 !.idea/prettier.xml
 !.idea/vcs.xml
