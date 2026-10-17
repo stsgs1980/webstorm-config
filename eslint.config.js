@@ -67,6 +67,10 @@ export default [
   },
   {
     files: ["**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts}"],
+    // Keep unused-disable reporting off for all JS/TS linting (sources and snippets):
+    // the flat-config default is warn, docs snippets show illustrative disable lines,
+    // and --max-warnings=0 would turn those warnings into failures.
+    linterOptions: { reportUnusedDisableDirectives: false },
     languageOptions: {
       parser: tsParser,
       parserOptions: {

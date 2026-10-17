@@ -111,6 +111,14 @@ describe("markdown-snippets", () => {
     assert.equal(emoji[0].column, 20);
   });
 
+  it("неиспользованная директива в js-сниппете не репортится", async () => {
+    const messages = await lintMarkdownAll(
+      "# Demo\n\n```js\n// eslint-disable-next-line no-console\nconst value = 1;\nexport default value;\n```\n",
+    );
+
+    assert.equal(messages.length, 0);
+  });
+
   it("markdown- и plain-фенсы не проверяются", async () => {
     const messages = await lintMarkdown(
       "# Demo\n\n```markdown\n# заголовок \u{1F600}\n```\n\n```\nпросто \u{1F600}\n```\n",
