@@ -1,7 +1,8 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import { RuleTester } from "eslint";
+import assert from "node:assert/strict";
 // noinspection NpmUsedModulesInstalled
-import { describe } from "vitest";
+import { describe, it } from "vitest";
 
 import unicodePolicy from "../eslint-rules/unicode-policy.js";
 
@@ -124,11 +125,12 @@ describe("unicode-policy/unicode-graphics", () => {
 
 describe("unicode-policy/meta", () => {
   it("у правил есть описание и схема для тулинга", () => {
-    expect(unicodePolicy.rules.emoji.meta.docs.description).toBe("Disallow emoji; use text tags like [OK] or [FAIL].");
-    expect(unicodePolicy.rules.emoji.meta.schema).toEqual([]);
-    expect(unicodePolicy.rules["unicode-graphics"].meta.docs.description).toBe(
+    assert.equal(unicodePolicy.rules.emoji.meta.docs.description, "Disallow emoji; use text tags like [OK] or [FAIL].");
+    assert.deepEqual(unicodePolicy.rules.emoji.meta.schema, []);
+    assert.equal(
+      unicodePolicy.rules["unicode-graphics"].meta.docs.description,
       "Disallow Unicode box/line drawing characters; use ASCII.",
     );
-    expect(unicodePolicy.rules["unicode-graphics"].meta.schema).toEqual([]);
+    assert.deepEqual(unicodePolicy.rules["unicode-graphics"].meta.schema, []);
   });
 });
