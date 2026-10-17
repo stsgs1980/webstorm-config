@@ -1,5 +1,6 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import { RuleTester } from "eslint";
+// noinspection NpmUsedModulesInstalled
 import { describe } from "vitest";
 
 import unicodePolicy from "../eslint-rules/unicode-policy.js";
