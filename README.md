@@ -106,7 +106,7 @@ npm install
 ## Conventions
 
 См. `.aiassistant/rules/AI Rules.md`: JSDoc, strict TS, 120 chars, Conventional Commits,
-anti-monolith (250 lines).
+anti-monolith (250 lines; test files are exempt).
 
 ## License
 

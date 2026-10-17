@@ -5,6 +5,10 @@ import { existsSync, readFileSync } from "node:fs";
 
 const DEFAULT_MAX_LINES = 250;
 const EXTENSIONS = /\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
+/** Test files are exempt: the limit must not force splitting one test suite. */
+const TEST_FILE = /\.(test|spec)\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
+/** Everything under tests/ or __tests__/ is test support code. */
+const TEST_DIR = /(?:^|[\\/])(?:__tests__|tests?)[\\/]/;
 
 const args = process.argv.slice(2);
 const checkAll = args.includes("--all");
@@ -46,11 +50,23 @@ function listFiles(): string[] {
 }
 
 /**
- * Anti-monolith check: TS/JS files must not exceed MAX_LINES.
+ * Whether test code is exempt from the anti-monolith limit.
+ * @param file - repository-relative path
+ * @returns true for *.test.* and *.spec.* files and tests/ or __tests__/ trees
+ */
+function isTestFile(file: string): boolean {
+  return TEST_FILE.test(file) || TEST_DIR.test(file);
+}
+
+/**
+ * Anti-monolith check: TS/JS source files must not exceed MAX_LINES.
+ * Test files (*.test.*, *.spec.*, tests/, __tests__/) are exempt.
  * @returns {void}
  */
 function main(): void {
-  const files = listFiles();
+  const candidates = listFiles();
+  const files = candidates.filter((file) => !isTestFile(file));
+  const skippedTests = candidates.length - files.length;
 
   let failed = 0;
 
@@ -59,7 +75,9 @@ function main(): void {
       continue;
     }
 
-    const lines = readFileSync(file, "utf8").split("\n").length;
+    // A trailing newline terminates the last line; it is not an extra line.
+    const content = readFileSync(file, "utf8").replace(/\r?\n$/, "");
+    const lines = content.split("\n").length;
 
     if (lines > MAX_LINES) {
       console.error(`[FAIL] File '${file}' has ${lines} lines. Limit: ${MAX_LINES}.`);
@@ -72,7 +90,9 @@ function main(): void {
     process.exit(1);
   }
 
-  process.stdout.write(`[OK] Checked files: ${files.length}. Limit: ${MAX_LINES} lines.\n`);
+  process.stdout.write(
+    `[OK] Checked files: ${files.length}, tests skipped: ${skippedTests}. Limit: ${MAX_LINES} lines.\n`,
+  );
 }
 
 main();
