@@ -15,6 +15,7 @@ describe("unicode-policy/emoji", () => {
       "const star = '★';",
       "const txt = '→ — …';",
       "const path = 'docs/live-templates/README.md';",
+      "const digit = '1\u{FE0F}';",
     ],
     invalid: [
       {
@@ -51,6 +52,29 @@ describe("unicode-policy/emoji", () => {
         name: "column указывает на первый запрещённый символ",
         code: "const s = '⏰';",
         errors: [{ messageId: "noEmoji", line: 1, column: 12 }],
+      },
+      {
+        name: "keycap с цифрой (1 U+FE0F U+20E3) ловится",
+        code: "const keycap = '1\u{FE0F}\u{20E3}';",
+        errors: [{ messageId: "noEmoji", line: 1 }],
+      },
+      {
+        name: "keycap с решёткой и звёздочкой ловится",
+        code: "const hash = '#\u{FE0F}\u{20E3}';\nconst star = '*\u{FE0F}\u{20E3}';",
+        errors: [
+          { messageId: "noEmoji", line: 1 },
+          { messageId: "noEmoji", line: 2 },
+        ],
+      },
+      {
+        name: "одиночный U+20E3 ловится",
+        code: "const enclosing = '\u{20E3}';",
+        errors: [{ messageId: "noEmoji", line: 1 }],
+      },
+      {
+        name: "column указывает на U+20E3 внутри keycap",
+        code: "const s = '1\u{FE0F}\u{20E3}';",
+        errors: [{ messageId: "noEmoji", line: 1, column: 14 }],
       },
     ],
   });
