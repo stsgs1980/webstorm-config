@@ -8,7 +8,9 @@ const emojiPattern = new RegExp(emojiBranches.join("|"), "u");
 
 const unicodeGraphicsPattern = /[\u{2500}-\u{257F}\u{2580}-\u{259F}\u{25A0}-\u{25FF}\u{2800}-\u{28FF}]/u;
 
-const createRule = (messages, pattern) => {
+const formatCodePoint = (character) => `U+${character.codePointAt(0).toString(16).toUpperCase().padStart(4, "0")}`;
+
+const createRule = ({ description, message, messageId, pattern }) => {
   const create = (context) => {
     const sourceCode = context.sourceCode || context.getSourceCode();
     const lines = sourceCode.getText().split("\n");
@@ -19,30 +21,34 @@ const createRule = (messages, pattern) => {
         lines.forEach((line, index) => {
           for (const match of line.matchAll(matcher)) {
             context.report({
+              data: { codePoint: formatCodePoint(match[0]) },
               loc: { line: index + 1, column: match.index },
-              messageId: Object.keys(messages)[0],
+              messageId,
             });
           }
         });
       },
     };
   };
-  return { meta: { type: "problem", messages }, create };
+  return {
+    meta: { type: "problem", docs: { description }, schema: [], messages: { [messageId]: message } },
+    create,
+  };
 };
 
-const emoji = createRule(
-  {
-    noEmoji: "Emoji are prohibited. Use text tags like [OK], [FAIL] instead.",
-  },
-  emojiPattern,
-);
+const emoji = createRule({
+  description: "Disallow emoji; use text tags like [OK] or [FAIL].",
+  message: "Emoji are prohibited. Use text tags like [OK], [FAIL] instead. Found {{codePoint}}.",
+  messageId: "noEmoji",
+  pattern: emojiPattern,
+});
 
-const unicodeGraphics = createRule(
-  {
-    noUnicodeGraphics: "Unicode box/line drawing characters are prohibited. Use ASCII.",
-  },
-  unicodeGraphicsPattern,
-);
+const unicodeGraphics = createRule({
+  description: "Disallow Unicode box/line drawing characters; use ASCII.",
+  message: "Unicode box/line drawing characters are prohibited. Use ASCII. Found {{codePoint}}.",
+  messageId: "noUnicodeGraphics",
+  pattern: unicodeGraphicsPattern,
+});
 
 export default {
   rules: {

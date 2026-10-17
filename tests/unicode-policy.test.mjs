@@ -19,9 +19,9 @@ describe("unicode-policy/emoji", () => {
     ],
     invalid: [
       {
-        name: "эмодзи ловится",
+        name: "эмодзи ловится и сообщение содержит код поинта",
         code: "export const s = '⏰';",
-        errors: [{ messageId: "noEmoji", line: 1 }],
+        errors: [{ line: 1, message: "Emoji are prohibited. Use text tags like [OK], [FAIL] instead. Found U+23F0." }],
       },
       {
         name: "эмодзи в комментарии",
@@ -44,12 +44,12 @@ describe("unicode-policy/emoji", () => {
       {
         name: "текстовый copyright ловится",
         code: "const c = '©';",
-        errors: [{ messageId: "noEmoji", line: 1 }],
+        errors: [{ messageId: "noEmoji", line: 1, data: { codePoint: "U+00A9" } }],
       },
       {
         name: "буквенный бейдж U+1F170 ловится",
         code: "const badge = '🅰';",
-        errors: [{ messageId: "noEmoji", line: 1 }],
+        errors: [{ messageId: "noEmoji", line: 1, data: { codePoint: "U+1F170" } }],
       },
       {
         name: "column указывает на первый запрещённый символ",
@@ -59,7 +59,7 @@ describe("unicode-policy/emoji", () => {
       {
         name: "keycap с цифрой (1 U+FE0F U+20E3) ловится",
         code: "const keycap = '1\u{FE0F}\u{20E3}';",
-        errors: [{ messageId: "noEmoji", line: 1 }],
+        errors: [{ messageId: "noEmoji", line: 1, data: { codePoint: "U+20E3" } }],
       },
       {
         name: "keycap с решёткой и звёздочкой ловится",
@@ -106,5 +106,16 @@ describe("unicode-policy/unicode-graphics", () => {
         ],
       },
     ],
+  });
+});
+
+describe("unicode-policy/meta", () => {
+  it("у правил есть описание и схема для тулинга", () => {
+    expect(unicodePolicy.rules.emoji.meta.docs.description).toBe("Disallow emoji; use text tags like [OK] or [FAIL].");
+    expect(unicodePolicy.rules.emoji.meta.schema).toEqual([]);
+    expect(unicodePolicy.rules["unicode-graphics"].meta.docs.description).toBe(
+      "Disallow Unicode box/line drawing characters; use ASCII.",
+    );
+    expect(unicodePolicy.rules["unicode-graphics"].meta.schema).toEqual([]);
   });
 });
