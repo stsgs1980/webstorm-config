@@ -1,4 +1,4 @@
-// noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction
+// noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import js from "@eslint/js";
 import markdown from "@eslint/markdown";
 import tsParser from "@typescript-eslint/parser";

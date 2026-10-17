@@ -1,3 +1,4 @@
+// noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import { RuleTester } from "eslint";
 import { describe } from "vitest";
 
