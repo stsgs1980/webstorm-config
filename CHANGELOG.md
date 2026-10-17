@@ -1,5 +1,4 @@
 <!-- markdownlint-disable -->
-<!-- noinspection GrazieInspection,GrazieStyle,LongLine,SpellCheckingInspection -->
 
 # 1.0.0 (2026-10-17)
 
@@ -25,6 +24,7 @@
 - **hooks:** pass --no-warn-ignored to eslint in lint-staged ([07859c9](https://github.com/stsgs1980/webstorm-config/commit/07859c96c5e87161273788bd4f24888e5dcb17c3))
 - **ide:** add quotes and trailing comma to the project code style ([576227e](https://github.com/stsgs1980/webstorm-config/commit/576227e633bb9be96b4ba5e93a043b9d5c544184))
 - **ide:** add return type to React component template ([676356c](https://github.com/stsgs1980/webstorm-config/commit/676356cb17222730ced78a57013fb797fec38bf8))
+- **ide:** exempt generated changelog from IDE hints via shared scope ([9f2b4ed](https://github.com/stsgs1980/webstorm-config/commit/9f2b4ed2bea89a3fdb2d4eab0b18d5bcfcad77ac))
 - **ide:** scope webstorm noinspection comments to statements ([b70fb1b](https://github.com/stsgs1980/webstorm-config/commit/b70fb1b7cff27a68c62830c50ddb7018c9d857cf))
 - **ide:** suppress NpmUsedModulesInstalled false positives in JS tooling ([e246139](https://github.com/stsgs1980/webstorm-config/commit/e246139bb1921985c805ba5f73c44c6bd6174710))
 - **ide:** suppress WebStorm false positives in snippet parser and config ([5c885d3](https://github.com/stsgs1980/webstorm-config/commit/5c885d3b85482166f550000a5fbf239b0ea29288))
