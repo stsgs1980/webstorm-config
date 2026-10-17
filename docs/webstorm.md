@@ -144,11 +144,12 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 В git лежат только переносимые настройки (белый список в `.gitignore`):
 
-- `codeStyles/` — схема Project;
+- `codeStyles/` — схема Project (`Project.xml`, включение в `codeStyleConfig.xml`);
 - `inspectionProfiles/` — общие инспекции (профиль `Project Default`);
 - `fileTemplates/`, `liveTemplates/` — шаблоны (склад для ручного импорта, см. §12);
 - `jsLinters/` — ESLint Automatic + fix on save;
-- `jsonSchemas.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
+- `dictionaries/project.xml` — словарь проекта (термины и аббревиатуры);
+- `jsonSchemas.xml`, `jsonCatalog.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
 
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
 
