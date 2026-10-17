@@ -35,6 +35,7 @@ coverage/
 !.idea/liveTemplates/
 !.idea/fileTemplates/
 !.idea/dictionaries/
+!.idea/scopes/
 !.idea/jsonCatalog.xml
 !.idea/jsonSchemas.xml
 !.idea/prettier.xml

@@ -84,6 +84,12 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 Визуальная направляющая `SOFT_MARGINS=120` для Markdown задана в `.idea/codeStyles/Project.xml`;
 жёсткий лимит держит markdownlint (`MD013` с `line_length: 120` в `.markdownlint.json`).
 
+Инспекция IDE «Line is longer than allowed by code style» берёт лимит из code style
+(«Hard wrap at»), а не из `.editorconfig`. Для генерируемого `CHANGELOG.md` (строки
+с commit-ссылками длиннее 120 by design) подсказки IDE — LongLine, Grazie и
+орфография — отключены скоупом `generated_changelog`: `.idea/scopes/generated_changelog.xml`
+и профиль `Project Default` в `.idea/inspectionProfiles/Project_Default.xml`.
+
 ## 7. Конвенции стиля
 
 - 2 пробела, точка с запятой, двойные кавычки (`USE_DOUBLE_QUOTES` в `.idea/codeStyles/Project.xml`).
@@ -150,6 +156,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 - `fileTemplates/`, `liveTemplates/` — шаблоны (склад для ручного импорта, см. §12);
 - `jsLinters/` — ESLint Automatic + fix on save;
 - `dictionaries/project.xml` — словарь проекта (термины и аббревиатуры);
+- `scopes/` — скоуп `generated_changelog` (исключение `CHANGELOG.md` из подсказок IDE, см. §6);
 - `jsonSchemas.xml`, `jsonCatalog.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
 
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.

@@ -57,4 +57,5 @@ ESLint проверяет **только код внутри fenced-блоков
 
 - Используйте ASCII: `->` вместо `→`, `...` вместо `…`
 - Emoji запрещены: используйте текстовые теги `[OK]`, `[FAIL]`, `[TODO]`
-- CHANGELOG.md — автогенерированный: `<!-- markdownlint-disable -->` и `<!-- noinspection ... -->` в начале
+- CHANGELOG.md — автогенерированный: `<!-- markdownlint-disable -->` в начале; подсказки IDE отключены
+  скоупом `generated_changelog` (см. §6 в [webstorm.md](webstorm.md))
