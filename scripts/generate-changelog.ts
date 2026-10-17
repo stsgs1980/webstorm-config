@@ -3,6 +3,18 @@
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
+// A shallow clone hides most of git log, so the regenerated changelog would
+// silently drop old releases.
+const isShallowClone = execSync("git rev-parse --is-shallow-repository", { encoding: "utf8" }).trim() === "true";
+
+if (isShallowClone) {
+  process.stderr.write(
+    "Shallow clone detected: the regenerated changelog would silently drop old releases.\n" +
+      "Run `git fetch --unshallow` and try again.\n",
+  );
+  process.exit(1);
+}
+
 const MARKDOWNLINT_DISABLE = "<!-- markdownlint-disable -->";
 // WebStorm hints (spelling, Grazie, LongLine) on quoted historical commit text.
 const IDE_SUPPRESS = "<!-- noinspection GrazieInspection,GrazieStyle,LongLine,SpellCheckingInspection -->";
