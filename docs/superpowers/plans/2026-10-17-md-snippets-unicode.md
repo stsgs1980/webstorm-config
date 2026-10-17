@@ -21,10 +21,10 @@
 
 - Node.js >= 22.22.2, npm >= 10.9.0 (engines).
 - Prettier: printWidth 120, double quotes, trailing commas, LF.
-- markdownlint: default + MD013 (120, code_blocks off) + MD060 aligned; все код-фенсы с языком.
+- `markdownlint`: default + MD013 (120, code_blocks off) + MD060 aligned; все код-фенсы с языком.
 - Коммиты: conventional commits, subject по-английски; `test:` и `fix(...)` видны в
   changelog, `docs:` — скрыт.
-- Каждый коммит проходит хуки: pre-commit (lint-staged: prettier + markdownlint + eslint;
+- Каждый коммит проходит хуки: pre-commit (lint-staged: prettier + `markdownlint` + eslint;
   check-file-length — лимит 250 строк для не-тестовых TS/JS) и pre-push (typecheck + test).
 - Без новых зависимостей. Правки только в: `eslint.config.js`, `eslint-parsers/plain-text.js`
   (новый), `tests/markdown-snippets.test.mjs`, `docs/markdown.md`, `scripts/check-docs.ts`,
