@@ -31,6 +31,23 @@ jobs:
       - run: npm run lint:md
       - run: npm run format:check
 
+  floor:
+    # Minimum from engines.node: proves install and toolchain on the floor.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22.22.2"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run check:file-length
+      - run: npm run check:docs
+      - run: npm test
+
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
