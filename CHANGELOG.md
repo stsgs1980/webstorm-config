@@ -1,4 +1,5 @@
 <!-- markdownlint-disable -->
+<!-- noinspection GrazieInspection,GrazieStyle,LongLine,SpellCheckingInspection -->
 
 # 1.0.0 (2026-10-17)
 

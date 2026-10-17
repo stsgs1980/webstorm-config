@@ -4,6 +4,8 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 
 const MARKDOWNLINT_DISABLE = "<!-- markdownlint-disable -->";
+// WebStorm hints (spelling, Grazie, LongLine) on quoted historical commit text.
+const IDE_SUPPRESS = "<!-- noinspection GrazieInspection,GrazieStyle,LongLine,SpellCheckingInspection -->";
 
 const previous = existsSync("CHANGELOG.md") ? readFileSync("CHANGELOG.md", "utf8").replace(/\r\n/g, "\n") : "";
 
@@ -12,7 +14,7 @@ execSync("npx conventional-changelog -p angular -i CHANGELOG.md -s", { stdio: "i
 
 // Convert asterisk to dash for consistency with prettier.
 const generated = readFileSync("CHANGELOG.md", "utf8").replace(/^\* /gm, "- ");
-writeFileSync("CHANGELOG.md", `${MARKDOWNLINT_DISABLE}\n${generated}`);
+writeFileSync("CHANGELOG.md", `${MARKDOWNLINT_DISABLE}\n${IDE_SUPPRESS}\n${generated}`);
 
 execSync("npx prettier --write CHANGELOG.md", { stdio: "inherit" });
 
