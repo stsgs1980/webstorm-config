@@ -1,6 +1,7 @@
 // Snippets in non-JS languages (json, python, bash, text, ...) are checked for the
-// unicode policy: the rules read the raw source text, so a minimal empty Program is
+// Unicode policy: the rules read the raw source text, so a minimal empty Program is
 // enough and any snippet content stays parseable.
+// noinspection JSUnusedGlobalSymbols
 const plainTextParser = {
   meta: { name: "plain-text-parser", version: "1.0.0" },
   parse(text) {

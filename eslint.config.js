@@ -6,8 +6,11 @@ import markdown from "@eslint/markdown";
 import tsParser from "@typescript-eslint/parser";
 // noinspection NpmUsedModulesInstalled
 import jsdoc from "eslint-plugin-jsdoc";
+// noinspection NpmUsedModulesInstalled
 import jsxA11y from "eslint-plugin-jsx-a11y";
+// noinspection NpmUsedModulesInstalled
 import react from "eslint-plugin-react";
+// noinspection NpmUsedModulesInstalled
 import reactHooks from "eslint-plugin-react-hooks";
 // noinspection NpmUsedModulesInstalled
 import tseslint from "typescript-eslint";
