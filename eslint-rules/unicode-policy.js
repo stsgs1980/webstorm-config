@@ -12,12 +12,12 @@ const createRule = (messages, pattern) => {
   const create = (context) => {
     const sourceCode = context.sourceCode || context.getSourceCode();
     const lines = sourceCode.getText().split("\n");
+    const matcher = new RegExp(pattern.source, `${pattern.flags}g`);
     // noinspection JSUnusedGlobalSymbols
     return {
       Program() {
         lines.forEach((line, index) => {
-          const match = pattern.exec(line);
-          if (match) {
+          for (const match of line.matchAll(matcher)) {
             context.report({
               loc: { line: index + 1, column: match.index },
               messageId: Object.keys(messages)[0],

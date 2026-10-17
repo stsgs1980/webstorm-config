@@ -29,9 +29,12 @@ describe("unicode-policy/emoji", () => {
         errors: [{ messageId: "noEmoji", line: 1 }],
       },
       {
-        name: "два эмодзи в одной строке дают одну ошибку",
+        name: "два эмодзи в одной строке дают две ошибки",
         code: "export const s = '⏰ ⭐';",
-        errors: [{ messageId: "noEmoji", line: 1 }],
+        errors: [
+          { messageId: "noEmoji", line: 1, column: 19 },
+          { messageId: "noEmoji", line: 1, column: 21 },
+        ],
       },
       {
         name: "номер строки определяется верно",
@@ -92,6 +95,15 @@ describe("unicode-policy/unicode-graphics", () => {
         name: "псевдографика в комментарии",
         code: "// █ progress bar",
         errors: [{ messageId: "noUnicodeGraphics", line: 1 }],
+      },
+      {
+        name: "несколько символов псевдографики в строке дают несколько ошибок",
+        code: "const bar = '───';",
+        errors: [
+          { messageId: "noUnicodeGraphics", line: 1, column: 14 },
+          { messageId: "noUnicodeGraphics", line: 1, column: 15 },
+          { messageId: "noUnicodeGraphics", line: 1, column: 16 },
+        ],
       },
     ],
   });
