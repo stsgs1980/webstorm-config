@@ -16,13 +16,15 @@ import prodConfig from "../eslint.config.js";
  * @property {boolean} [fatal]
  */
 
+/**
+ * @param {string} text
+ * @returns {Promise<LintMessageInfo[]>}
+ */
 const lintMarkdownAll = async (text) => {
   const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: prodConfig });
   const results = await eslint.lintText(text, { filePath: "docs/fixture.md" });
-  /** @type {LintMessageInfo[]} */
-  const messages = results.flatMap((result) => result.messages);
 
-  return messages;
+  return results.flatMap((result) => result.messages);
 };
 
 const lintMarkdown = async (text) =>
