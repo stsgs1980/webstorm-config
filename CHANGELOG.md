@@ -15,6 +15,7 @@
 - convert markdown-snippets.js to .ts with proper types ([ba7ad1f](https://github.com/stsgs1980/webstorm-config/commit/ba7ad1f0eedbca84707bf681d783d5543ec05363))
 - drop dead .codex/config.toml mapping, whitelist jsonSchemas.xml ([6edfc6c](https://github.com/stsgs1980/webstorm-config/commit/6edfc6cf6a74eac39cb597325ab2990a7776697a))
 - **eslint-rules:** catch keycap emoji and avoid WebStorm RegExp false positives ([72cbd0c](https://github.com/stsgs1980/webstorm-config/commit/72cbd0cc31d9bbb02570810c1acaa24460079af7))
+- **eslint:** extend unicode policy to non-JS markdown snippets ([737e93d](https://github.com/stsgs1980/webstorm-config/commit/737e93ddb193920ac9374f8f35e1c18c018166c5))
 - explicit String type in check-file-length.mjs ([0241e01](https://github.com/stsgs1980/webstorm-config/commit/0241e01b69c94a5abad18f48f87e5c4f63f51393))
 - extract functions before export to satisfy WebStorm static analysis ([dfc76dd](https://github.com/stsgs1980/webstorm-config/commit/dfc76ddfb59b24f70b810ded69cd74f7f330b2c7))
 - fix long lines and structure in eslint-rules files ([ac522be](https://github.com/stsgs1980/webstorm-config/commit/ac522beb42faac080a55e3b38bcd6a932c16b18f))
