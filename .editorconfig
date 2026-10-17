@@ -11,7 +11,6 @@ max_line_length = 120
 
 [*.md]
 trim_trailing_whitespace = false
-max_line_length = 120
 
 [*.{cmd,bat,ps1}]
 end_of_line = crlf
