@@ -11,6 +11,7 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 // noinspection NpmUsedModulesInstalled
 import tseslint from "typescript-eslint";
+import plainTextParser from "./eslint-parsers/plain-text.js";
 import markdownSnippetsProcessor from "./eslint-processors/markdown-snippets.js";
 import unicodePolicy from "./eslint-rules/unicode-policy.js";
 
@@ -46,15 +47,14 @@ export default [
     processor: markdownSnippetsProcessor,
   },
   {
-    files: ["**/*.md/**"],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-        ecmaFeatures: { jsx: true },
-      },
-    },
+    // Non-JS fenced snippets: the policy works on raw text, the parser returns an
+    // empty Program for any content. The pattern must stay specific: patterns that
+    // end in /* or /** are "universal" for ESLint, and code blocks matching only
+    // those are silently skipped. JS/TS snippets are excluded here: the block below
+    // keeps tsParser and the full rule set for them.
+    files: ["**/*.md/*.*"],
+    ignores: ["**/*.md/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts}", "**/*.md/*.md"],
+    languageOptions: { parser: plainTextParser },
     linterOptions: { reportUnusedDisableDirectives: false },
     plugins: { "unicode-policy": unicodePolicy },
     rules: {
