@@ -50,6 +50,15 @@ WebStorm часть из них **не подхватывает автомати
 галочки уже активны. Проверка — открытием проекта в IDE: при расхождении формата
 WebStorm молча проигнорирует файл. Ручные шаги нужны, если файл удалён.
 
+### Известная ложная подсветка: Unknown character category
+
+WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как «Unknown character category»
+([IJPL-101766](https://youtrack.jetbrains.com/issue/IJPL-101766); исправления нет).
+Поэтому в `eslint-rules/unicode-policy.js` паттерн собирается в рантайме — не сворачивайте
+его в литерал или шаблонную строку `new RegExp` (IDE найдёт там «дублирующую ветвь»).
+`// noinspection Annotator` в редакторе не подавляет — действует только в batch-отчёте
+инспекций.
+
 ## 4. Stylelint
 
 Путь: `Settings → Languages & Frameworks → Style Sheets → Stylelint`
