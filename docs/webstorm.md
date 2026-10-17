@@ -181,4 +181,4 @@ git push         →  typecheck + тесты (pre-push)
 ## Windows
 
 Husky pre-commit использует `npm run check:file-length` (кроссплатформенно).
-Нужны: Node.js >= 24.15.0, Git. Pre-commit останавливается на первой ошибке.
+Нужны: Node.js >= 22.22.2, Git. Pre-commit останавливается на первой ошибке.

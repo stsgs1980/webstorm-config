@@ -53,7 +53,29 @@ function lineOf(text: string, index: number): number {
 }
 
 /**
- * Verify docs against configs: npm run names, pinned versions, real paths.
+ * Compare two x.y.z version strings numerically.
+ * @param a - first version
+ * @param b - second version
+ * @returns negative when a < b, zero when equal, positive when a > b
+ */
+function compareVersions(a: string, b: string): number {
+  const pa = a.split(".").map(Number);
+  const pb = b.split(".").map(Number);
+
+  for (let i = 0; i < 3; i += 1) {
+    const da = pa[i] ?? 0;
+    const db = pb[i] ?? 0;
+
+    if (da !== db) {
+      return da - db;
+    }
+  }
+
+  return 0;
+}
+
+/**
+ * Verify docs against configs: npm run names, Node.js version markers, real paths.
  * @returns void; exits with code 1 on any violation
  */
 function main(): void {
@@ -62,25 +84,21 @@ function main(): void {
     engines: { node: string };
   };
   const nvmrc = readFileSync(".nvmrc", "utf8").trim();
-  const readme = existsSync("README.md") ? readFileSync("README.md", "utf8") : "";
   const files = getDocFiles();
   const failures: string[] = [];
 
   const scriptPattern = /npm run ([a-z:.-]+)/g;
   const pathPattern = /`([^`]+\/[^`]*)`/g;
-  const versionPattern = /(\d+)\.(\d+)\.(\d+)/;
+  const nodeVersionPattern = /Node\.js-?\s*(?:%3E%3D|>=)\s*(\d+\.\d+\.\d+)/g;
 
-  const nvmMajor = /^\d+/.exec(nvmrc)?.[0];
-  const engineMin = versionPattern.exec(pkg.engines.node)?.[1];
+  const nvmVersion = /^(\d+)\.(\d+)\.(\d+)$/.exec(nvmrc)?.[0];
+  const engineMin = /(\d+)\.(\d+)\.(\d+)/.exec(pkg.engines.node)?.[0];
+  let readmeMarkers = 0;
 
-  if (nvmMajor === undefined || engineMin === undefined) {
+  if (nvmVersion === undefined || engineMin === undefined) {
     failures.push("[FAIL] Cannot parse version from .nvmrc or engines.node.");
-  } else if (nvmMajor !== engineMin) {
-    failures.push(`[FAIL] .nvmrc major ${nvmMajor} != engines.node min major ${engineMin}.`);
-  }
-
-  if (!readme.includes(nvmrc)) {
-    failures.push(`[FAIL] README.md does not contain pinned version ${nvmrc} (badge).`);
+  } else if (compareVersions(nvmVersion, engineMin) < 0) {
+    failures.push(`[FAIL] .nvmrc ${nvmVersion} does not satisfy engines.node ${pkg.engines.node}.`);
   }
 
   for (const file of files) {
@@ -116,6 +134,22 @@ function main(): void {
         failures.push(`[FAIL] ${file}:${lineOf(text, at)} path ${path} does not exist.`);
       }
     }
+
+    for (const match of text.matchAll(nodeVersionPattern)) {
+      const found = match[1];
+      const at = match.index ?? 0;
+
+      if (file === "README.md") {
+        readmeMarkers += 1;
+      }
+      if (engineMin !== undefined && found !== engineMin) {
+        failures.push(`[FAIL] ${file}:${lineOf(text, at)} Node.js version ${found} != engines.node min ${engineMin}.`);
+      }
+    }
+  }
+
+  if (readmeMarkers === 0) {
+    failures.push("[FAIL] README.md has no Node.js badge marker for engines.node min.");
   }
 
   if (failures.length > 0) {
