@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 interface Props {
   title: string;
 }
@@ -5,11 +7,9 @@ interface Props {
 /**
  * ${NAME} component.
  *
- * @param props - component props
- * @param props.title - component title
  * @returns JSX element
  */
-export const ${NAME} = ({ title }: Props) => {
+export const ${NAME} = ({ title }: Props): ReactElement => {
   return <div>{title}</div>;
 };
 
