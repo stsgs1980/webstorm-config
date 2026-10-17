@@ -67,8 +67,8 @@ git add CHANGELOG.md
 git commit -m "chore: reset changelog for new project"
 ```
 
-Pre-push hook генерирует CHANGELOG.md только на ветке main (на других ветках молча пропускается)
-на основе conventional commits вашего проекта.
+`CHANGELOG.md` генерируется из conventional commits вашего проекта командой `npm run changelog`.
+Запускайте её перед пушем в `main`: CI проверяет свежесть файла на ветке `main` (джоба `changelog`).
 
 Первый запуск в новом проекте из шаблона — [docs/getting-started.md](docs/getting-started.md)
 (фреймворк, `src/`, скрипты `dev`/`build`).

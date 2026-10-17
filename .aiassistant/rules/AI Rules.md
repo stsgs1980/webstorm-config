@@ -69,8 +69,9 @@ When a threshold is crossed:
 - Allowed types: feat, fix, docs, style, refactor, test, chore, perf, ci, build.
 - Do not commit directly to main without verification.
 - Pre-commit hooks (Husky + lint-staged) must pass before commit.
-- Pre-push hook generates CHANGELOG.md only on main branch (on other branches it skips silently).
-  If file changed, push blocked — commit CHANGELOG first: `git add CHANGELOG.md && git commit -m "docs: update changelog"`.
+- CHANGELOG.md is generated from conventional commits by `npm run changelog`
+  (run it before pushing to main; CI verifies freshness on main).
+  Commit changes as `git add CHANGELOG.md && git commit -m "docs: update changelog"`.
 
 ## 7. Systematic Debugging & Work Cycle
 
