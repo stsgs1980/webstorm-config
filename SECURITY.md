@@ -29,6 +29,14 @@
   через Dependabot (`.github/dependabot.yml`).
 - Настройки форков и приложений, собранных на базе шаблона.
 
+## npm audit
+
+`npm audit --omit=dev` не находит проблем: дерево production-зависимостей
+чистое. В полном `npm audit` — 10 high: все они от одного транзитивного
+advisory `braces` (GHSA-vfj7-8cjw-p6xm, DoS на глубоко вложенных паттернах),
+который приходит в dev-дерево через Stylelint. Исправленной версии `braces`
+пока нет; обновление придёт штатно через Dependabot.
+
 ## Меры в репозитории
 
 - Включены secret scanning и push protection.
