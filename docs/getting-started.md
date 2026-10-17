@@ -152,6 +152,7 @@ Markdown (`.md`) ограничен 120 символами на строку (к
 
 ```text
 eslint.config.js
+eslint-parsers/
 eslint-rules/
 eslint-processors/
 .prettierrc
