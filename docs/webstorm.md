@@ -8,7 +8,7 @@ WebStorm часть из них **не подхватывает автомати
 
 | Шаг | Обязательно   | Действие                                        |
 | --- | ------------- | ----------------------------------------------- |
-| 1   | Да            | Импортировать `webstorm-codestyle.xml`          |
+| 1   | Нет           | Code Style — уже в проекте (см. §1)             |
 | 2   | Да            | Включить Prettier (format on save)              |
 | 3   | Да            | ESLint — fix on save (уже в `.idea/jsLinters/`) |
 | 4   | Если есть CSS | Включить Stylelint                              |
@@ -16,16 +16,17 @@ WebStorm часть из них **не подхватывает автомати
 | 6   | Нет           | EditorConfig — читается из `.editorconfig`      |
 | 7   | Рекомендуется | Включить анализ кода при коммите                |
 
-## 1. Code Style (code style)
+## 1. Code Style
 
-Путь: `Settings → Editor → Code Style → шестерёнка → Import Scheme → webstorm-codestyle.xml`
+Отдельных действий не требуется: схема проекта закоммичена в `.idea/codeStyles/`
+(`USE_PER_PROJECT_SETTINGS`) и применяется автоматически при открытии проекта.
 
 Схема согласована с `.prettierrc`: двойные кавычки, trailing comma, 2 пробела,
 120 символов. Для TS/JS основной форматтер — **Prettier**; code style — запасная
 согласованность и языки без Prettier.
 
-> Импорт **не выполняется сам** при `git clone` — только вручную или через
-> **Share → Copy settings** у коллеги, у кого уже настроено.
+> При необходимости схему можно перенести на другую машину или в глобальные
+> настройки IDE штатным экспортом из диалога Code Style.
 
 ## 2. Prettier
 
@@ -85,11 +86,11 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 7. Конвенции стиля
 
-- 2 пробела, точка с запятой, двойные кавычки (`USE_DOUBLE_QUOTES` в `webstorm-codestyle.xml`).
+- 2 пробела, точка с запятой, двойные кавычки (`USE_DOUBLE_QUOTES` в `.idea/codeStyles/Project.xml`).
 - `const`/`let` по умолчанию; `var` запрещён.
 - JSDoc для публичного API; `@param`/`@returns` — опциональны в TS-файлах, обязательны в JS-файлах.
 - Trailing commas (`Always`) в объектах и массивах.
-- Максимальная длина строки — 120 символов (`RIGHT_MARGIN` в `webstorm-codestyle.xml`).
+- Максимальная длина строки — 120 символов (`.prettierrc`, `.editorconfig`).
 
 ## 8. Анализ кода при коммите (рекомендуется)
 

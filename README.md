@@ -71,20 +71,20 @@ npm install
 
 ## What's Included
 
-| Tool             | Config                                       |
-| ---------------- | -------------------------------------------- |
-| **ESLint**       | `eslint.config.js` — TS/JS/JSX, React, a11y  |
-| **Stylelint**    | `.stylelintrc.json` — Tailwind v4 at-rules   |
-| **Prettier**     | `.prettierrc`, `.prettierignore`             |
-| **markdownlint** | `.markdownlint.json`                         |
-| **TypeScript**   | `tsconfig.json` (strict)                     |
-| **Git hooks**    | Husky + lint-staged                          |
-| **Commitlint**   | Conventional Commits                         |
-| **EditorConfig** | `.editorconfig`                              |
-| **WebStorm**     | `webstorm-codestyle.xml`, `.idea/` templates |
-| **AI Rules**     | `.aiassistant/rules/AI Rules.md`             |
-| **Testing**      | Vitest — `vitest.config.ts`                  |
-| **Security**     | `SECURITY.md` — политика уязвимостей         |
+| Tool             | Config                                      |
+| ---------------- | ------------------------------------------- |
+| **ESLint**       | `eslint.config.js` — TS/JS/JSX, React, a11y |
+| **Stylelint**    | `.stylelintrc.json` — Tailwind v4 at-rules  |
+| **Prettier**     | `.prettierrc`, `.prettierignore`            |
+| **markdownlint** | `.markdownlint.json`                        |
+| **TypeScript**   | `tsconfig.json` (strict)                    |
+| **Git hooks**    | Husky + lint-staged                         |
+| **Commitlint**   | Conventional Commits                        |
+| **EditorConfig** | `.editorconfig`                             |
+| **WebStorm**     | `.idea/` — code style, ESLint, templates    |
+| **AI Rules**     | `.aiassistant/rules/AI Rules.md`            |
+| **Testing**      | Vitest — `vitest.config.ts`                 |
+| **Security**     | `SECURITY.md` — политика уязвимостей        |
 
 **Docs (едут в fork):** [getting-started](docs/getting-started.md),
 [kickoff](docs/kickoff.md), [WebStorm](docs/webstorm.md), [testing](docs/testing.md),

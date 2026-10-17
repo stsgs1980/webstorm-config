@@ -160,7 +160,6 @@ eslint-processors/
 .editorconfig
 tsconfig.base.json
 vitest.config.ts
-webstorm-codestyle.xml
 ```
 
 ### 2. Установите devDependencies
@@ -196,7 +195,8 @@ npx husky init
 
 ### 4. WebStorm
 
-Импортируйте `webstorm-codestyle.xml` — [webstorm.md](webstorm.md).
+Скопируйте `.idea/codeStyles/` из шаблона в `.idea/` проекта — схема Code Style применяется
+автоматически (отдельные действия не нужны). Остальные шаги — [webstorm.md](webstorm.md).
 
 ### 5. Скрипты
 
