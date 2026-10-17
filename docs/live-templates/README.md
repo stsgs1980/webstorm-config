@@ -40,8 +40,8 @@ IDE **не читает**: такой возможности в IntelliJ/WebStor
   а `React.FC` не даёт ничего поверх обычной типизации пропсов.
 - Props не пустые (`children?: ReactNode`): пустой интерфейс падает на
   `@typescript-eslint/no-empty-object-type`.
-- JSDoc с `@param props.children` и `@returns` — требование `.aiassistant/rules/AI Rules.md`;
-  без тега на `props.children` правило `jsdoc/require-param` ругается.
+- JSDoc на компонент обязателен (публичное API, правило `jsdoc/require-jsdoc`);
+  теги `@param props.children` и `@returns` шаблон добавляет сам — линтер в TS их не требует.
 - У `useReducer` начальное состояние по умолчанию `{}`, чтобы при пропуске переменной
   `$INIT$` код оставался синтаксически валидным.
 

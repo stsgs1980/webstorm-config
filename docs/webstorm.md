@@ -78,7 +78,7 @@ WebStorm молча проигнорирует файл. Ручные шаги �
 
 - 2 пробела, точка с запятой, двойные кавычки (`USE_DOUBLE_QUOTES` в `webstorm-codestyle.xml`).
 - `const`/`let` по умолчанию; `var` запрещён.
-- JSDoc (`@param`, `@return`) для функций и компонентов.
+- JSDoc для публичного API; `@param`/`@returns` — опциональны в TS-файлах, обязательны в JS-файлах.
 - Trailing commas (`Always`) в объектах и массивах.
 - Максимальная длина строки — 120 символов (`RIGHT_MARGIN` в `webstorm-codestyle.xml`).
 

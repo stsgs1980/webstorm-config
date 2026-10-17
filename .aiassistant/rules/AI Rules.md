@@ -32,7 +32,9 @@ Before any action, classify the user's request:
 - Max file length is 250 lines. If exceeded, split into modules
   (checked by `npm run check:file-length` in pre-commit and CI).
   Test files (`*.test.*`, `*.spec.*`, files under `tests/` and `__tests__/`) are exempt.
-- JSDoc with @param and @returns required for every function, method, and React component.
+- JSDoc required for public API (exported functions, methods, React components).
+  In TS, `@param`/`@returns` are optional (explicit types are the source of truth);
+  in plain JS files, a JSDoc block must include them.
 - Markdown: follow `docs/markdown.md` — 120 chars per line, aligned tables, `npm run lint:md`.
 - Markdown code blocks must specify a language (e.g., ```typescript, not empty).
 - Markdown with JSX in fenced blocks must use `tsx`, not `typescript` (WebStorm injection).
