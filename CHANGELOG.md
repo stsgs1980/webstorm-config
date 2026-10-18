@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-# 1.0.0 (2026-10-17)
+# 1.0.0 (2026-10-18)
 
 ### Bug Fixes
 
@@ -38,12 +38,14 @@
 - remove CHANGELOG.md exclusions, add markdownlint-disable comment ([ef6a671](https://github.com/stsgs1980/webstorm-config/commit/ef6a671b147cb3c4bdc30d7bf194d906ced45bc6))
 - rename TMPFILE to TEMP_FILE for clarity ([3ccc4b5](https://github.com/stsgs1980/webstorm-config/commit/3ccc4b51bd66f8a01dbc52027cf73e834f913303))
 - restore .js with proper JSDoc, remove broken .d.ts ([7b02afd](https://github.com/stsgs1980/webstorm-config/commit/7b02afd8ec8c3e889a02c084f7f7b05b601b06d9))
+- **scripts:** keep CHANGELOG.md intact when changelog generation fails ([9388a91](https://github.com/stsgs1980/webstorm-config/commit/9388a91726aee3768259d2dbd8207ed8fba22e67))
 - set MD013 line_length=120 per AI Rules.md ([64000b8](https://github.com/stsgs1980/webstorm-config/commit/64000b89adf32024d6319743a001857b4208d0bb))
 - suppress WebStorm false positive for @eslint/markdown import ([d7d237a](https://github.com/stsgs1980/webstorm-config/commit/d7d237ab7141c674c1da118c50ec506aada94189))
 - suppress WebStorm false positives in markdown-snippets.js ([ab1f233](https://github.com/stsgs1980/webstorm-config/commit/ab1f233243a9db655603591eae25b7e45c08c76e))
 - sync .markdownlint-cli.json with .markdownlint.json, document markdown rules ([afb2f04](https://github.com/stsgs1980/webstorm-config/commit/afb2f0424d51e4aaf9edd229544adb9fc1bf4b32))
 - **tests:** resolve WebStorm finding in snippet tests ([01c0b80](https://github.com/stsgs1980/webstorm-config/commit/01c0b802fa9d9e7140241d36d1442d8efae94601))
 - **tests:** resolve WebStorm findings in tooling tests ([fa45091](https://github.com/stsgs1980/webstorm-config/commit/fa450910627bae3010614d04b93d9f21e3434721))
+- tolerate Tailwind v4 at-rules and harden checks for non-ASCII paths ([3977c9b](https://github.com/stsgs1980/webstorm-config/commit/3977c9b4007335297d28cd2b53718c25c49d6a20))
 - typo 'codestyle' -> 'code style' in docs/webstorm.md and AI Rules ([1528049](https://github.com/stsgs1980/webstorm-config/commit/1528049bbc17e11bf796a7162acbf391f0141018))
 - whitelist prettier/vcs/modules/iml, extend iml excludes and prettier pattern ([9b087eb](https://github.com/stsgs1980/webstorm-config/commit/9b087ebd9871582a54196139ef20a81fd929c76b))
 
