@@ -60,6 +60,22 @@ jobs:
       - run: npm ci
       - run: npm test
 
+  windows:
+    # Windows-specific surface: path separators, git spawns and Cyrillic file
+    # names; the tooling checks and tests exercise exactly these.
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check:file-length
+      - run: npm run check:docs
+      - run: npm test
+
   changelog:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
