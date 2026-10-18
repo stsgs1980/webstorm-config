@@ -31,6 +31,27 @@
         ]
       }
     ],
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "layer",
+          "screen",
+          "container",
+          "variants",
+          "responsive",
+          "theme",
+          "custom-variant",
+          "custom-media",
+          "utility",
+          "source",
+          "plugin",
+          "config"
+        ]
+      }
+    ],
     "import-notation": null,
     "declaration-block-no-redundant-longhand-properties": null,
     "lightness-notation": null,

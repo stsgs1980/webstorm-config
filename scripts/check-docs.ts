@@ -38,6 +38,10 @@ const VERSION_PATTERN = /(\d+)\.(\d+)\.(\d+)/;
  * @returns markdown file paths with forward slashes
  */
 function collectMarkdown(dir: string): string[] {
+  if (!existsSync(dir)) {
+    return [];
+  }
+
   const out: string[] = [];
 
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -99,24 +103,31 @@ function compareVersions(a: string, b: string): number {
 
 /**
  * Check that the .nvmrc version satisfies engines.node.
- * @param nvmVersion - exact version from .nvmrc, if parseable
- * @param enginesNode - engines.node range from package.json
+ * @param nvmRaw - raw .nvmrc content, if the file exists
+ * @param enginesNode - engines.node value from package.json, if set
  * @param failures - collector for error lines
  * @returns min version extracted from engines.node, if parseable
  */
 function checkVersionAlignment(
-  nvmVersion: string | undefined,
-  enginesNode: string,
+  nvmRaw: string | undefined,
+  enginesNode: string | undefined,
   failures: string[],
 ): string | undefined {
-  const engineMin = VERSION_PATTERN.exec(enginesNode)?.[0];
-
-  if (nvmVersion === undefined || engineMin === undefined) {
-    failures.push("[FAIL] Cannot parse version from .nvmrc or engines.node.");
-  } else if (compareVersions(nvmVersion, engineMin) < 0) {
+  const nvmVersion = nvmRaw === undefined ? undefined : EXACT_VERSION_PATTERN.exec(nvmRaw)?.[0];
+  const engineMin = enginesNode === undefined ? undefined : VERSION_PATTERN.exec(enginesNode)?.[0];
+  if (nvmRaw === undefined) {
+    failures.push("[FAIL] .nvmrc not found.");
+  } else if (nvmVersion === undefined) {
+    failures.push("[FAIL] Cannot parse version from .nvmrc.");
+  }
+  if (enginesNode === undefined) {
+    failures.push("[FAIL] engines.node is not set in package.json.");
+  } else if (engineMin === undefined) {
+    failures.push("[FAIL] Cannot parse version from engines.node.");
+  }
+  if (nvmVersion !== undefined && engineMin !== undefined && compareVersions(nvmVersion, engineMin) < 0) {
     failures.push(`[FAIL] .nvmrc ${nvmVersion} does not satisfy engines.node ${enginesNode}.`);
   }
-
   return engineMin;
 }
 
@@ -205,12 +216,12 @@ function checkNodeVersionMarkers(
 function main(): void {
   const pkg = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
-    engines: { node: string };
+    engines?: { node?: string };
   };
-  const nvmVersion = EXACT_VERSION_PATTERN.exec(readFileSync(".nvmrc", "utf8").trim())?.[0];
+  const nvmRaw = existsSync(".nvmrc") ? readFileSync(".nvmrc", "utf8").trim() : undefined;
   const files = getDocFiles();
   const failures: string[] = [];
-  const engineMin = checkVersionAlignment(nvmVersion, pkg.engines.node, failures);
+  const engineMin = checkVersionAlignment(nvmRaw, pkg.engines?.node, failures);
   let readmeMarkers = 0;
 
   for (const file of files) {

@@ -29,8 +29,8 @@ Before any action, classify the user's request:
 - Trailing commas required in objects and arrays.
 - Indentation is 2 spaces.
 - Max line length is 120 characters.
-- Max file length is 250 lines. If exceeded, split into modules
-  (checked by `npm run check:file-length` in pre-commit and CI).
+- Max file length is 250 lines. If exceeded, split into modules (pre-commit checks
+  staged files via `node scripts/check-file-length.ts`; CI runs `npm run check:file-length`).
   Test files (`*.test.*`, `*.spec.*`, files under `tests/` and `__tests__/`) are exempt.
 - JSDoc required for public API (exported functions, methods, React components).
   In TS, `@param`/`@returns` are optional (explicit types are the source of truth);

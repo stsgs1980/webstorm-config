@@ -41,11 +41,12 @@ const MAX_LINES = parseMaxLines(maxLinesArg);
  * @returns {string[]} file paths to check
  */
 function listFiles(): string[] {
-  const command = checkAll ? "git ls-files" : "git diff --cached --name-only --diff-filter=ACM";
+  // -z keeps paths verbatim: without it git quotes non-ASCII names ("\320\244..."),
+  // and the trailing quote breaks both the extension filter and existsSync.
+  const command = checkAll ? "git ls-files -z" : "git diff --cached --name-only --diff-filter=ACM -z";
 
   return execSync(command, { encoding: "utf8" })
-    .split("\n")
-    .map((file) => file.trim())
+    .split("\0")
     .filter((file) => EXTENSIONS.test(file));
 }
 
