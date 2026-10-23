@@ -91,6 +91,13 @@ Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотс
 добавленные в индекс) файлы не проверяются. В CI это не имеет значения: там
 проверяются все tracked-файлы.
 
+## Если у проекта UI
+
+Есть пользовательские сценарии в браузере (клик-путь, формы, маршрутизация)?
+Тогда добавьте e2e: `@playwright/test` или `cypress` — Vitest (даже с `jsdom`)
+их не заменяет. Условия и варианты — [testing.md](testing.md). Проекту без UI
+(утилиты, конфиги, CLI) e2e не нужен.
+
 ## Superpowers scratch dirs
 
 `docs/superpowers/plans/` и `docs/superpowers/specs/` — рабочие папки агента для планов
