@@ -72,6 +72,13 @@ When a threshold is crossed:
 - CHANGELOG.md is generated from conventional commits by `npm run changelog`
   (run it before pushing to main; CI verifies freshness on main).
   Commit changes as `git add CHANGELOG.md && git commit -m "docs: update changelog"`.
+- Releases are anchored by semver git tags with a `v` prefix (`v1.0.0`):
+  commit the changelog, then tag the release commit and push the tag
+  (`git tag -a vX.Y.Z -m "..." && git push origin vX.Y.Z`). Without a new tag,
+  only `fix`/`feat`/`perf` merges change the changelog; `chore`/`docs` merges
+  keep CI green. The untagged (pending-release) chunk is re-dated on every
+  regeneration, so tag the release right after its "docs: update changelog"
+  commit.
 
 ## 7. Systematic Debugging & Work Cycle
 
