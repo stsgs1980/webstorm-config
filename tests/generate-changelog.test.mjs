@@ -60,8 +60,11 @@ const makeFailingNpx = () => {
 };
 
 /**
- * Create a directory whose npx writes fixed content into the file passed
- * after the `-i` argument, imitating the generator output.
+ * Create a directory whose npx writes fixed content into the target file,
+ * imitating the generator output. The generator call puts the draft at the
+ * 5th argv token; the shim only answers calls containing `-i` (the generator)
+ * so the prettier call leaves the composed draft intact.
+ *
  * @param {string} content - text to write into the target file
  * @returns {string} shim directory path
  */
@@ -70,38 +73,25 @@ const makeGeneratedNpx = (content) => {
   if (process.platform === "win32") {
     writeFileSync(
       join(dir, "npx.cmd"),
-      `@echo off\npowershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0emit-chunk.ps1" %*\r\n`,
+      ["@echo off", 'set "args=%*"', 'if "%args%" neq "%args:-i=%" copy /y "%~dp0content.txt" "%~5" >nul 2>&1'].join(
+        "\r\n",
+      ),
     );
   } else {
     writeFileSync(
       join(dir, "npx"),
       [
         "#!/bin/sh",
-        'dir="${0%/*}"',
-        "if command -v pwsh >/dev/null 2>&1; then",
-        '  exec pwsh -NoProfile -File "$dir/emit-chunk.ps1" "$@"',
-        "fi",
-        "if command -v powershell >/dev/null 2>&1; then",
-        '  exec powershell -NoProfile -ExecutionPolicy Bypass -File "$dir/emit-chunk.ps1" "$@"',
-        "fi",
-        "exit 1",
+        'for arg in "$@"; do',
+        '  if [ "$arg" = "-i" ]; then',
+        '    exec cat "$(dirname "$0")/content.txt" > "$5"',
+        "  fi",
+        "done",
+        "exit 0",
       ].join("\n"),
     );
     chmodSync(join(dir, "npx"), 0o755);
   }
-  writeFileSync(
-    join(dir, "emit-chunk.ps1"),
-    [
-      "### no param() block: everything goes to $args, so -i stays positional",
-      '$contentPath = Join-Path $PSScriptRoot "content.txt"',
-      "if (-not (Test-Path $contentPath)) { exit 0 }",
-      "$content = Get-Content -Raw -LiteralPath $contentPath",
-      '$index = [array]::IndexOf($args, "-i")',
-      "if ($index -lt 0 -or ($index + 1) -ge $args.Count) { exit 0 }",
-      "[System.IO.File]::WriteAllText($args[$index + 1], $content)",
-      "exit 0",
-    ].join("\n"),
-  );
   writeFileSync(join(dir, "content.txt"), content);
   return dir;
 };
