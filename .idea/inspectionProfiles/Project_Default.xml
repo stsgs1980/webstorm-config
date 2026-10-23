@@ -1,6 +1,7 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="ConsistentTypeImports" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CyclomaticComplexityJS" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="15" />
     </inspection_tool>
@@ -15,6 +16,8 @@
     <inspection_tool class="GrazieStyle" enabled="true" level="STYLE_SUGGESTION" enabled_by_default="true">
       <scope name="generated_changelog" level="STYLE_SUGGESTION" enabled="false" />
     </inspection_tool>
+    <inspection_tool class="JSDocMissingParam" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="JsonSchemaValidation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="LongLine" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="generated_changelog" level="WARNING" enabled="false" />
     </inspection_tool>
@@ -26,6 +29,7 @@
     <inspection_tool class="NestedFunctionDepthJS" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="4" />
     </inspection_tool>
+    <inspection_tool class="NoFloatingPromisesJS" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="OverlyLongFunctionJS" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="50" />
     </inspection_tool>
@@ -33,7 +37,14 @@
       <option name="m_limit" value="5" />
     </inspection_tool>
     <inspection_tool class="SpellCheckingInspection" enabled="true" level="TYPO" enabled_by_default="true">
-      <scope name="generated_changelog" level="TYPO" enabled="false" />
+      <scope name="generated_changelog" level="TYPO" enabled="false">
+        <option name="processCode" value="true" />
+        <option name="processLiterals" value="true" />
+        <option name="processComments" value="true" />
+      </scope>
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
     </inspection_tool>
     <inspection_tool class="StatementsPerFunctionJS" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="30" />
@@ -43,10 +54,6 @@
     <inspection_tool class="TypeScriptExplicitMemberType" enabled="true" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="TypeScriptMissingAugmentationImport" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="TypeScriptStrictTypeCheckings" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="NoFloatingPromisesJS" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="UnusedImports" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ConsistentTypeImports" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="JSDocMissingParam" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="JsonSchemaValidation" enabled="true" level="WARNING" enabled_by_default="true" />
   </profile>
 </component>
