@@ -6,11 +6,10 @@ import { checkVersionAlignment } from "./lib/version-alignment.ts";
 
 /**
  * Documented future scripts that intentionally do not exist yet.
- * `dev` is a documented workspace bootstrap script; `lint:metrics` is the
- * planned non-blocking metrics lane. Until either is added to
+ * `dev` is a documented workspace bootstrap script; until it is added to
  * package.json the doc reference is a plan, not a dead link.
  */
-const KNOWN_FUTURE_SCRIPTS = ["dev", "lint:metrics"];
+const KNOWN_FUTURE_SCRIPTS = ["dev"];
 
 /**
  * Future paths referenced by the roadmap section of the WebStorm setup

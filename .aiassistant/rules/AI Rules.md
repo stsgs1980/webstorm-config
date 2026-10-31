@@ -65,6 +65,11 @@ When a signal fires:
    hooks, or subcomponents to lower a line count.
 3. Continue the task normally: the counter is not the goal, cohesion is.
 
+Optional survey: `npm run lint:metrics` reports advisory signals
+(complexity, function length, params, nesting) as warnings; a warning
+there never fails a run. Use it to find candidates for a responsibility
+check, not as a gate.
+
 The number of `useState` calls is not evidence by itself: a page with
 six `useState` calls can be healthy. Extract a hook for one coherent
 behavior with a clear contract; prefer `useReducer` for complex

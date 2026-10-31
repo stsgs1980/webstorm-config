@@ -1,0 +1,59 @@
+// noinspection ES6UnusedImports,NpmUsedModulesInstalled
+// Advisory metrics lane: run via `npm run lint:metrics`, never part of `npm run lint`,
+// pre-commit or CI gates. A warning here does not fail the run: metrics answer
+// "where is the code worth a responsibility check", they do not forbid anything.
+// Plain Node file: TS annotations are not parseable there (see eslint.config.js).
+import tsParser from "@typescript-eslint/parser";
+
+/** Directories and files exempt from metrics, same logic as check-file-length. */
+const EXEMPT = [
+  "node_modules/**",
+  "dist/**",
+  "build/**",
+  "coverage/**",
+  "dev/**",
+  "out/**",
+  ".next/**",
+  ".nuxt/**",
+  ".svelte-kit/**",
+  ".astro/**",
+  ".output/**",
+  ".vite/**",
+  ".idea/**",
+  ".superpowers/**",
+  ".opencode/**",
+  ".agents/**",
+  // Metrics describe hand-edited source; vendored and generated trees answer to their tools.
+  "**/vendor/**",
+  "**/generated/**",
+  "**/__generated__/**",
+  "**/codegen/**",
+  "**/.gen.*",
+  "**/components/ui/**",
+  // Tests measure coverage, not cohesion: exemption mirrors check-file-length.
+  "**/*.test.*",
+  "**/*.spec.*",
+  "**/tests/**",
+  "**/__tests__/**",
+];
+
+export default [
+  {
+    ignores: EXEMPT,
+  },
+  {
+    files: ["**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts}"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: { ecmaVersion: "latest", sourceType: "module", ecmaFeatures: { jsx: true } },
+    },
+    rules: {
+      // Thresholds from the anti-monolith section of .aiassistant/rules:
+      // signals to analyze, not barriers.
+      complexity: ["warn", 15],
+      "max-lines-per-function": ["warn", { max: 60, skipBlankLines: true, skipComments: true }],
+      "max-params": ["warn", { max: 4 }],
+      "max-depth": ["warn", 4],
+    },
+  },
+];

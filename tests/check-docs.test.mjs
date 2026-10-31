@@ -69,12 +69,23 @@ describe("check-docs", () => {
 
   it("дорожная карта со ссылками на будущие файлы и скрипт даёт [OK]", () => {
     const doc =
-      "# Планы\n\n`npm run lint:metrics`, `docs/architecture.md`, `docs/api.md`,\n" +
+      "# Планы\n\n`npm run dev`, `docs/architecture.md`, `docs/api.md`,\n" +
       "`docs/security.md`, `scripts/check-templates.ts`,\n`scripts/check-unicode-prose.ts`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 0);
     assert.doesNotMatch(result.stderr, /does not exist/);
     assert.doesNotMatch(result.stderr, /is not in package\.json scripts/);
+  });
+
+  it("реальный скрипт из package.json в документации проходит", () => {
+    const pkg = JSON.stringify({
+      name: "fixture",
+      scripts: { "lint:metrics": "eslint . --config eslint.metrics.config.js" },
+      engines: { node: ">=22.22.2" },
+    });
+    const doc = "# Ретонка\n\nЗапускается `npm run lint:metrics`.\n";
+    const result = runFixture(pkg, "22.22.2", [{ file: "docs/lane.md", content: doc }]);
+    assert.equal(result.status, 0);
   });
 
   it("ссылка на случайный несуществующий путь по-прежнему ловится", () => {

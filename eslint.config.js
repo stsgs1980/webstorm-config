@@ -116,7 +116,11 @@ export default [
       "react/jsx-uses-react": "error",
       "react/jsx-uses-vars": "error",
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
+      // No warn level in this config: --max-warnings=0 makes "warn" identical
+      // to "error", so a name that reads as advisory would still block CI.
+      // Real defects are named "error"; advisory metrics live in the
+      // separate non-blocking lane: npm run lint:metrics.
+      "react-hooks/exhaustive-deps": "error",
       "jsx-a11y/alt-text": "error",
       "jsx-a11y/anchor-has-content": "error",
       "jsx-a11y/anchor-is-valid": "error",
