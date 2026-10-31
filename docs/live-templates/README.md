@@ -42,6 +42,12 @@ IDE **не читает**: такой возможности в IntelliJ/WebStor
   `@typescript-eslint/no-empty-object-type`.
 - JSDoc на компонент обязателен (публичное API, правило `jsdoc/require-jsdoc`);
   теги `@param props.children` и `@returns` шаблон добавляет сам — линтер в TS их не требует.
+- Имя компонента не вводится вручную: `NAME` вычисляется как
+  `capitalize(fileNameWithoutExtension())` (fallback `Component`) и
+  подставляется во все четыре места — интерфейс, JSDoc, `export const`,
+  `export default`.
+- Возвращаемый тип `: ReactElement` записан явно вместе с импортом типа:
+  правило `explicit-function-return-type` в этом репозитории включено.
 - У `useReducer` начальное состояние по умолчанию `{}`, чтобы при пропуске переменной
   `$INIT$` код оставался синтаксически валидным.
 
