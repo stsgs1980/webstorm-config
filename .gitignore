@@ -45,6 +45,7 @@ coverage/
 
 # OpenCode
 .agents/
+.opencode/
 
 # OS files
 .DS_Store
