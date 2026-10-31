@@ -2,9 +2,44 @@
 
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { checkVersionAlignment } from "./lib/version-alignment.ts";
 
-/** Documented future scripts that intentionally do not exist yet. */
-const KNOWN_FUTURE_SCRIPTS = ["dev"];
+/**
+ * Documented future scripts that intentionally do not exist yet.
+ * `dev` is a documented workspace bootstrap script; `lint:metrics` is the
+ * planned non-blocking metrics lane. Until either is added to
+ * package.json the doc reference is a plan, not a dead link.
+ */
+const KNOWN_FUTURE_SCRIPTS = ["dev", "lint:metrics"];
+
+/**
+ * Future paths referenced by the roadmap section of the WebStorm setup
+ * guide; each entry carries a reason, an exemption without one is a hole
+ * in the rule, not a rule.
+ * @type {{path: string, reason: string}[]}
+ */
+const KNOWN_FUTURE_PATHS = [
+  {
+    path: "docs/architecture.md",
+    reason: "planned module-boundary policy document",
+  },
+  {
+    path: "docs/security.md",
+    reason: "planned secrets and server authorization policy document",
+  },
+  {
+    path: "docs/api.md",
+    reason: "planned API conventions document",
+  },
+  {
+    path: "scripts/check-templates.ts",
+    reason: "planned live-template render verifier",
+  },
+  {
+    path: "scripts/check-unicode-prose.ts",
+    reason: "planned prose checker, one of the two documented options",
+  },
+];
 
 /** Inline-code path prefixes that must exist in the repository. */
 const PATH_PREFIXES = [
@@ -25,12 +60,6 @@ const PATH_PATTERN = /`([^`]+\/[^`]*)`/g;
 
 /** "Node.js >= x.y.z" markers, including the percent-encoded badge form. */
 const NODE_VERSION_PATTERN = /Node\.js-?\s*(?:%3E%3D|>=)\s*(\d+\.\d+\.\d+)/g;
-
-/** Strict x.y.z version, as required inside .nvmrc. */
-const EXACT_VERSION_PATTERN = /^(\d+)\.(\d+)\.(\d+)$/;
-
-/** First x.y.z version found in a range, e.g. engines.node. */
-const VERSION_PATTERN = /(\d+)\.(\d+)\.(\d+)/;
 
 /**
  * Recursively collect .md files under a directory.
@@ -80,58 +109,6 @@ function lineOf(text: string, index: number): number {
 }
 
 /**
- * Compare two x.y.z version strings numerically.
- * @param a - first version
- * @param b - second version
- * @returns negative when a < b, zero when equal, positive when a > b
- */
-function compareVersions(a: string, b: string): number {
-  const pa = a.split(".").map(Number);
-  const pb = b.split(".").map(Number);
-
-  for (let i = 0; i < 3; i += 1) {
-    const da = pa[i] ?? 0;
-    const db = pb[i] ?? 0;
-
-    if (da !== db) {
-      return da - db;
-    }
-  }
-
-  return 0;
-}
-
-/**
- * Check that the .nvmrc version satisfies engines.node.
- * @param nvmRaw - raw .nvmrc content, if the file exists
- * @param enginesNode - engines.node value from package.json, if set
- * @param failures - collector for error lines
- * @returns min version extracted from engines.node, if parseable
- */
-function checkVersionAlignment(
-  nvmRaw: string | undefined,
-  enginesNode: string | undefined,
-  failures: string[],
-): string | undefined {
-  const nvmVersion = nvmRaw === undefined ? undefined : EXACT_VERSION_PATTERN.exec(nvmRaw)?.[0];
-  const engineMin = enginesNode === undefined ? undefined : VERSION_PATTERN.exec(enginesNode)?.[0];
-  if (nvmRaw === undefined) {
-    failures.push("[FAIL] .nvmrc not found.");
-  } else if (nvmVersion === undefined) {
-    failures.push("[FAIL] Cannot parse version from .nvmrc.");
-  }
-  if (enginesNode === undefined) {
-    failures.push("[FAIL] engines.node is not set in package.json.");
-  } else if (engineMin === undefined) {
-    failures.push("[FAIL] Cannot parse version from engines.node.");
-  }
-  if (nvmVersion !== undefined && engineMin !== undefined && compareVersions(nvmVersion, engineMin) < 0) {
-    failures.push(`[FAIL] .nvmrc ${nvmVersion} does not satisfy engines.node ${enginesNode}.`);
-  }
-  return engineMin;
-}
-
-/**
  * Check that every `npm run <name>` in a doc file is a real script.
  * @param file - doc file being checked
  * @param text - file content
@@ -173,6 +150,11 @@ function checkPaths(file: string, text: string, failures: string[]): void {
       path = path.slice(0, anchor);
     }
     if (!PATH_PREFIXES.some((prefix) => path.startsWith(prefix))) {
+      continue;
+    }
+    const future = KNOWN_FUTURE_PATHS.find((entry) => entry.path === path);
+    if (future !== undefined) {
+      // Roadmap reference: the failure would be creating it, not naming it.
       continue;
     }
     if (!existsSync(path)) {
