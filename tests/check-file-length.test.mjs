@@ -1,9 +1,9 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
@@ -22,6 +22,7 @@ const SHORT_FILE = "export const ok = true;\n";
 const makeRepo = (name, content) => {
   const dir = mkdtempSync(join(tmpdir(), "wsc-file-length-"));
   execFileSync("git", ["init", "-q"], { cwd: dir });
+  mkdirSync(join(dir, dirname(name)), { recursive: true });
   writeFileSync(join(dir, name), content);
   execFileSync("git", ["add", "-A"], { cwd: dir });
   return dir;
@@ -75,5 +76,41 @@ describe("check-file-length", () => {
     const result = runFixture("long.ts", LONG_FILE, ["--all"]);
     assert.equal(result.status, 1);
     assert.match(result.stderr, /\[FAIL\] File 'long\.ts' has 260 lines\./);
+  });
+
+  it("сгенерированный файл в generated/ пропускается с причиной", () => {
+    const result = runFixture(join("generated", "schema.ts"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*generated[/\\]schema\.ts \(.+\)/);
+  });
+
+  it("сторонний код в vendor/ пропускается", () => {
+    const result = runFixture(join("vendor", "lib.js"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*vendor[/\\]lib\.js \(.+\)/);
+  });
+
+  it("файл суффикса .gen.ts (кодогенерация) пропускается", () => {
+    const result = runFixture(join("src", "schema.gen.ts"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*schema\.gen\.ts \(.+\)/);
+  });
+
+  it("копированные shadcn/ui компоненты пропускаются", () => {
+    const result = runFixture(join("src", "components", "ui", "sidebar.tsx"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*components[/\\]ui[/\\]sidebar\.tsx \(shadcn/);
+  });
+
+  it("обычный длинный файл вне сгенерированных деревьев по-прежнему ловится", () => {
+    const result = runFixture(join("src", "generated-looking.ts"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /\[FAIL\] File 'src[/\\]generated-looking\.ts' has 260 lines\./);
+  });
+
+  it("сводка [OK] отчитывает и пропущенные исключения, а не молчит", () => {
+    const result = runFixture(join("generated", "schema.ts"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt skipped: \d+/);
   });
 });

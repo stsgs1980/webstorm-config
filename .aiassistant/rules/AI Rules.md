@@ -40,22 +40,35 @@ Before any action, classify the user's request:
 - Markdown with JSX in fenced blocks must use `tsx`, not `typescript` (WebStorm injection).
 - WebStorm IDE setup: `docs/webstorm.md` (code style import and on-save tools are manual).
 
-## 4. Anti-Monolith (Auto-Activation)
+## 4. Anti-Monolith
 
-This skill MUST activate automatically when ANY of these conditions are detected:
+Hard rule, enforced by a script at pre-commit and in CI:
 
-- File exceeds 250 lines (TS/JS; test files exempt) — enforced by `npm run check:file-length`.
-- Component exceeds 200 lines (extract subcomponents).
-- Function exceeds 50 lines or cyclomatic complexity > 15 — enforced by
-  WebStorm inspections (`OverlyLongFunctionJS`, `CyclomaticComplexityJS`).
-- 3+ `useState` in one component (extract to custom hook).
+- A TS/JS file over 250 lines (tests exempt) blocks the commit:
+  `node scripts/check-file-length.ts --all`. Generated and vendored paths
+  are exempt; each exemption is reported with its reason.
 
-When a threshold is crossed:
+Signals to analyze - guiding checks, not barriers (no auto-stop):
 
-1. STOP writing the monolith.
-2. Announce: `[ANTI-MONOLITH] Threshold exceeded: <reason>`
-3. Apply decomposition: extract subcomponents, extract hooks, separate data fetching.
-4. Continue the task with decomposed modules.
+- small UI component (button, card) over 200 lines: almost always mixing jobs;
+- behavior component (form, widget) over 250 lines;
+- page-level composition over 300 lines: check it does not own data or logic;
+- function or hook over 60 lines, or cyclomatic complexity over 15;
+- a hook that bundles three or more unrelated jobs.
+
+When a signal fires:
+
+1. State the file's purpose in one sentence without "and". If it fits,
+   leave the file as is and continue the task.
+2. If it does not fit, split by responsibility: UI separate from data
+   fetching, state owned by the nearest parent. Do not create wrappers,
+   hooks, or subcomponents to lower a line count.
+3. Continue the task normally: the counter is not the goal, cohesion is.
+
+The number of `useState` calls is not evidence by itself: a page with
+six `useState` calls can be healthy. Extract a hook for one coherent
+behavior with a clear contract; prefer `useReducer` for complex
+transitions. A hook that mixes unrelated concerns is the signal.
 
 ## 5. Clean Code & Architecture
 
