@@ -148,6 +148,30 @@ export default [
     },
   },
   {
+    // Promise rules need type information (guide 5.2, item 6): syntax-only
+    // linting sees no difference between a returned Promise and a void call.
+    // projectService picks the nearest tsconfig from the file; markdown
+    // snippets are virtual files that exist only in the processor, and the
+    // type service cannot resolve a file that is not on disk, so they are
+    // excluded here and keep the syntax-only parserOptions of the main block.
+    files: ["**/*.ts", "**/*.tsx"],
+    ignores: ["**/*.md/*"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: { jsx: true },
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": "error",
+    },
+  },
+  {
     // Template's own tooling tests: vitest globals + intentional fixtures.
     // Must stay last: overrides the code rules above for tests/**.
     files: ["tests/**"],

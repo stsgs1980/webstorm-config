@@ -16,7 +16,10 @@ import { ESLint } from "eslint";
 import { AMBIENT_DECLARATIONS, VAR_OVERRIDES, VAR_SAMPLES } from "./check-templates-tables.ts";
 
 const TSC = join("node_modules", "typescript", "lib", "tsc.js");
-const RENDER_DIR = join("dev", ".templates-check");
+// No dot segment in the directory name: TypeScript include globs do not
+// enter dotted directories, and with the type-aware lint layer the
+// rendered files must be part of the tsconfig project.
+const RENDER_DIR = join("dev", "templates-check");
 const TEMPLATE_TAG = /<template\b([^>]*)>/g;
 
 /**
