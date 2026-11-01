@@ -1,0 +1,227 @@
+#!/usr/bin/env node
+
+// Renderer for .idea/liveTemplates: every template is expanded with sample
+// values and the result must pass `eslint --max-warnings=0` and
+// `tsc --noEmit --strict`. This guards against a broken template shipping
+// its defect into every future component silently (the rafce incident:
+// .idea/ is excluded from ESLint, so templates are invisible to the
+// ordinary gates).
+
+import { execFileSync } from "node:child_process";
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import process from "node:process";
+// noinspection NpmUsedModulesInstalled
+import { ESLint } from "eslint";
+import { AMBIENT_DECLARATIONS, VAR_OVERRIDES, VAR_SAMPLES } from "./check-templates-tables.ts";
+
+const TSC = join("node_modules", "typescript", "lib", "tsc.js");
+const RENDER_DIR = join("dev", ".templates-check");
+const TEMPLATE_TAG = /<template\b([^>]*)>/g;
+
+/**
+ * Read an XML attribute value; template values carry no raw quotes.
+ * @param tag - attribute string of one template element
+ * @param name - attribute name
+ * @returns attribute value or undefined
+ */
+function attr(tag: string, name: string): string | undefined {
+  return new RegExp(`\\b${name}="([^"]*)"`).exec(tag)?.[1];
+}
+
+/**
+ * Unescape XML entities that WebStorm writes into live template values.
+ * @param raw - raw attribute value
+ * @returns plain template text
+ */
+function unescape(raw: string): string {
+  return raw
+    .replaceAll("&quot;", '"')
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&#xA;", "\n")
+    .replaceAll("&#10;", "\n")
+    .replaceAll("&amp;", "&");
+}
+
+/**
+ * Render a template: variables replaced, identical everywhere - the rafce
+ * drift (different value in different places) cannot pass unnoticed.
+ * @param set - set key (file base name)
+ * @param name - template name
+ * @param value - raw template text with $VARS$
+ * @returns rendered code
+ */
+function render(set: string, name: string, value: string): string {
+  return value.replaceAll(/\$([A-Z][A-Z0-9_]*)\$/g, (_whole, variable: string) => {
+    const override = VAR_OVERRIDES[`${set}::${name}::${variable}`];
+    return override ?? VAR_SAMPLES[variable] ?? "0";
+  });
+}
+
+/**
+ * Collect all templates of one set file.
+ * @param file - path to the template set XML
+ * @returns parsed templates with names and unescaped values
+ */
+function parseSet(file: string): { name: string; value: string }[] {
+  const raw = readFileSync(file, "utf8");
+  const templates: { name: string; value: string }[] = [];
+  for (const match of raw.matchAll(TEMPLATE_TAG)) {
+    const name = attr(match[1], "name");
+    const value = attr(match[1], "value");
+    if (name !== undefined && value !== undefined) {
+      templates.push({ name, value: unescape(value) });
+    }
+  }
+  return templates;
+}
+
+/**
+ * Every template an argv dir holds; flat list keyed by set name.
+ * @param dir - directory with template set XML files
+ * @returns list with set, name and raw value per template
+ */
+function collectTemplates(dir: string): { set: string; name: string; value: string }[] {
+  let entries: string[];
+  try {
+    entries = readdirSync(dir).filter((file) => file.endsWith(".xml"));
+  } catch {
+    return [];
+  }
+  return entries.flatMap((file) => parseSet(join(dir, file)).map((tpl) => ({ set: file.slice(0, -4), ...tpl })));
+}
+
+/**
+ * Lint all rendered files: repository config plus a snippet-override block.
+ * A template is a skeleton, so unused declarations and empty blocks are
+ * expected there; every other rule stays at full strength.
+ * @param files - rendered file label/path pairs
+ * @returns [FAIL] lines for every error message
+ */
+async function lint(files: { path: string; label: string }[]): Promise<string[]> {
+  const labels = new Map(files.map((item) => [join(process.cwd(), item.path), item.label]));
+  const eslint = new ESLint({
+    ignore: false,
+    overrideConfigFile: "eslint.config.js",
+    overrideConfig: [
+      {
+        rules: {
+          "@typescript-eslint/no-unused-vars": "off",
+          "no-unused-vars": "off",
+          "no-empty": "off",
+        },
+      },
+    ],
+  });
+  const results = await eslint.lintFiles(files.map((item) => item.path));
+  const failures: string[] = [];
+  for (const result of results) {
+    const label = labels.get(result.filePath) ?? result.filePath;
+    for (const message of result.messages) {
+      if (message.severity === 2) {
+        failures.push(`[FAIL] ${label}:${message.line} ${message.ruleId} ${message.message}`);
+      }
+    }
+  }
+  return failures;
+}
+
+/**
+ * Compile all rendered files with strict TypeScript. A single tsc run:
+ * each file is standalone (prelude inline), cross-file deps do not exist.
+ * @param files - rendered file label/path pairs
+ * @returns [FAIL] lines naming label and message
+ */
+function typecheck(files: { path: string; label: string }[]): string[] {
+  let output = "";
+  try {
+    output = execFileSync(
+      process.execPath,
+      [
+        TSC,
+        "--noEmit",
+        "--strict",
+        "--jsx",
+        "react-jsx",
+        "--target",
+        "es2022",
+        "--module",
+        "esnext",
+        "--moduleResolution",
+        "bundler",
+        ...files.map((item) => item.path),
+      ],
+      { encoding: "utf8" },
+    );
+  } catch (error) {
+    output = (error as { stdout?: string }).stdout ?? String(error);
+  }
+  return output
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => `[FAIL] ${line}`);
+}
+
+/**
+ * Render, lint, typecheck every template; failures go to stderr, exit 1.
+ * @returns {Promise<void>}
+ */
+async function main(): Promise<void> {
+  const dir = process.argv[2] ?? join(".idea", "liveTemplates");
+  const templates = collectTemplates(dir);
+  const files: { path: string; label: string }[] = [];
+  mkdirSync(RENDER_DIR, { recursive: true });
+
+  let okCount = 0;
+  for (const { set, name, value } of templates) {
+    const label = `${set}/${name}`;
+    const rendered = render(set, name, value);
+    // Hook snippets describe code typed inside a component body; render
+    // them in that context so rules-of-hooks judges them as used.
+    const isHook = set === "react" && /^use[A-Z]/.test(name);
+    const body = isHook
+      ? `const TemplateSnippet = (): void => {\n${rendered}\n};\nTemplateSnippet();\n`
+      : `${rendered}\n`;
+    // A module per file: top-level consts can then collide with nothing.
+    const text = `${body}export {};\n`;
+
+    mkdirSync(join(RENDER_DIR, set), { recursive: true });
+    const ext = set === "react" ? ".tsx" : ".ts";
+    const path = join(RENDER_DIR, set, `${name}${ext}`);
+    writeFileSync(path, text);
+    // Ambient declarations live in one shared d.ts, inside the tsc program
+    // only: duplicating them per file breaks the single tsc run.
+    files.push({ path, label });
+    okCount += 1;
+  }
+  const ambient = join(RENDER_DIR, "ambient.d.ts");
+  writeFileSync(ambient, `${AMBIENT_DECLARATIONS.map((line) => `${line}\n`).join("")}`);
+
+  const lintFailures = await lint(files);
+  const typecheckFailures = typecheck([...files, { path: ambient, label: "ambient" }]);
+  const failures = [...lintFailures, ...typecheckFailures];
+
+  if (failures.length > 0 || files.length === 0) {
+    if (files.length === 0) {
+      failures.push(`[FAIL] check-templates: no templates in ${dir}.`);
+    }
+    for (const failure of failures) {
+      console.error(failure);
+    }
+    console.error(`[Anti-Drift] templates checked: 0 of ${okCount} rendered cleanly.`);
+    process.exitCode = 1;
+    return;
+  }
+
+  for (const { label } of files) {
+    process.stdout.write(`[OK] ${label}: rendered, eslint OK, tsc OK\n`);
+  }
+  process.stdout.write(`[OK] templates checked: ${files.length}\n`);
+}
+
+try {
+  await main();
+} finally {
+  rmSync(RENDER_DIR, { recursive: true, force: true });
+}
