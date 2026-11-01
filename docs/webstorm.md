@@ -185,6 +185,12 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 XML-файлы там это склад. Импорт: откройте нужный XML, скопируйте тело шаблона,
 `Settings → Editor → Live Templates` → `+` → вставьте.
 
+Источники истины — репозиторий, а не IDE-настройки: правки шаблона вносятся в XML
+`.idea/liveTemplates/`, затем в IDE реимпортируются; сделанное только в IDE и не
+закоммиченное считается потерянным. Чистота склада машинно проверяется:
+`npm run check:templates` рендерит каждый шаблон со значениями переменных и прогоняет
+через ESLint и tsc (CI и локально).
+
 Состав групп (React 8 шаблонов, Testing 4, TypeScript 3, Utilities 3), требования
 к контексту и частые проблемы — в [docs/live-templates/README.md](live-templates/README.md).
 Отдельно смотрите [шаблон компонента](live-templates/README.md): `rafce` больше не
@@ -211,6 +217,28 @@ git push         →  typecheck + тесты (pre-push)
 ```
 
 Если при коммите много неожиданных правок — проверьте шаги 2–4.
+
+### Где проверяется каждое правило
+
+Обязательность не угадывается: у каждого правила назван канал проверки.
+«commit» — husky pre-commit, «CI» — `.github/workflows/ci.yml`, «IDE» —
+инспекции WebStorm, «advisory» — `npm run lint:metrics` (CI-шаг не блокирует).
+
+| Правило                                                  | Закреплено                          | Проверяется       |
+| -------------------------------------------------------- | ----------------------------------- | ----------------- |
+| TS/JS-файл до 250 строк; исключения — с причиной         | `scripts/check-file-length.ts`      | commit + CI       |
+| Шаблоны рендерятся чисто: render → eslint → tsc          | `scripts/check-templates.ts`        | CI                |
+| docs согласованы с конфигами                             | `scripts/check-docs.ts`             | CI                |
+| ESLint-правила кода (в т.ч. без `warn`)                  | `eslint.config.js`                  | IDE + commit + CI |
+| Промисы: no-floating/misused-promises                    | `eslint.config.js` (type-aware)     | IDE + CI          |
+| `no-console`: приложение error, скрипты/сервер off       | `eslint.config.js`                  | IDE + commit + CI |
+| Юникод и emoji-политика в коде и прозе                   | `eslint-rules`, markdownlint        | IDE + commit + CI |
+| Markdown не длиннее 120                                  | markdownlint MD013, `.editorconfig` | IDE + commit + CI |
+| Метрики: длина функций, сложность, max-depth, max-params | `eslint.metrics.config.js`          | IDE + advisory    |
+| Вложенность функций (порог 4)                            | профиль IDE, в git не коммитится    | только IDE        |
+| TS-типы (tsc), тесты                                     | `tsconfig.json`, `vitest.config.ts` | push + CI         |
+| Prod-аудит зависимостей (high+)                          | `.github/workflows/ci.yml`          | CI                |
+| React-компонент 200 строк; 3+ `useState`; сложность 15   | пороги-сигналы                      | ревью             |
 
 ## Windows
 
