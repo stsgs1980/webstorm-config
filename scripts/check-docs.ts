@@ -31,10 +31,6 @@ const KNOWN_FUTURE_PATHS = [
     reason: "planned API conventions document",
   },
   {
-    path: "scripts/check-templates.ts",
-    reason: "planned live-template render verifier",
-  },
-  {
     path: "scripts/check-unicode-prose.ts",
     reason: "planned prose checker, one of the two documented options",
   },

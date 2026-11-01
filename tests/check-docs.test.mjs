@@ -70,7 +70,7 @@ describe("check-docs", () => {
   it("дорожная карта со ссылками на будущие файлы и скрипт даёт [OK]", () => {
     const doc =
       "# Планы\n\n`npm run dev`, `docs/architecture.md`, `docs/api.md`,\n" +
-      "`docs/security.md`, `scripts/check-templates.ts`,\n`scripts/check-unicode-prose.ts`.\n";
+      "`docs/security.md`, `scripts/check-unicode-prose.ts`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 0);
     assert.doesNotMatch(result.stderr, /does not exist/);
