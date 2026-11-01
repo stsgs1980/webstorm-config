@@ -14,7 +14,12 @@ updates:
           - patch
     ignore:
       # ESLint 10 is blocked by eslint-plugin-react and eslint-plugin-jsx-a11y.
+      # @eslint/js versions pair module by module with eslint (10.x needs
+      # eslint 10), and the bump bypasses the "eslint" ignore above: the
+      # name is different, the constraint is the same.
       - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
         update-types: ["version-update:semver-major"]
       # TypeScript 6+ is blocked by typescript-eslint.
       - dependency-name: typescript
