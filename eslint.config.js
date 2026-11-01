@@ -139,6 +139,15 @@ export default [
     },
   },
   {
+    // Console policy by context (guide 5.2, item 7): in application code a
+    // console call is a forgotten debug leftover; on the server and in
+    // scripts logging is the tool of the trade, so it stays allowed.
+    files: ["scripts/**", "server/**"],
+    rules: {
+      "no-console": "off",
+    },
+  },
+  {
     // Template's own tooling tests: vitest globals + intentional fixtures.
     // Must stay last: overrides the code rules above for tests/**.
     files: ["tests/**"],
