@@ -113,4 +113,50 @@ describe("check-file-length", () => {
     assert.equal(result.status, 0);
     assert.match(result.stdout, /exempt skipped: \d+/);
   });
+
+  it("маркер file-length-exempt первой строкой пропускает файл с его причиной", () => {
+    const content = `// file-length-exempt: cohesive state machine, splitting would break invariants\n${LONG_FILE}`;
+    const result = runFixture("shield.ts", content, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: shield\.ts \(file-length-exempt: cohesive state machine/);
+  });
+
+  it("маркер не первой строкой не работает", () => {
+    const content = `${LONG_FILE.slice(0, 40)}\n// file-length-exempt: too late\n${LONG_FILE.slice(40)}`;
+    const result = runFixture("late-marker.ts", `${content}\n`, ["--all"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /\[FAIL\] File 'late-marker\.ts' has/);
+  });
+
+  it("файл объявлений типов .d.ts пропускается", () => {
+    const result = runFixture(join("src", "types.d.ts"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*types\.d\.ts \(type declarations/);
+  });
+
+  it("конфиг инструмента *.config.ts пропускается", () => {
+    const result = runFixture("vite.config.ts", LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: vite\.config\.ts \(tool config/);
+  });
+
+  it("дерево dist/ пропускается", () => {
+    const result = runFixture(join("dist", "lib.js"), LONG_FILE, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*dist[/\\]lib\.js \(build output/);
+  });
+
+  it("чистый barrel index.ts пропускается даже длинным", () => {
+    const barrel = Array.from({ length: 260 }, (_, index) => `export { x${index} } from "./x${index}.js";`).join("\n");
+    const result = runFixture(join("src", "index.ts"), barrel, ["--all"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /exempt: .*index\.ts \(barrel file, re-exports only\)/);
+  });
+
+  it("index.ts с логикой barrel не является и ловится", () => {
+    const barrel = `${Array.from({ length: 260 }, (_, index) => `export { x${index} } from "./x${index}.js";`).join("\n")}\nconsole.log("loaded");`;
+    const result = runFixture(join("src", "index.ts"), barrel, ["--all"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /\[FAIL\] File/);
+  });
 });

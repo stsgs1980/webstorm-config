@@ -32,10 +32,29 @@ const EXEMPT_PATHS = [
     reason: "codegen output (.gen.* suffix)",
   },
   {
+    pattern: /\.generated\.(?:ts|tsx|js|jsx|mts|cts|mjs|cjs)$/,
+    reason: "codegen output (.generated.* suffix)",
+  },
+  {
+    pattern: /\.d\.(?:ts|mts|cts)$/,
+    reason: "type declarations, zero runtime",
+  },
+  {
+    pattern: /\.config\.(?:ts|tsx|js|jsx|mts|cts|mjs|cjs)$/,
+    reason: "tool config wired into its tool, not application logic",
+  },
+  {
+    pattern: /(?:^|[\\/])(?:dist|build|third_party)[\\/]/,
+    reason: "build output or vendored tree, not edited by hand",
+  },
+  {
     pattern: /(?:^|[\\/])components[\\/]ui[\\/]/,
     reason: "shadcn/ui components copied from the registry",
   },
 ];
+
+/** First-line escape hatch for a legitimately cohesive long file. */
+const FILE_LENGTH_EXEMPT = /^\/\/\s*file-length-exempt:\s*(\S.*)$/;
 
 /**
  * Match a file against the exempt list.
@@ -101,37 +120,70 @@ function isTestFile(file: string): boolean {
 }
 
 /**
+ * Whether a file is a barrel: named index.* and holding nothing but
+ * `export` statements. Re-export boundaries are not monoliths; logic
+ * hiding behind the name voids the exemption.
+ * @param file - repository-relative path
+ * @param content - file content
+ * @returns true for a pure re-export barrel
+ */
+function isBarrel(file: string, content: string): boolean {
+  const base = file.split(/[\\/]/).pop() ?? "";
+  if (!/^index\.(?:ts|tsx|mts|cts|js|mjs|cjs)$/.test(base)) {
+    return false;
+  }
+  const statements = content.split("\n").filter((line) => line.trim() !== "");
+  return statements.length > 0 && statements.every((line) => /^\s*export\s/.test(line));
+}
+
+/**
  * Anti-monolith check: TS/JS source files must not exceed MAX_LINES.
- * Test files (*.test.*, *.spec.*, tests/, __tests__/) and generated or
- * vendored paths (EXEMPT_PATHS) are exempt; every exemption is reported
- * with its reason.
+ * Test files (*.test.*, *.spec.*, tests/, __tests__/), generated or
+ * vendored paths (EXEMPT_PATHS), barrel files and a first-line
+ * `// file-length-exempt: <reason>` marker are exempt; every exemption
+ * is reported with its reason.
  * @returns {void}
  */
 function main(): void {
   const candidates = listFiles();
 
+  const skippedTests: string[] = [];
   const exempted: { file: string; reason: string }[] = [];
-  const files = candidates
-    .filter((file) => !isTestFile(file))
-    .filter((file) => {
-      const exempt = exemptEntry(file);
-      if (exempt) {
-        exempted.push({ file, reason: exempt.reason });
-      }
-      return !exempt;
-    });
-  const skippedTests = candidates.length - exempted.length - files.length;
-
+  let missing = 0;
   let failed = 0;
 
-  for (const file of files) {
+  for (const file of candidates) {
+    if (isTestFile(file)) {
+      skippedTests.push(file);
+      continue;
+    }
+
+    const pathExempt = exemptEntry(file);
+    if (pathExempt) {
+      exempted.push({ file, reason: pathExempt.reason });
+      continue;
+    }
+
     if (!existsSync(file)) {
+      missing += 1;
       continue;
     }
 
     // A trailing newline terminates the last line; it is not an extra line.
-    const content = readFileSync(file, "utf8").replace(/\r?\n$/, "");
-    const lines = content.split("\n").length;
+    const content = readFileSync(file, "utf8");
+
+    const marker = FILE_LENGTH_EXEMPT.exec(content.split("\n", 1)[0] ?? "");
+    if (marker) {
+      exempted.push({ file, reason: `file-length-exempt: ${marker[1]}` });
+      continue;
+    }
+
+    if (isBarrel(file, content)) {
+      exempted.push({ file, reason: "barrel file, re-exports only" });
+      continue;
+    }
+
+    const lines = content.replace(/\r?\n$/, "").split("\n").length;
 
     if (lines > MAX_LINES) {
       console.error(`[FAIL] File '${file}' has ${lines} lines. Limit: ${MAX_LINES}.`);
@@ -149,8 +201,9 @@ function main(): void {
   }
 
   process.stdout.write(
-    `[OK] Checked files: ${files.length}, tests skipped: ${skippedTests},` +
-      ` exempt skipped: ${exempted.length}. Limit: ${MAX_LINES} lines.\n`,
+    `[OK] Checked files: ${candidates.length - skippedTests.length - exempted.length - missing},` +
+      ` tests skipped: ${skippedTests.length}, exempt skipped: ${exempted.length}.` +
+      ` Limit: ${MAX_LINES} lines.\n`,
   );
 }
 
