@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { checkVersionAlignment } from "./lib/version-alignment.ts";
@@ -126,6 +127,25 @@ function checkScriptNames(file: string, text: string, scripts: Record<string, st
 }
 
 /**
+ * Whether git ignores the path. Ignored paths are personal files by the
+ * `.idea` whitelist policy: documentation may and must name them even
+ * though a CI checkout holds none of them. Outside a git repository the
+ * path simply does not exist, and the ordinary existence check applies.
+ * @param path - repo-relative path
+ * @returns true when `git check-ignore` reports the path ignored
+ */
+function isGitIgnored(path: string): boolean {
+  try {
+    execFileSync("git", ["check-ignore", "-q", "--", path], { stdio: "ignore" });
+    return true;
+  } catch (error) {
+    // git exit codes: 0 = ignored (throws never), 1 = not ignored,
+    // 128 = not a repository or broken git: the path is not ignored.
+    return (error as { status?: number }).status === 0;
+  }
+}
+
+/**
  * Check that file paths in a doc file's inline code exist.
  * @param file - doc file being checked
  * @param text - file content
@@ -152,7 +172,7 @@ function checkPaths(file: string, text: string, failures: string[]): void {
       // Roadmap reference: the failure would be creating it, not naming it.
       continue;
     }
-    if (!existsSync(path)) {
+    if (!existsSync(path) && !isGitIgnored(path)) {
       failures.push(`[FAIL] ${file}:${lineOf(text, at)} path ${path} does not exist.`);
     }
   }

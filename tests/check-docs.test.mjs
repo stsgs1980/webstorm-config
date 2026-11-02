@@ -101,4 +101,28 @@ describe("check-docs", () => {
     assert.equal(result.status, 1);
     assert.match(result.stderr, /npm run lint:metrics-extra is not in package\.json scripts/);
   });
+
+  it("ссылка на личный файл из .gitignore не считается несуществующей", { timeout: 120000 }, () => {
+    // A checkout (CI) has no personal files like .idea/workspace.xml: the
+    // fixture is a git repo whose .gitignore ignores the named path.
+    const dir = mkdtempSync(join(tmpdir(), "wsc-check-docs-"));
+    try {
+      writeFileSync(join(dir, "package.json"), PKG);
+      writeFileSync(join(dir, "README.md"), `# Fixture\n\n${BADGE}`);
+      writeFileSync(join(dir, ".nvmrc"), "22.22.2");
+      writeFileSync(join(dir, ".gitignore"), ".idea/workspace.xml\n");
+      const docs = join(dir, "docs");
+      mkdirSync(docs, { recursive: true });
+      writeFileSync(
+        join(docs, "settings.md"),
+        "# Папки\n\n`.idea/workspace.xml` - личное состояние, в git не попадает.\n",
+      );
+      execFileSync("git", ["init", "-q"], { cwd: dir, stdio: "ignore" });
+      execFileSync("git", ["config", "core.quotepath", "false"], { cwd: dir, stdio: "ignore" });
+      const stdout = execFileSync(process.execPath, [SCRIPT], { cwd: dir, encoding: "utf8" });
+      assert.doesNotMatch(stdout, /does not exist/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });
