@@ -80,20 +80,21 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 
 ## Scripts
 
-| Команда                 | Описание                                  |
-| ----------------------- | ----------------------------------------- |
-| `npm run lint`          | ESLint                                    |
-| `npm run typecheck`     | TypeScript (`tsc --noEmit`)               |
-| `npm run lint:css`      | Stylelint                                 |
-| `npm run lint:md`       | markdownlint                              |
-| `npm run format`        | Prettier (запись)                         |
-| `npm run format:check`  | Prettier (проверка, как в CI)             |
-| `npm run check:docs`    | Сверка доков с конфигами (шаблон)         |
-| `npm test`              | Vitest                                    |
-| `npm run test:watch`    | Vitest (watch)                            |
-| `npm run test:coverage` | Vitest + coverage                         |
-| `npm run test:e2e`      | Playwright (план; после установки)        |
-| `npm run dev`           | _добавьте после Step 3 в getting-started_ |
+| Команда                           | Описание                                  |
+| --------------------------------- | ----------------------------------------- |
+| `npm run lint`                    | ESLint                                    |
+| `npm run lint:prettier-conflicts` | Конфликты правил ESLint с Prettier        |
+| `npm run typecheck`               | TypeScript (`tsc --noEmit`)               |
+| `npm run lint:css`                | Stylelint                                 |
+| `npm run lint:md`                 | markdownlint                              |
+| `npm run format`                  | Prettier (запись)                         |
+| `npm run format:check`            | Prettier (проверка, как в CI)             |
+| `npm run check:docs`              | Сверка доков с конфигами (шаблон)         |
+| `npm test`                        | Vitest                                    |
+| `npm run test:watch`              | Vitest (watch)                            |
+| `npm run test:coverage`           | Vitest + coverage                         |
+| `npm run test:e2e`                | Playwright (план; после установки)        |
+| `npm run dev`                     | _добавьте после Step 3 в getting-started_ |
 
 ## Docs
 

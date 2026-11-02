@@ -24,6 +24,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      # Formatting rules must stay off: Prettier owns formatting in this repo.
+      - run: npm run lint:prettier-conflicts
       # Advisory lane: metrics report candidates for a responsibility check,
       # a warning here must not fail the build.
       - run: npm run lint:metrics

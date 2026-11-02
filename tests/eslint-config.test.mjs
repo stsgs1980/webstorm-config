@@ -50,6 +50,40 @@ describe("eslint-config no-console scopes", () => {
   });
 });
 
+describe("eslint-config environment globals", () => {
+  it("браузерные глобали известны в src", { timeout: 120000 }, async () => {
+    const rules = await reportRules('window.matchMedia("(min-width: 1px)");\n', "src/app.mjs");
+    assert.ok(!rules.includes("no-undef"), `unexpected no-undef, got: ${rules.join(", ")}`);
+  });
+
+  it("Node-глобали известны в scripts", { timeout: 120000 }, async () => {
+    const rules = await reportRules("process.exit(0);\n", "scripts/tool.mjs");
+    assert.ok(!rules.includes("no-undef"), `unexpected no-undef, got: ${rules.join(", ")}`);
+  });
+
+  it("браузерное имя в Node-скрипте остаётся ошибкой", { timeout: 120000 }, async () => {
+    const rules = await reportRules('window.matchMedia("x");\n', "scripts/tool.mjs");
+    assert.ok(rules.includes("no-undef"), `expected no-undef, got: ${rules.join(", ")}`);
+  });
+
+  it("console.warn в src не даёт no-undef", { timeout: 120000 }, async () => {
+    const rules = await reportRules('console.warn("deprecation");\n', "src/app.mjs");
+    assert.ok(!rules.includes("no-undef"), `unexpected no-undef, got: ${rules.join(", ")}`);
+  });
+});
+
+describe("eslint-config prettier compatibility", () => {
+  it("форматные правила выключены eslint-config-prettier", { timeout: 120000 }, async () => {
+    const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO });
+    const config = await eslint.calculateConfigForFile(join(REPO, "scripts/check-docs.ts"));
+    const severity = (value) => (Array.isArray(value) ? value[0] : value);
+    for (const rule of ["indent", "quotes", "semi"]) {
+      const value = config.rules[rule];
+      assert.ok(severity(value) === 0 || value === "off", `expected ${rule} to be off, got: ${JSON.stringify(value)}`);
+    }
+  });
+});
+
 describe("eslint-config type-aware promises", () => {
   /**
    * Lint a real .ts fixture: the type service resolves the file on disk

@@ -5,6 +5,8 @@ import markdown from "@eslint/markdown";
 // noinspection NpmUsedModulesInstalled
 import tsParser from "@typescript-eslint/parser";
 // noinspection NpmUsedModulesInstalled
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+// noinspection NpmUsedModulesInstalled
 import jsdoc from "eslint-plugin-jsdoc";
 // noinspection NpmUsedModulesInstalled
 import jsxA11y from "eslint-plugin-jsx-a11y";
@@ -12,6 +14,8 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 // noinspection NpmUsedModulesInstalled
 import reactHooks from "eslint-plugin-react-hooks";
+// noinspection NpmUsedModulesInstalled
+import globals from "globals";
 // noinspection NpmUsedModulesInstalled
 import tseslint from "typescript-eslint";
 import plainTextParser from "./eslint-parsers/plain-text.js";
@@ -177,6 +181,21 @@ export default [
     },
   },
   {
+    // Node environment: tooling, tests and the server. Globals are declared
+    // per path on purpose: a browser name in a Node file must stay an error.
+    files: ["scripts/**", "server/**", "tests/**", "*.config.*"],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+  },
+  {
+    // Browser environment: application code only.
+    files: ["src/**"],
+    languageOptions: {
+      globals: { ...globals.browser },
+    },
+  },
+  {
     // Template's own tooling tests: vitest globals + intentional fixtures.
     // Must stay last: overrides the code rules above for tests/**.
     files: ["tests/**"],
@@ -195,4 +214,7 @@ export default [
       "unicode-policy/unicode-graphics": "off",
     },
   },
+  // Prettier owns formatting: turn off every rule that could fight it. Last
+  // entry on purpose - it must override earlier configs, not be overridden.
+  eslintConfigPrettier,
 ];
