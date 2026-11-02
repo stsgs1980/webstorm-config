@@ -1,5 +1,24 @@
 <!-- markdownlint-disable -->
 
+# Unreleased
+
+### Bug Fixes
+
+- **changelog:** generate the unreleased chunk and keep the file idempotent ([ff87744](https://github.com/stsgs1980/webstorm-config/commit/ff8774467e7cc835bd4811dad89e1bd82ebcb1b0))
+- **check-docs:** accept git-ignored paths as legitimate doc references ([3ba78a3](https://github.com/stsgs1980/webstorm-config/commit/3ba78a3019693be634f0d55011c6ae077348970e))
+- **check-templates:** render into pid-unique dir to survive parallel runs ([45f242f](https://github.com/stsgs1980/webstorm-config/commit/45f242f9600e08ddcafd4f9caeb8ceaef9c749e6))
+- **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
+- **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
+
+### Features
+
+- **lint:** block exhaustive-deps, add advisory lint:metrics lane ([e9d4aeb](https://github.com/stsgs1980/webstorm-config/commit/e9d4aeb2cf304bb3ab9e9e0d4e5629d7e1bd89ed))
+- **lint:** no-console by path scopes (app error, server/scripts off) ([bd08ab3](https://github.com/stsgs1980/webstorm-config/commit/bd08ab33305d766729838131e2effd499754166d))
+- **lint:** type-aware promises layer (projectService, no-floating/misused-promises) ([5cd6dfb](https://github.com/stsgs1980/webstorm-config/commit/5cd6dfb085b5e377a1dcdf127c994e8308717655))
+- **scripts:** exempt generated and vendored paths with reasons ([2a13c6d](https://github.com/stsgs1980/webstorm-config/commit/2a13c6dc7c8a61a89baee1be09eab9e93fc512bc))
+- **scripts:** file-length escape hatch, barrel detection, unified exemptions ([d124adc](https://github.com/stsgs1980/webstorm-config/commit/d124adc477253d9e81b0adecde75ff8cbd08c72b))
+- **scripts:** verify live templates render clean (check-templates) ([3307062](https://github.com/stsgs1980/webstorm-config/commit/33070623bd51188c9d3b4c4d82c61a7f5ed6b4e8))
+
 # 1.0.0 (2026-10-18)
 
 ### Bug Fixes
