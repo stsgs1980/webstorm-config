@@ -7,10 +7,11 @@ import { checkVersionAlignment } from "./lib/version-alignment.ts";
 
 /**
  * Documented future scripts that intentionally do not exist yet.
- * `dev` is a documented workspace bootstrap script; until it is added to
- * package.json the doc reference is a plan, not a dead link.
+ * `dev` is a documented workspace bootstrap script, `test:e2e` is the
+ * Playwright plan: until they are added to package.json the doc reference is a
+ * plan, not a dead link.
  */
-const KNOWN_FUTURE_SCRIPTS = ["dev"];
+const KNOWN_FUTURE_SCRIPTS = ["dev", "test:e2e"];
 
 /** Inline-code path prefixes that must exist in the repository. */
 const PATH_PREFIXES = [
@@ -23,8 +24,8 @@ const PATH_PREFIXES = [
   "eslint-parsers/",
 ];
 
-/** `npm run <name>` references inside docs. */
-const SCRIPT_PATTERN = /npm run ([a-z:.-]+)/g;
+/** `npm run <name>` references inside docs; digits occur in names like test:e2e. */
+const SCRIPT_PATTERN = /npm run ([a-z0-9:.-]+)/g;
 
 /** Inline-code values shaped like repository paths. */
 const PATH_PATTERN = /`([^`]+\/[^`]*)`/g;

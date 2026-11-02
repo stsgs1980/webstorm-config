@@ -68,6 +68,29 @@ describe("check-docs", () => {
     assert.match(result.stdout, /\[OK\] check-docs: 1 docs files consistent with configs\./);
   });
 
+  it("имя скрипта с цифрой читается целиком", () => {
+    const pkg = JSON.stringify({
+      name: "fixture",
+      scripts: { "test:e2e": "playwright test" },
+      engines: { node: ">=22.22.2" },
+    });
+    const doc = "# E2E\n\nЗапускается `npm run test:e2e`.\n";
+    const result = runFixture(pkg, "22.22.2", [{ file: "docs/e2e.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("опечатка в имени скрипта с цифрой ловится", () => {
+    const pkg = JSON.stringify({
+      name: "fixture",
+      scripts: { "test:e2e": "playwright test" },
+      engines: { node: ">=22.22.2" },
+    });
+    const doc = "# E2E\n\nЗапускается `npm run test:e3e`.\n";
+    const result = runFixture(pkg, "22.22.2", [{ file: "docs/e2e.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /npm run test:e3e is not in package\.json scripts/);
+  });
+
   it("будущий скрипт dev по-прежнему не считается битой ссылкой", () => {
     const doc = "# Планы\n\n`npm run dev`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
