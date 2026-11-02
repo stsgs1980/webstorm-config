@@ -37,6 +37,8 @@ export default [
       ".idea/**",
       // Agent workspace (superpowers briefs/ledger; never present in CI).
       ".superpowers/**",
+      // Draft workspace: reports and working notes outside every gate.
+      "drafts/**",
     ],
   },
   ...markdown.configs.recommended,

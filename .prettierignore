@@ -4,6 +4,7 @@ build/
 coverage/
 out/
 .idea/
+drafts/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock

@@ -60,7 +60,7 @@
     "lint": "eslint . --max-warnings=0",
     "lint:metrics": "eslint . --config eslint.metrics.config.js --no-warn-ignored",
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
-    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules --ignore drafts",
     "check:file-length": "node scripts/check-file-length.ts --all",
     "check:docs": "node scripts/check-docs.ts",
     "check:templates": "node scripts/check-templates.ts",

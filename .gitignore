@@ -24,6 +24,9 @@ coverage/
 # Husky
 .husky/_/
 
+# Drafts: workspace for reports and working notes, outside every gate.
+/drafts/
+
 # React Buddy
 /dev/
 
