@@ -100,6 +100,9 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | [webstorm.md](docs/webstorm.md)               | Настройка WebStorm                    |
 | [testing.md](docs/testing.md)                 | Vitest, `jsdom`, Testing Library      |
 | [markdown.md](docs/markdown.md)               | Правила оформления `.md`              |
+| [architecture.md](docs/architecture.md)       | Границы модулей и зависимости         |
+| [security.md](docs/security.md)               | Секреты, вход, авторизация            |
+| [api.md](docs/api.md)                         | Контракты HTTP API                    |
 
 ## Architecture
 
