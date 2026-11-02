@@ -7,13 +7,31 @@
 
 Репозиторий-**шаблон** настроек для WebStorm: ESLint, Prettier, Stylelint, Vitest, Husky, AI rules.
 
-## Этот README vs README.template.md
+## Docs: один вопрос - один документ
 
-| Файл                        | Назначение                                                     |
-| --------------------------- | -------------------------------------------------------------- |
-| **README.md** (этот файл)   | Документация репозитория `webstorm-config` на GitHub           |
-| **README.template.md**      | Заготовка README форка: структура и пример заполнения (Step 1) |
-| **docs/getting-started.md** | Шаги после fork — остаётся в проекте, не переписывается        |
+Каждый документ отвечает на свой вопрос; текст на другой вопрос живёт в другом
+файле, а здесь остаётся ссылка.
+
+| Документ                                                  | В форке         | Отвечает на вопрос           |
+| --------------------------------------------------------- | --------------- | ---------------------------- |
+| [README.md](README.md)                                    | это шаблон      | Что это за шаблон            |
+| [README.template.md](README.template.md)                  | заменяет README | Какой README будет у проекта |
+| [kickoff.md](docs/kickoff.md)                             | удаляется       | Промт запуска настройки      |
+| [getting-started.md](docs/getting-started.md)             | да              | Шаги после форка             |
+| [webstorm.md](docs/webstorm.md)                           | да              | Что где в IDE                |
+| [webstorm-settings.md](docs/webstorm-settings.md)         | да              | Перенос настроек на машину   |
+| [live-templates/README.md](docs/live-templates/README.md) | да              | Импорт и устройство шаблонов |
+| [testing.md](docs/testing.md)                             | да              | Тесты и покрытие             |
+| [markdown.md](docs/markdown.md)                           | да              | Оформление `.md`             |
+| [architecture.md](docs/architecture.md)                   | да              | Границы модулей              |
+| [security.md](docs/security.md)                           | да              | Правила безопасного кода     |
+| [api.md](docs/api.md)                                     | да              | Конвенции HTTP API           |
+| [AGENTS.md](AGENTS.md)                                    | да              | Обязательные правила         |
+| [SECURITY.md](SECURITY.md)                                | да              | Политика уязвимостей         |
+| [CHANGELOG.md](CHANGELOG.md)                              | генерируется    | История версий               |
+
+Справочник и процедура разведены: `webstorm.md` отвечает «что где лежит и как
+проверить», `webstorm-settings.md` - «какие шаги выполнить на машине».
 
 ## Что есть в шаблоне (и чего нет)
 
@@ -85,14 +103,6 @@ npm install
 | **AI Rules**     | `AGENTS.md` — канон; AI Rules — указатель   |
 | **Testing**      | Vitest — `vitest.config.ts`                 |
 | **Security**     | `SECURITY.md` — политика уязвимостей        |
-
-**Docs (едут в fork):** [getting-started](docs/getting-started.md),
-[WebStorm](docs/webstorm.md), [testing](docs/testing.md),
-[markdown](docs/markdown.md), [live templates](docs/live-templates/README.md),
-[architecture](docs/architecture.md), [security](docs/security.md), [api](docs/api.md).
-
-Стартовый промт - [kickoff](docs/kickoff.md): он нужен только для шаблона и
-удаляется на Step 1 в новом проекте.
 
 ## After fork (кратко)
 
