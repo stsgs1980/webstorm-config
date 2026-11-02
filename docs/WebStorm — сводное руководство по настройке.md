@@ -166,7 +166,7 @@ React Buddy и другие) могут сохранять английские 
 и открыт белым списком строк с `!`), конфигурации линтеров в корне,
 `package.json` и скрипты. Всё, что коммитится, работает у всех после
 клона и является источником истины. Второй контур - **глобальные
-настройки IDE** в каталоге пользователя (`%APPDATA%\JetBrains\WebStorm2026.2`
+настройки IDE** в каталоге пользователя (`%APPDATA%\JetBrains\WebStorm<версия>`
 для Windows): тема, кеймап, плагины и всё, что импортировано вручную.
 Третий контур - **личные настройки** в `workspace.xml`, который
 намеренно не коммитится: File Watchers, React Buddy toolbox, анализ
@@ -216,7 +216,7 @@ React Buddy и другие) могут сохранять английские 
 Статус на 24.10.2026: импорт выполнен в обход UI - четыре XML
 (`React.xml` - 8 шаблонов, `Testing.xml` - 4, `TypeScript.xml` - 3,
 `Utilities.xml` - 3) записаны напрямую в
-`%APPDATA%\JetBrains\WebStorm2026.2\templates\` с прописанными контекстами
+`%APPDATA%\JetBrains\WebStorm<версия>\templates\` с прописанными контекстами
 TypeScript/TSX/JavaScript; после полного перезапуска IDE все четыре группы
 видны в настройках.
 
@@ -452,7 +452,7 @@ IJPL-101766 остаётся обязательным: YouTrack не показ�
 ошибку `Missing return type on function` (`@typescript-eslint/explicit-function-return-type`),
 а пустые `expression` и `defaultValue` у `NAME` порождают синтаксически
 невалидное `const  = ...`. **Важно:** глобальная копия в
-`%APPDATA%\JetBrains\WebStorm2026.2\templates\React.xml` уже исправлена
+`%APPDATA%\JetBrains\WebStorm<версия>\templates\React.xml` уже исправлена
 24.10.2026, репозиторная - нет; любой форк получает сломанную версию.
 **Проверка:** рендер шаблона проходит `npx eslint` без ошибок, имя
 подставилось во все четыре места.
