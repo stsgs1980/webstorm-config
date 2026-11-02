@@ -106,12 +106,6 @@ Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотс
 их не заменяет. Условия и варианты — [testing.md](testing.md). Проекту без UI
 (утилиты, конфиги, CLI) e2e не нужен.
 
-## Superpowers scratch dirs
-
-`docs/superpowers/plans/` и `docs/superpowers/specs/` — рабочие папки агента для планов
-и спеков (пустые в шаблоне, метки `.gitkeep` везут их в fork). Файлы планов коммитить
-не обязательно.
-
 ## Recommended dependencies
 
 | Project type         | Add to devDependencies                                      |

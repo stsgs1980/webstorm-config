@@ -1,8 +1,8 @@
 # Settings уровни: IDE-глобальные, проектные, личные
 
 Памятка отвечает на вопрос «какие настройки живут где» в связке
-webstorm-config и WebStorm. Подробный разбор - в
-`docs/WebStorm — сводное руководство по настройке.md` (главы 2-3).
+webstorm-config и WebStorm. Практические шаги - в [webstorm.md](webstorm.md),
+машинный runbook - в [webstorm-settings.md](webstorm-settings.md).
 
 ## Три уровня
 
