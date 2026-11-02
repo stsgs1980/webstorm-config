@@ -67,7 +67,7 @@ npm install
 | ------- | -------------- | ------------------- |
 | npm     | `npm install`  | `package-lock.json` |
 | pnpm    | `pnpm install` | `pnpm-lock.yaml`    |
-| Bun     | `bun install`  | `bun.lockb`         |
+| Bun     | `bun install`  | `bun.lock`          |
 
 ## What's Included
 
