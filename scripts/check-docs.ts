@@ -12,31 +12,6 @@ import { checkVersionAlignment } from "./lib/version-alignment.ts";
  */
 const KNOWN_FUTURE_SCRIPTS = ["dev"];
 
-/**
- * Future paths referenced by the roadmap section of the WebStorm setup
- * guide; each entry carries a reason, an exemption without one is a hole
- * in the rule, not a rule.
- * @type {{path: string, reason: string}[]}
- */
-const KNOWN_FUTURE_PATHS = [
-  {
-    path: "docs/architecture.md",
-    reason: "planned module-boundary policy document",
-  },
-  {
-    path: "docs/security.md",
-    reason: "planned secrets and server authorization policy document",
-  },
-  {
-    path: "docs/api.md",
-    reason: "planned API conventions document",
-  },
-  {
-    path: "scripts/check-unicode-prose.ts",
-    reason: "planned prose checker, one of the two documented options",
-  },
-];
-
 /** Inline-code path prefixes that must exist in the repository. */
 const PATH_PREFIXES = [
   "docs/",
@@ -166,11 +141,6 @@ function checkPaths(file: string, text: string, failures: string[]): void {
       path = path.slice(0, anchor);
     }
     if (!PATH_PREFIXES.some((prefix) => path.startsWith(prefix))) {
-      continue;
-    }
-    const future = KNOWN_FUTURE_PATHS.find((entry) => entry.path === path);
-    if (future !== undefined) {
-      // Roadmap reference: the failure would be creating it, not naming it.
       continue;
     }
     if (!existsSync(path) && !isGitIgnored(path)) {

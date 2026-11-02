@@ -68,14 +68,17 @@ describe("check-docs", () => {
     assert.match(result.stdout, /\[OK\] check-docs: 1 docs files consistent with configs\./);
   });
 
-  it("дорожная карта со ссылками на будущие файлы и скрипт даёт [OK]", () => {
-    const doc =
-      "# Планы\n\n`npm run dev`, `docs/architecture.md`, `docs/api.md`,\n" +
-      "`docs/security.md`, `scripts/check-unicode-prose.ts`.\n";
+  it("будущий скрипт dev по-прежнему не считается битой ссылкой", () => {
+    const doc = "# Планы\n\n`npm run dev`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 0);
-    assert.doesNotMatch(result.stderr, /does not exist/);
-    assert.doesNotMatch(result.stderr, /is not in package\.json scripts/);
+  });
+
+  it("путь, снятый с плана, больше не легализован", () => {
+    const doc = "# Планы\n\n`scripts/check-unicode-prose.ts`.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /path scripts\/check-unicode-prose\.ts does not exist/);
   });
 
   it("реальный скрипт из package.json в документации проходит", () => {
