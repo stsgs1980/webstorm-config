@@ -94,7 +94,8 @@ npm install
 ## After fork (кратко)
 
 1. Обновите `package.json`: `name`, `description`.
-2. `README.template.md` -> `README.md`, заполнить Overview / Features / Architecture.
+2. `README.template.md` -> `README.md`, заполнить Overview / Features / Architecture
+   и заменить плейсхолдеры `${PROJECT_NAME}`, `${DATE}`, `${GITHUB_USER}`.
 3. Удалить `CHANGELOG.md` (история шаблона, не вашего проекта):
 
    ```bash
@@ -106,7 +107,7 @@ npm install
 
 ## Conventions
 
-См. `.aiassistant/rules/AI Rules.md`: JSDoc, strict TS, 120 chars, Conventional Commits,
+См. [AGENTS.md](AGENTS.md): JSDoc, strict TS, 120 chars, Conventional Commits,
 anti-monolith (250 lines; test files are exempt).
 
 ## License
