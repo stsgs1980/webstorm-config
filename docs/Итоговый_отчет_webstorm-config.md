@@ -1,7 +1,7 @@
 # webstorm-config: итоговый отчёт и план работ
 
-Дата: 2026-11-02, статусы сверены по коммиту `bfe00c6`.
-База проверки: `main` @ `bfe00c6`; все правки предыдущих сеансов закоммичены,
+Дата: 2026-11-02, статусы сверены по коммиту `0a7e85b`.
+База проверки: `main` @ `0a7e85b`; все правки предыдущих сеансов закоммичены,
 рабочее дерево чистое. Закрытые пункты помечены `[CLOSED]`, открытые - `[OPEN]`.
 
 Методика: каждое положение двухагентного аудита перепроверено против фактического
@@ -32,6 +32,10 @@
   `docs/api.md` созданы, whitelist будущих путей удалён из `check-docs` - P1-7.
 - [CLOSED] Coverage-гейт: принято 80% строк на изменённый файл (не глобально);
   схема записана в `docs/testing.md`, реализация - отдельная задача - P1-8.
+- [CLOSED] P2-9: Playwright-план в `docs/testing.md`, `test:e2e` в таблице
+  скриптов `README.template.md`; `check-docs` знает имя с цифрой.
+- [CLOSED] P2-10: `react`/`react-dom` в devDependencies (prod-дерево пустое),
+  `.opencode/**`/`.agents/**` в игнорах ESLint, exempt печатается при провале.
 - [CLOSED] WebStorm на машине 2026.2.4 (build WS-262.11879.105): минимум по
   бюллетеню eMudhra выполнен; остаётся ручная проверка IJPL-101766 в редакторе -
   P0-2.
@@ -66,10 +70,10 @@
   `KNOWN_FUTURE_PATHS` удалён, проверка прозы оставлена ручной, P1-7.
 - **WebStorm 2026.2.0.1** - имя каталога установки не обновляется; `product-info.json`
   и `idea.log` дают 2026.2.4 (build WS-262.11879.105) -> [CLOSED], P0-2.
-- **`react` в dependencies** - `"react": "^19.2.8"`, `"react-dom": "^19.3.0"` ->
-  подтверждено, P2-10.
-- **Игноры ESLint несимметричны** - metrics: `.opencode/**`, `.agents/**`;
-  основной конфиг: нет -> подтверждено, P2-10.
+- **`react` в dependencies** - [CLOSED]: перенесён в devDependencies, production
+  дерево шаблона пустое, P2-10.
+- **Игноры ESLint несимметричны** - [CLOSED]: `.opencode/**` и `.agents/**`
+  добавлены в основной конфиг, P2-10.
 - **`%APPDATA%` захардкожен** - 12 упоминаний в трёх документах `docs/` ->
   подтверждено, P2-13.
 - **"Prettier on save" не настроен** - `.idea/prettier.xml`: `myRunOnSave=true` -
@@ -150,12 +154,12 @@
 
 ### 4.3 P2
 
-- **9.** [OPEN] Playwright: короткий раздел в `docs/testing.md` и строка `test:e2e`
-  в таблице скриптов `README.template.md` как план. Где: репо.
-- **10.** [OPEN] Мелкие правки (по коммиту): `react`/`react-dom` -> devDependencies
-  (+ фраза в `SECURITY.md`, `README.md`); `.opencode/**` и `.agents/**` в игноры
-  основного конфига; exempt-строки печатать и при провале `check:file-length`.
+- **9.** [CLOSED] Playwright: раздел в `docs/testing.md` и строка `test:e2e` в
+  `README.template.md` как план; `check-docs` принимает имя скрипта с цифрой.
   Где: репо.
+- **10.** [CLOSED] Мелкие правки: `react`/`react-dom` -> devDependencies (+ фраза
+  в `SECURITY.md`, `README.md`); `.opencode/**` и `.agents/**` в игноры основного
+  конфига; exempt-строки печатаются и при провале `check:file-length`. Где: репо.
 - **11.** [OPEN] Раздел "Версии IDE" в `docs/webstorm.md`: Vitest 5 требует 2026.3
   (WEB-79586), TS 7 LSP сыроват, Chrome Connect, Git Worktree UX. Где: репо.
 - **12.** [OPEN] Расформировать `docs/webstorm-settings.md`: открытые пункты ->
@@ -239,3 +243,4 @@ rg -n "OverlyLongFunctionJS" .idea/inspectionProfiles/   # после P1-5: ли
 | 2026-11-02 | `251aa7d` | P1-4, P1-5, P1-6 закрыты: `.env.example`, профиль, статусы |
 | 2026-11-02 | `4108b8a` | P1-7 закрыт: architecture/security/api, whitelist удалён   |
 | 2026-11-02 | `bfe00c6` | P1-8 закрыт: решение по coverage-гейту зафиксировано       |
+| 2026-11-02 | `0a7e85b` | P2-9, P2-10 закрыты: Playwright, react в devDeps, exempt   |
