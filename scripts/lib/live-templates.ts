@@ -62,7 +62,9 @@ export function render(set: string, name: string, value: string): string {
  * @returns parsed templates with names and unescaped values
  */
 export function parseSet(file: string): { name: string; value: string }[] {
-  const raw = readFileSync(file, "utf8");
+  // XML comments may quote a <template> element; strip them first, otherwise a
+  // commented example turns into a ghost template and gets rendered.
+  const raw = readFileSync(file, "utf8").replace(/<!--[\s\S]*?-->/g, "");
   const templates: { name: string; value: string }[] = [];
   for (const match of raw.matchAll(TEMPLATE_TAG)) {
     const name = attr(match[1], "name");

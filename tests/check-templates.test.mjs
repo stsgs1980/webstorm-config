@@ -132,6 +132,15 @@ describe("check-templates", () => {
     assert.match(result.stdout, /\[OK\] typescript\/arrow/);
   });
 
+  it("XML-комментарий с <template> не создаёт ghost-шаблон", { timeout: 120000 }, () => {
+    const real = '<template name="real" value="const $NAME$ = 1;"></template>';
+    const xml = `<templateSet group="Probe">\n<!-- <template name="ghost" value="const ghost = 1;"></template> -->\n${real}\n</templateSet>\n`;
+    const result = runFixture([{ name: "probe.xml", xml }]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /templates checked: 1/);
+    assert.doesNotMatch(result.stdout, /ghost/);
+  });
+
   it("шаблоны живого репозитория проходят рендер, eslint и tsc", { timeout: 120000 }, () => {
     const result = run(REPO_TEMPLATES);
     assert.equal(result.status, 0);
