@@ -62,6 +62,10 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 `// noinspection Annotator` в редакторе не подавляет — действует только в batch-отчёте
 инспекций.
 
+Перепроверено 02.11.2026 на WebStorm 2026.2.4: литерал `/\p{Extended_Pictographic}/u`
+по-прежнему даёт «Неизвестная категория символов», а `new RegExp(String.raw...)` -
+чистый. Обход обязателен до исправления IJPL-101766.
+
 ## 4. Stylelint
 
 Путь: `Settings → Languages & Frameworks → Style Sheets → Stylelint`
