@@ -31,9 +31,9 @@ Automation first: if a style rule is not enforced by Prettier or ESLint, it is a
 convention, not a requirement. The tsconfig flags in `tsconfig.base.json` are the
 source of truth for strictness; do not restate them here.
 
-- TypeScript strict mode. Explicit typing for all parameters and return values (no
-  `any`). Checked by ESLint: `@typescript-eslint/explicit-function-return-type` (with
-  `allowExpressions`) and `no-console`.
+- TypeScript strict mode. Explicit typing for all parameters and return values.
+  ESLint checks return types only (`@typescript-eslint/explicit-function-return-type`
+  with `allowExpressions`); parameter annotations are a convention, not a lint check.
 - No `any`: prefer `unknown` and narrow. Avoid `as` casts and non-null assertions
   (`!`) without a comment explaining why the value cannot be absent.
 - Semicolons required, strings use double quotes, trailing commas required,
@@ -115,7 +115,7 @@ the signal.
 ## 6. Git & Commits
 
 - All commits MUST follow Conventional Commits: `type(scope): short description`.
-- Allowed types: feat, fix, docs, style, refactor, test, chore, perf, ci, build.
+- Allowed types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert.
 - Breaking changes use `type(scope)!: description` plus a `BREAKING CHANGE:` footer.
   They bump the major version and land under "Breaking Changes" in the changelog.
 - Do not commit directly to main. "Verified" means: approved PR, pre-commit hooks
