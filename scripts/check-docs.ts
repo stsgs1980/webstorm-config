@@ -86,11 +86,12 @@ function collectMarkdown(dir: string): string[] {
 }
 
 /**
- * Markdown files the verifier scans (root README files plus docs/, agent workspace excluded).
+ * Markdown files the verifier scans (root AGENTS.md and README files plus docs/, agent
+ * workspace excluded).
  * @returns list of file paths
  */
 function getDocFiles(): string[] {
-  const root = ["README.md", "README.template.md"].filter((file) => existsSync(file));
+  const root = ["AGENTS.md", "README.md", "README.template.md"].filter((file) => existsSync(file));
   return [...root, ...collectMarkdown("docs")];
 }
 

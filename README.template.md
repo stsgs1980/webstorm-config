@@ -118,7 +118,8 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 ## Conventions
 
 Стиль кода: 2 пробела, точка с запятой, двойные кавычки, trailing commas,
-JSDoc для публичного API, `const`/`let`. См. `.aiassistant/rules/AI Rules.md`.
+JSDoc для публичного API, `const`/`let`. Канонические правила: `AGENTS.md`
+(указатель для AI Assistant — `.aiassistant/rules/AI Rules.md`).
 
 ## License
 

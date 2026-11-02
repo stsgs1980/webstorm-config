@@ -125,4 +125,20 @@ describe("check-docs", () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+
+  it("AGENTS.md в корне сканируется: битый npm run даёт [FAIL]", () => {
+    const result = runFixture(PKG, "22.22.2", [
+      { file: "AGENTS.md", content: "# Rules\n\nЗапускается `npm run nosuchscript`.\n" },
+    ]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /AGENTS\.md:\d+ npm run nosuchscript/);
+  });
+
+  it("валидный AGENTS.md в корне проходит и учитывается в счётчике", () => {
+    const result = runFixture(PKG, "22.22.2", [
+      { file: "AGENTS.md", content: "# Rules\n\nAlways read a file before editing it.\n" },
+    ]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /\[OK\] check-docs: 2 docs files consistent with configs\./);
+  });
 });

@@ -82,7 +82,7 @@ npm install
 | **Commitlint**   | Conventional Commits                        |
 | **EditorConfig** | `.editorconfig`                             |
 | **WebStorm**     | `.idea/` — code style, ESLint, templates    |
-| **AI Rules**     | `.aiassistant/rules/AI Rules.md`            |
+| **AI Rules**     | `AGENTS.md` — канон; AI Rules — указатель   |
 | **Testing**      | Vitest — `vitest.config.ts`                 |
 | **Security**     | `SECURITY.md` — политика уязвимостей        |
 
