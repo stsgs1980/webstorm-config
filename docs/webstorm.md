@@ -33,7 +33,9 @@ WebStorm часть из них **не подхватывает автомати
 Путь: `Settings → Languages & Frameworks → JavaScript → Prettier`
 
 - Prettier package: `{project}/node_modules/prettier`
-- **Run on save** (или Actions on save → Reformat with Prettier)
+- Run on save уже включён проектом (`.idea/prettier.xml`: `myRunOnSave=true`);
+  проверьте после открытия проекта, что галочка активна, и не включайте второй
+  механизм (Save Actions, §13).
 
 Использует `.prettierrc` и плагины из `devDependencies`.
 
@@ -102,29 +104,17 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 Путь: `Commit tool window (Alt+0) → Settings (⚙) → Commit Checks → Analyze code`
 
-Включите опцию **Analyze code** и выберите профиль **Project Default**.
+Включите **Analyze code** и выберите профиль **Project Default**.
 
 ### Что делает
 
-- Анализирует изменённые файлы inspection profile перед коммитом
-- Показывает уведомление, если найдены ошибки/предупреждения
-- Позволяет исправить проблемы перед коммитом или проигнорировать
-
-### Альтернатива (через .idea/workspace.xml)
-
-Если хотите зафиксировать настройку в репозитории, добавьте в `.idea/workspace.xml`:
-
-```xml
-<component name="CommitConfigs">
-  <option name="ANALYZE_CODE" value="true" />
-  <option name="ANALYZE_CODE_PROFILE" value="Project Default" />
-  <option name="RUN_CLEANUP" value="true" />
-  <option name="RUN_CLEANUP_PROFILE" value="Project Default" />
-</component>
-```
-
-> **Примечание:** Это проектная настройка (в `workspace.xml`). Для каждого нового проекта
-> нужно включать отдельно или использовать UI (Alt+0 → Settings).
+- Это Advanced Commit Checks: IDE анализирует изменённые файлы после коммита и
+  показывает уведомление с найденными проблемами.
+- Блокирует коммит не он, а Husky + lint-staged; анализ IDE - дополнительный
+  слой, который видит инспекции, недоступные CLI.
+- Настройка личная (`workspace.xml`, в git не попадает): включите её на каждой
+  машине через UI. Фиксировать её в репозитории нельзя - `workspace.xml`
+  в `.gitignore` по белому списку.
 
 ## 9. React Buddy (превью компонентов)
 
@@ -165,16 +155,23 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
 
+Словарь в git - сознательное отклонение от рекомендации JetBrains: он держит
+термины проекта и переносим, но в форке его можно удалить без последствий для
+гейтов.
+
 Белый список осознанный: новый файл настроек `.idea/` не попадёт в git без `!`-строки
 в `.gitignore`. Это отличается от рекомендации JetBrains (коммитить все XML, кроме
 `workspace.xml`) — так надёжнее для форков.
 
 ## 11. File Watchers (ручная настройка, 5 минут)
 
-Определения вотчеров живут в `workspace.xml` и не коммитятся, поэтому на новой машине
+Определения вотчеров хранятся в `.idea/watcherTasks.xml` (проектная настройка; файл
+не входит в белый список `.gitignore`, поэтому в git не попадает). На новой машине
 `Settings → Tools → File Watchers` пуст. Создайте вручную:
 
 1. **Stylelint**: Program — `stylelint`, Arguments — `$FilePath$`, File type — CSS/SCSS.
+   Если включена штатная интеграция Stylelint (§4), вотчер не нужен: он дублирует
+   ту же подсветку.
 2. **Markdownlint**: Program — `markdownlint`, Arguments — `$FilePath$`, File type — Markdown.
 3. Вотчер длины файла **не создавайте**: скрипт `check-file-length.ts` проверяет
    staged-файлы, при сейве ему нечего проверять, а в pre-commit хуке он уже работает.
