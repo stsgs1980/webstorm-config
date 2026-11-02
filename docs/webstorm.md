@@ -130,7 +130,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 Конфиг: `vitest.config.ts`. Подробнее — [testing.md](testing.md).
 
 > В шаблоне есть `tests/` (проверки тулчейна, не удалять), но нет папки `src/` — это нормально.
-> `passWithNoTests: true` позволяет `npm test` проходить до Step 4 в getting-started.md.
+> Пустой набор тестов считается ошибкой: `passWithNoTests` в конфиге нет.
 
 ## 6. Markdown и `.editorconfig`
 
@@ -295,10 +295,10 @@ git push         →  typecheck + тесты (pre-push)
 | ESLint-правила кода (в т.ч. без `warn`)                | `eslint.config.js`                      | IDE + commit + CI |
 | Промисы: no-floating/misused-promises                  | `eslint.config.js` (type-aware)         | IDE + CI          |
 | `no-console`: приложение error, скрипты/сервер off     | `eslint.config.js`                      | IDE + commit + CI |
-| Юникод и emoji-политика в коде и прозе                 | `eslint-rules`, markdownlint            | IDE + commit + CI |
+| Юникод-политика в коде и сниппетах (проза - вручную)   | `eslint-rules`                          | IDE + commit + CI |
 | Markdown не длиннее 120                                | markdownlint MD013, `.editorconfig`     | IDE + commit + CI |
 | Метрики: 60/15/4/4                                     | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
-| Вложенность функций (порог 4)                          | профиль IDE, в git не коммитится        | только IDE        |
+| Вложенность функций (порог 4)                          | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 | TS-типы (tsc), тесты                                   | `tsconfig.json`, `vitest.config.ts`     | push + CI         |
 | Prod-аудит зависимостей (high+)                        | `.github/workflows/ci.yml`              | CI                |
 | React-компонент 200 строк; 3+ `useState`; сложность 15 | пороги-сигналы                          | ревью             |

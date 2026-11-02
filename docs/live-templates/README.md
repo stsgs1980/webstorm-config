@@ -52,7 +52,8 @@ IDE **не читает**: такой возможности в IntelliJ/WebStor
   `$INIT$` код оставался синтаксически валидным.
 
 Код, который генерируют `rafce` и `React Component.tsx`, проходит `eslint --max-warnings=0`
-и `tsc --noEmit` без правок.
+и `tsc --noEmit` без правок. Это проверено вручную: `check:templates` покрывает только
+live-шаблоны, file templates автоматическим гейтом не проверяются.
 
 ## File templates
 

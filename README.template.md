@@ -47,7 +47,7 @@
 
 ### Prerequisites
 
-- Node.js >= 22.22.2 (в CI и локально — 24.15.0 из `.nvmrc`)
+- Node.js >= 22.22.2 (основные джобы CI и локально — 24.15.0 из `.nvmrc`; floor-джоба — ровно 22.22.2)
 
 Pre-commit останавливается на первой ошибке: сначала `lint-staged`, затем проверка длины файлов.
 Перед пушем pre-push дополнительно прогоняет `npm run typecheck` и `npm test`.
@@ -71,7 +71,8 @@ git commit -m "chore: reset changelog for new project"
 ```
 
 `CHANGELOG.md` генерируется из conventional commits вашего проекта командой `npm run changelog`.
-Запускайте её перед пушем в `main`: CI проверяет свежесть файла на ветке `main` (джоба `changelog`).
+Запускайте её перед пушем: CI проверяет свежесть файла на pull request и на `main`
+(джоба `changelog`).
 
 Первый запуск в новом проекте из шаблона — [docs/getting-started.md](docs/getting-started.md)
 (фреймворк, `src/`, скрипты `dev`/`build`).
@@ -90,6 +91,10 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | `npm run format`                  | Prettier (запись)                         |
 | `npm run format:check`            | Prettier (проверка, как в CI)             |
 | `npm run check:docs`              | Сверка доков с конфигами (шаблон)         |
+| `npm run check:file-length`       | Лимит 250 строк                           |
+| `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc         |
+| `npm run lint:metrics`            | Метрики (advisory)                        |
+| `npm run changelog`               | Пересборка `CHANGELOG.md`                 |
 | `npm test`                        | Vitest                                    |
 | `npm run test:watch`              | Vitest (watch)                            |
 | `npm run test:coverage`           | Vitest + coverage                         |

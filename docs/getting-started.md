@@ -89,6 +89,7 @@ src/
 
 ```bash
 npm run lint
+npm run lint:prettier-conflicts
 npm run typecheck
 npm run lint:css
 npm run lint:md
@@ -96,6 +97,8 @@ npm run format:check
 npm test
 npm run check:file-length
 npm run check:docs
+npm run check:templates
+npm audit --omit=dev --audit-level=high
 ```
 
 Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотслеживаемые (не
@@ -171,6 +174,7 @@ eslint-processors/
 scripts/
 .prettierrc
 .stylelintrc.json
+.stylelintignore
 .markdownlint.json
 .editorconfig
 tsconfig.base.json
@@ -245,6 +249,7 @@ npx husky init
 
 ```bash
 npm run lint
+npm run lint:prettier-conflicts
 npm run typecheck
 npm run lint:css
 npm run lint:md
@@ -252,7 +257,10 @@ npm run format:check
 npm test
 npm run check:file-length
 npm run check:docs
+npm audit --omit=dev --audit-level=high
 ```
+
+`check:templates` добавьте, если переносите `.idea/liveTemplates/`.
 
 Исправьте ошибки линтеров до зелёного состояния.
 
