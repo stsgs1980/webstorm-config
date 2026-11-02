@@ -71,18 +71,19 @@ Global status notes (checked 29.10.2026):
 
 ## 3. Known problems
 
-| Nr  | Problem                             | Severity | Where                                        | Status       |
-| --- | ----------------------------------- | -------- | -------------------------------------------- | ------------ |
-| 1   | Save Actions vs Actions on Save     | HIGH     | .idea/workspace.xml, docs/webstorm.md        | Open         |
-| 2   | Live Templates not project-read     | HIGH     | .idea/liveTemplates/                         | Mitigated    |
-| 3   | React template not fixed in repo    | MEDIUM   | .idea/liveTemplates/react.xml                | Open         |
-| 4   | React Buddy docs mismatch           | MEDIUM   | docs/webstorm.md, .idea/workspace.xml        | Closed 29.10 |
-| 5   | Profile pProject Default            | MEDIUM   | .idea/workspace.xml                          | Closed 29.10 |
-| 6   | Hard inspection thresholds          | MEDIUM   | .idea/inspectionProfiles/Project_Default.xml | Decision     |
-| 7   | explicit-function-return-type error | MEDIUM   | AI Rules                                     | Open         |
-| 8   | Emoji policy, keycaps               | LOW      | webstorm-config and false positive.md        | Closed       |
+| Nr  | Problem                             | Severity | Where                                        | Status        |
+| --- | ----------------------------------- | -------- | -------------------------------------------- | ------------- |
+| 1   | Save Actions vs Actions on Save     | HIGH     | .idea/workspace.xml, docs/webstorm.md        | Open          |
+| 2   | Live Templates not project-read     | HIGH     | .idea/liveTemplates/                         | Mitigated     |
+| 3   | React template not fixed in repo    | MEDIUM   | .idea/liveTemplates/react.xml                | Closed 02.11  |
+| 4   | React Buddy docs mismatch           | MEDIUM   | docs/webstorm.md, .idea/workspace.xml        | Closed 29.10  |
+| 5   | Profile pProject Default            | MEDIUM   | .idea/workspace.xml                          | Closed 29.10  |
+| 6   | Hard inspection thresholds          | MEDIUM   | .idea/inspectionProfiles/Project_Default.xml | Decision      |
+| 7   | explicit-function-return-type error | MEDIUM   | AI Rules                                     | Decided 02.11 |
+| 8   | Emoji policy, keycaps               | LOW      | webstorm-config and false positive.md        | Closed        |
 
-Status notes (checked 29.10.2026 against revision 8393b57 and global config):
+Status notes (checked 29.10.2026 against revision 8393b57, re-checked 02.11.2026
+against revision 251aa7d and the global config):
 
 1. Still open: `SaveActionsConfiguration` in workspace.xml is active with
    `reformat`, `optimizeImports`, `compile`; native Reformat on Save is also
@@ -91,16 +92,17 @@ Status notes (checked 29.10.2026 against revision 8393b57 and global config):
    (`intellij-plugin-save-actions`). docs/webstorm.md §13 documents the conflict.
 2. Limitation remains (IDEABKL-5033), but workaround is done: 4 groups imported
    to `%APPDATA%\JetBrains\WebStorm2026.2\templates\` on 24.10.2026.
-3. Still open, verified by render test 29.10.2026: repo `rafce` rendered and
-   linted with `npx eslint --max-warnings=0` — 1 error
-   `explicit-function-return-type`. Global copy fixed on 24.10.2026.
+3. Closed 02.11.2026: repo `rafce` renders and passes `check:templates`
+   (14/14); the render test covers the return type and the computed `NAME`.
 4. Closed: plugin `reactbuddy` present in `%APPDATA%\JetBrains\WebStorm2026.2\plugins\`;
    docs/webstorm.md §9 rewritten on 24.10.2026 (commit 8393b57).
 5. Closed: workspace.xml `CommitConfigs` references "Project Default"; profile
    `myName` in `.idea/inspectionProfiles/Project_Default.xml` is "Project Default" — names match.
 6. Decision recorded (§4.4): keep thresholds for the template, tune per app.
    Deviation: global profile copy still carries FileLength 250 + scope — see §1.1.
-7. Open: rule is still `error` with `allowExpressions` in `eslint.config.js`.
+7. Decided 02.11.2026: `error` with `allowExpressions` stays final. `warn`
+   would be blocking anyway because every run uses `--max-warnings=0`;
+   advisory metrics live in the separate `lint:metrics` lane.
 8. Closed in repo: `\u20E3` added to keycap alternation in `eslint-rules/unicode-policy.js`
    (runtime-built pattern). Prose in Markdown remains unchecked (policy by discipline).
 
@@ -110,8 +112,9 @@ Status notes (checked 29.10.2026 against revision 8393b57 and global config):
 
 1. Save Actions: disable formatting actions, keep native Actions on Save. —
    Open (plugin still active, checked 29.10.2026)
-2. Sync React live template fixes into .idea/liveTemplates/react.xml. — Open
-   (checked 29.10.2026; global copy fixed, repo not)
+2. Sync React live template fixes into .idea/liveTemplates/react.xml. —
+   Done 02.11.2026 (repo copy matches the fixed global one; `check:templates`
+   covers it)
 
 ### 4.2 Follow-up
 
@@ -122,7 +125,9 @@ Status notes (checked 29.10.2026 against revision 8393b57 and global config):
 
 ### 4.3 Rules tuning
 
-1. explicit-function-return-type -> allowExpressions / warn. — Open
+1. explicit-function-return-type -> allowExpressions / warn. — Decided
+   02.11.2026: keep `error` with `allowExpressions`; `warn` is indistinguishable
+   from `error` under `--max-warnings=0`
 2. Emoji policy -> error for code and snippets, warn for prose and logs. — Keycaps closed; prose part open
 
 ### 4.4 Thresholds
@@ -133,6 +138,6 @@ Status notes (checked 29.10.2026 against revision 8393b57 and global config):
 
 Checks: npm run lint, npm run lint:md, npm run format:check, npm test, npm run check:docs, npm run check:file-length.
 
-Last cross-check: 29.10.2026, revision 8393b57 — statuses above updated from the
-global config (`%APPDATA%\JetBrains\WebStorm2026.2\`), workspace.xml and a rafce
-render lint test.
+Last cross-check: 02.11.2026, revision 251aa7d — items 3 and 7 updated, the
+inspection profile now matches the metrics lane (60/15/4/4); the rest is
+unchanged from 29.10.2026.
