@@ -4,7 +4,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    passWithNoTests: true,
     // Fixture tests spawn git, npx, eslint and tsc. On a loaded machine a
     // single spawn regularly exceeds the 5 s default and fails a green run.
     testTimeout: 30_000,

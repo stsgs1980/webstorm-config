@@ -41,7 +41,7 @@
 | Есть сразу после `npm install`   | Нет до настройки проекта |
 | -------------------------------- | ------------------------ |
 | Линтеры, Prettier, Husky         | `src/`, UI-код           |
-| Vitest (`passWithNoTests`)       | `npm run dev` / сборщик  |
+| Vitest (тесты в `tests/`)        | `npm run dev` / сборщик  |
 | `react` в devDeps (ESLint и TSX) | Vite / Next (Step 2)     |
 
 `react` и `react-dom` в `devDependencies` — **для линтинга и TypeScript (JSX)**, не для запуска
@@ -92,7 +92,7 @@ npm install
 | Tool             | Config                                      |
 | ---------------- | ------------------------------------------- |
 | **ESLint**       | `eslint.config.js` — TS/JS/JSX, React, a11y |
-| **Stylelint**    | `.stylelintrc.json` — Tailwind v4 at-rules  |
+| **Stylelint**    | `.stylelintrc.json`, `.stylelintignore`     |
 | **Prettier**     | `.prettierrc`, `.prettierignore`            |
 | **markdownlint** | `.markdownlint.json`                        |
 | **TypeScript**   | `tsconfig.json` (strict)                    |
