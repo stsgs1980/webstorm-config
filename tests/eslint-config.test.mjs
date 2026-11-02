@@ -65,6 +65,12 @@ describe("eslint-config type-aware promises", () => {
     const dir = join(REPO, "dev", "eslint-fixtures");
     const path = join(dir, name);
     mkdirSync(dir, { recursive: true });
+    // dev/ is excluded by the root tsconfig, so the fixture needs its own
+    // project for the type-aware layer (projectService) to accept it.
+    writeFileSync(
+      join(dir, "tsconfig.json"),
+      `${JSON.stringify({ extends: "../../tsconfig.json", include: ["**/*.ts"], exclude: [] }, null, 2)}\n`,
+    );
     writeFileSync(path, code);
     try {
       const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });

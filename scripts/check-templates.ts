@@ -182,6 +182,13 @@ async function main(): Promise<void> {
   rmSync(RENDER_DIR, { recursive: true, force: true });
   rmSync(LEGACY_RENDER_DIR, { recursive: true, force: true });
   mkdirSync(RENDER_DIR, { recursive: true });
+  // The root tsconfig excludes dev/, so the type-aware ESLint layer needs its
+  // own project next to the rendered files; otherwise projectService rejects
+  // every template as "not found by the project service".
+  writeFileSync(
+    join(RENDER_DIR, "tsconfig.json"),
+    `${JSON.stringify({ extends: "../../tsconfig.json", include: ["**/*.ts", "**/*.tsx"], exclude: [] }, null, 2)}\n`,
+  );
 
   let okCount = 0;
   for (const { set, name, value } of templates) {
