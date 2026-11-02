@@ -1,7 +1,7 @@
 # webstorm-config: итоговый отчёт и план работ
 
-Дата: 2026-11-02, статусы сверены по коммиту `0a7e85b`.
-База проверки: `main` @ `0a7e85b`; все правки предыдущих сеансов закоммичены,
+Дата: 2026-11-02, статусы сверены по коммиту `39e87f9`.
+База проверки: `main` @ `39e87f9`; все правки предыдущих сеансов закоммичены,
 рабочее дерево чистое. Закрытые пункты помечены `[CLOSED]`, открытые - `[OPEN]`.
 
 Методика: каждое положение двухагентного аудита перепроверено против фактического
@@ -36,6 +36,12 @@
   скриптов `README.template.md`; `check-docs` знает имя с цифрой.
 - [CLOSED] P2-10: `react`/`react-dom` в devDependencies (prod-дерево пустое),
   `.opencode/**`/`.agents/**` в игнорах ESLint, exempt печатается при провале.
+- [CLOSED] P2-11: раздел "Версии IDE" в `docs/webstorm.md` - Vitest 5, TS 7 LSP,
+  Chrome Connect, Git Worktree.
+- [CLOSED] P2-12: `docs/webstorm-settings.md` переписан в runbook синхронизации,
+  открытая задача Save Actions - GitHub issue #19.
+- [CLOSED] P2-13: пути `%APPDATA%` версия-независимы (`WebStorm<версия>`),
+  пояснение добавлено в `docs/settings-levels.md`.
 - [CLOSED] WebStorm на машине 2026.2.4 (build WS-262.11879.105): минимум по
   бюллетеню eMudhra выполнен; остаётся ручная проверка IJPL-101766 в редакторе -
   P0-2.
@@ -160,13 +166,12 @@
 - **10.** [CLOSED] Мелкие правки: `react`/`react-dom` -> devDependencies (+ фраза
   в `SECURITY.md`, `README.md`); `.opencode/**` и `.agents/**` в игноры основного
   конфига; exempt-строки печатаются и при провале `check:file-length`. Где: репо.
-- **11.** [OPEN] Раздел "Версии IDE" в `docs/webstorm.md`: Vitest 5 требует 2026.3
-  (WEB-79586), TS 7 LSP сыроват, Chrome Connect, Git Worktree UX. Где: репо.
-- **12.** [OPEN] Расформировать `docs/webstorm-settings.md`: открытые пункты ->
-  issues, файл переписать в runbook синхронизации без машинных путей. Где: репо.
-- **13.** [OPEN] Версия-независимые пути каталогов IDE: сейчас `%APPDATA%`
-  захардкожен в 12 местах трёх документов; бейдж версии обновить после 2026.3
-  stable или снять. Где: репо.
+- **11.** [CLOSED] Раздел "Версии IDE" в `docs/webstorm.md`: Vitest 5 (WEB-79586),
+  TS 7 LSP, Chrome Connect, Git Worktree UX. Где: репо.
+- **12.** [CLOSED] `docs/webstorm-settings.md` переписан в runbook без машинных
+  путей; открытая задача Save Actions - GitHub issue #19. Где: репо.
+- **13.** [CLOSED] Пути каталогов IDE версия-независимы: `WebStorm<версия>`, с
+  пояснением в `docs/settings-levels.md`. Где: репо.
 - **14.** [OPEN] Документация от аудита 31.10 (одной серией docs-коммитов):
   чеклист миграции (Verify запускает отсутствующие скрипты), рецепты Vue/Next.js
   с реальными командами, Analyze code как post-commit, плейсхолдеры
@@ -226,10 +231,9 @@ rg -n "OverlyLongFunctionJS" .idea/inspectionProfiles/   # после P1-5: ли
 | `.git/`         | сам репозиторий                                | не трогать                 |
 
 Файлы `docs/` - часть шаблона: они в git, их проверяют `check-docs` и
-`lint:md`, и они переезжают в каждый форк. Поэтому устаревшие документы
-(`webstorm-settings.md`, исторические аудиты) - не мусор для удаления, а
-обязательства шаблона: их чистка - это пункты P1-6 и P2-12 из плана, а не
-ручное удаление.
+`lint:md`, и они переезжают в каждый форк. Журнал статусов `webstorm-settings.md`
+превращён в runbook синхронизации (P2-12), новые задачи заводятся в issues, а
+не в документе.
 
 ## 7. Журнал сверки
 
@@ -244,3 +248,4 @@ rg -n "OverlyLongFunctionJS" .idea/inspectionProfiles/   # после P1-5: ли
 | 2026-11-02 | `4108b8a` | P1-7 закрыт: architecture/security/api, whitelist удалён   |
 | 2026-11-02 | `bfe00c6` | P1-8 закрыт: решение по coverage-гейту зафиксировано       |
 | 2026-11-02 | `0a7e85b` | P2-9, P2-10 закрыты: Playwright, react в devDeps, exempt   |
+| 2026-11-02 | `39e87f9` | P2-11, P2-12, P2-13 закрыты: версии IDE, runbook, пути     |
