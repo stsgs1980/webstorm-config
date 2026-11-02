@@ -191,13 +191,13 @@ function main(): void {
     }
   }
 
+  for (const { file, reason } of exempted) {
+    process.stdout.write(`[OK] exempt: ${file} (${reason})\n`);
+  }
+
   if (failed) {
     console.error("[Anti-Monolith] Commit rejected.");
     process.exit(1);
-  }
-
-  for (const { file, reason } of exempted) {
-    process.stdout.write(`[OK] exempt: ${file} (${reason})\n`);
   }
 
   process.stdout.write(

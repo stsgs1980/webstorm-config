@@ -61,6 +61,22 @@ const runFixture = (name, content, args) => {
 };
 
 describe("check-file-length", () => {
+  it("при провале всё равно печатает исключения с причиной", () => {
+    const dir = mkdtempSync(join(tmpdir(), "wsc-file-length-"));
+    try {
+      execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv() });
+      mkdirSync(join(dir, "generated"), { recursive: true });
+      writeFileSync(join(dir, "generated", "schema.ts"), LONG_FILE);
+      writeFileSync(join(dir, "long.ts"), LONG_FILE);
+      execFileSync("git", ["add", "-A"], { cwd: dir, env: gitEnv() });
+      const result = run(dir, ["--all"]);
+      assert.equal(result.status, 1);
+      assert.match(result.stdout, /exempt: .*generated[/\\]schema\.ts \(/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("кириллическое имя файла не теряется в git ls-files (-z)", () => {
     const result = runFixture("Файл.ts", LONG_FILE, ["--all"]);
     assert.equal(result.status, 1);
