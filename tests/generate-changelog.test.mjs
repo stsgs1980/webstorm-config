@@ -8,6 +8,7 @@ import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";
+import { gitEnv } from "./lib/git-env.mjs";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/generate-changelog.ts", import.meta.url));
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -25,10 +26,10 @@ const GIT_IDENTITY = ["-c", "user.name=test", "-c", "user.email=test@example.com
  */
 const makeRepo = (text = OLD_CHANGELOG) => {
   const dir = mkdtempSync(join(tmpdir(), "wsc-changelog-"));
-  execFileSync("git", ["init", "-q"], { cwd: dir });
-  execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: dir, stdio: "ignore" });
+  execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv() });
+  execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
   writeFileSync(join(dir, "CHANGELOG.md"), text);
-  execFileSync("git", ["add", "-A"], { cwd: dir });
+  execFileSync("git", ["add", "-A"], { cwd: dir, env: gitEnv() });
   return dir;
 };
 
@@ -39,8 +40,8 @@ const makeRepo = (text = OLD_CHANGELOG) => {
  * @returns {void}
  */
 const commitAll = (dir, message) => {
-  execFileSync("git", ["add", "-A"], { cwd: dir, stdio: "ignore" });
-  execFileSync("git", [...GIT_IDENTITY, "commit", "-m", message], { cwd: dir, stdio: "ignore" });
+  execFileSync("git", ["add", "-A"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
+  execFileSync("git", [...GIT_IDENTITY, "commit", "-m", message], { cwd: dir, env: gitEnv(), stdio: "ignore" });
 };
 
 /**
@@ -51,7 +52,7 @@ const commitAll = (dir, message) => {
 const makeTaggedRepo = (text = OLD_CHANGELOG) => {
   const dir = makeRepo(text);
   commitAll(dir, "chore: init");
-  execFileSync("git", ["tag", "v1.0.0"], { cwd: dir });
+  execFileSync("git", ["tag", "v1.0.0"], { cwd: dir, env: gitEnv() });
   return dir;
 };
 
@@ -69,10 +70,10 @@ const makeLiveRepo = () => {
   // warnings.
   writeFileSync(join(dir, ".gitignore"), "node_modules/\n");
   symlinkSync(REPO_NODE_MODULES, join(dir, "node_modules"), process.platform === "win32" ? "junction" : "dir");
-  execFileSync("git", ["init", "-q"], { cwd: dir, stdio: "ignore" });
-  execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: dir, stdio: "ignore" });
+  execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
+  execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
   commitAll(dir, "chore: init");
-  execFileSync("git", ["tag", "v1.0.0"], { cwd: dir, stdio: "ignore" });
+  execFileSync("git", ["tag", "v1.0.0"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
   return dir;
 };
 
@@ -132,7 +133,7 @@ const makeGeneratedNpx = (content) => {
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
 const runWithShim = (repo, shim) => {
-  const env = { ...process.env };
+  const env = gitEnv();
   const pathKey = Object.keys(env).find((key) => key.toLowerCase() === "path") ?? "PATH";
   env[pathKey] = `${shim}${delimiter}${env[pathKey]}`;
   try {
@@ -150,7 +151,12 @@ const runWithShim = (repo, shim) => {
  */
 const runScript = (repo) => {
   try {
-    const stdout = execFileSync(process.execPath, [SCRIPT], { cwd: repo, encoding: "utf8", timeout: 180000 });
+    const stdout = execFileSync(process.execPath, [SCRIPT], {
+      cwd: repo,
+      env: gitEnv(),
+      encoding: "utf8",
+      timeout: 180000,
+    });
     return { status: 0, stdout, stderr: "" };
   } catch (error) {
     return { status: error.status ?? 1, stdout: error.stdout ?? "", stderr: error.stderr ?? "" };
@@ -222,6 +228,59 @@ describe("generate-changelog", () => {
     } finally {
       rmSync(repo, { recursive: true, force: true });
       rmSync(shim, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("generate-changelog (environment isolation)", () => {
+  it("не коммитит в репозиторий, чей GIT_DIR унаследован от хука", { timeout: 120000 }, () => {
+    const victim = mkdtempSync(join(tmpdir(), "wsc-git-env-"));
+    const shim = makeGeneratedNpx(NEW_RELEASE_CHUNK);
+    const savedGitDir = process.env.GIT_DIR;
+    let repo;
+    try {
+      execFileSync("git", ["init", "-q"], { cwd: victim, env: gitEnv(), stdio: "ignore" });
+      execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: victim, env: gitEnv(), stdio: "ignore" });
+      writeFileSync(join(victim, "keep.txt"), "keep\n");
+      execFileSync("git", ["add", "-A"], { cwd: victim, env: gitEnv(), stdio: "ignore" });
+      execFileSync("git", [...GIT_IDENTITY, "commit", "-m", "chore: init"], {
+        cwd: victim,
+        env: gitEnv(),
+        stdio: "ignore",
+      });
+      const before = execFileSync("git", ["rev-parse", "HEAD"], {
+        cwd: victim,
+        env: gitEnv(),
+        encoding: "utf8",
+      }).trim();
+
+      process.env.GIT_DIR = join(victim, ".git");
+      repo = makeTaggedRepo();
+      const result = runWithShim(repo, shim);
+      assert.equal(result.status, 0);
+
+      const after = execFileSync("git", ["rev-parse", "HEAD"], {
+        cwd: victim,
+        env: gitEnv(),
+        encoding: "utf8",
+      }).trim();
+      assert.equal(after, before, "фикстурный коммит не должен попасть в чужой репозиторий");
+      assert.equal(
+        existsSync(join(victim, "CHANGELOG.md")),
+        false,
+        "файлы фикстуры не должны появиться в чужом репозитории",
+      );
+    } finally {
+      if (savedGitDir === undefined) {
+        delete process.env.GIT_DIR;
+      } else {
+        process.env.GIT_DIR = savedGitDir;
+      }
+      rmSync(victim, { recursive: true, force: true });
+      rmSync(shim, { recursive: true, force: true });
+      if (repo !== undefined) {
+        rmSync(repo, { recursive: true, force: true });
+      }
     }
   });
 });

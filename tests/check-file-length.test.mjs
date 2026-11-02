@@ -8,6 +8,7 @@ import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";
+import { gitEnv } from "./lib/git-env.mjs";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/check-file-length.ts", import.meta.url));
 const LONG_FILE = Array.from({ length: 260 }, (_, index) => `export const x${index} = ${index};`).join("\n");
@@ -21,10 +22,10 @@ const SHORT_FILE = "export const ok = true;\n";
  */
 const makeRepo = (name, content) => {
   const dir = mkdtempSync(join(tmpdir(), "wsc-file-length-"));
-  execFileSync("git", ["init", "-q"], { cwd: dir });
+  execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv() });
   mkdirSync(join(dir, dirname(name)), { recursive: true });
   writeFileSync(join(dir, name), content);
-  execFileSync("git", ["add", "-A"], { cwd: dir });
+  execFileSync("git", ["add", "-A"], { cwd: dir, env: gitEnv() });
   return dir;
 };
 
@@ -36,7 +37,7 @@ const makeRepo = (name, content) => {
  */
 const run = (dir, args) => {
   try {
-    const stdout = execFileSync(process.execPath, [SCRIPT, ...args], { cwd: dir, encoding: "utf8" });
+    const stdout = execFileSync(process.execPath, [SCRIPT, ...args], { cwd: dir, env: gitEnv(), encoding: "utf8" });
     return { status: 0, stdout, stderr: "" };
   } catch (error) {
     return { status: error.status ?? 1, stdout: error.stdout ?? "", stderr: error.stderr ?? "" };

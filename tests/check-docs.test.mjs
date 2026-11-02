@@ -8,6 +8,7 @@ import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";
+import { gitEnv } from "./lib/git-env.mjs";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/check-docs.ts", import.meta.url));
 const BADGE = "![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.22.2-green)\n";
@@ -37,7 +38,7 @@ const runFixture = (pkg, nvm, docs = []) => {
     writeFileSync(join(dir, ".nvmrc"), nvm);
   }
   try {
-    const stdout = execFileSync(process.execPath, [SCRIPT], { cwd: dir, encoding: "utf8" });
+    const stdout = execFileSync(process.execPath, [SCRIPT], { cwd: dir, env: gitEnv(), encoding: "utf8" });
     return { status: 0, stdout, stderr: "" };
   } catch (error) {
     return { status: error.status ?? 1, stdout: error.stdout ?? "", stderr: error.stderr ?? "" };
@@ -117,9 +118,9 @@ describe("check-docs", () => {
         join(docs, "settings.md"),
         "# Папки\n\n`.idea/workspace.xml` - личное состояние, в git не попадает.\n",
       );
-      execFileSync("git", ["init", "-q"], { cwd: dir, stdio: "ignore" });
-      execFileSync("git", ["config", "core.quotepath", "false"], { cwd: dir, stdio: "ignore" });
-      const stdout = execFileSync(process.execPath, [SCRIPT], { cwd: dir, encoding: "utf8" });
+      execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
+      execFileSync("git", ["config", "core.quotepath", "false"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
+      const stdout = execFileSync(process.execPath, [SCRIPT], { cwd: dir, env: gitEnv(), encoding: "utf8" });
       assert.doesNotMatch(stdout, /does not exist/);
     } finally {
       rmSync(dir, { recursive: true, force: true });
