@@ -7,6 +7,7 @@
 - **changelog:** generate the unreleased chunk and keep the file idempotent ([ff87744](https://github.com/stsgs1980/webstorm-config/commit/ff8774467e7cc835bd4811dad89e1bd82ebcb1b0))
 - **check-docs:** accept git-ignored paths as legitimate doc references ([3ba78a3](https://github.com/stsgs1980/webstorm-config/commit/3ba78a3019693be634f0d55011c6ae077348970e))
 - **check-templates:** render into pid-unique dir to survive parallel runs ([45f242f](https://github.com/stsgs1980/webstorm-config/commit/45f242f9600e08ddcafd4f9caeb8ceaef9c749e6))
+- **check-templates:** render templates whose values contain '>' ([273ac68](https://github.com/stsgs1980/webstorm-config/commit/273ac68578767a30ff8dcef997176d6ee35609ed))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
 
