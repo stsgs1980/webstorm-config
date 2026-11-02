@@ -187,3 +187,5 @@ actually exist there.
   `docs/markdown.md` (markdown style), `docs/architecture.md` (module boundaries),
   `docs/security.md` (secrets, auth), `docs/api.md` (HTTP conventions), `SECURITY.md`
   (vulnerability policy).
+- `docs/kickoff.md` is template-only: the starter prompt runs once, before the
+  project exists. In a fork, delete it at Step 1 (getting-started.md).
