@@ -39,6 +39,9 @@ export default [
       ".superpowers/**",
       // Draft workspace: reports and working notes outside every gate.
       "drafts/**",
+      // Agent workspace: local state of the IDE agent, never committed.
+      ".opencode/**",
+      ".agents/**",
     ],
   },
   ...markdown.configs.recommended,
