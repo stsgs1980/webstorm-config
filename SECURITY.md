@@ -31,14 +31,43 @@
 
 ## npm audit
 
-`npm audit --omit=dev` не находит проблем: дерево production-зависимостей
-чистое. В полном `npm audit` — 10 high: все они от одного транзитивного
-advisory `braces` (GHSA-vfj7-8cjw-p6xm, DoS на глубоко вложенных паттернах),
-который приходит в dev-дерево через Stylelint. Исправленной версии `braces`
-пока нет; обновление придёт штатно через Dependabot.
+Снимок на 2026-11-02. Воспроизведение:
+
+```bash
+npm audit --omit=dev --audit-level=high   # production-дерево: 0 уязвимостей
+npm audit                                 # полное дерево: 0 high, 15 moderate
+```
+
+`npm audit --omit=dev` чист: в production-зависимостях известных уязвимостей
+нет, и CI блокирует high/critical именно на этом дереве.
+
+В полном дереве 0 high и 15 moderate. Все 15 - одна транзитивная цепочка
+`minimatch < 11.0.1` (GHSA-g3hv-75wg-m249, CVE-2026-118764: усиление
+glob-паттерна в `firstPhasePreProcess`, DoS по CPU и памяти). Пакет приходит
+через ESLint-плагины (`eslint-plugin-react`, `eslint-plugin-jsx-a11y`,
+`typescript-eslint`) и `markdownlint-cli`; в дереве стоят `minimatch` 10.2.6
+и пять копий 3.1.5. Патч - `minimatch@11.0.1`, он требует мажорных
+обновлений этих инструментов и смены API: `npm audit fix` без `--force`
+ничего не меняет, `--force` ломает линтеры.
+
+Риск принят как dev-only:
+
+- пакета нет в production-дереве, пользовательские сборки его не содержат;
+- эксплуатируется шаблоном glob, который локально подаёт сам разработчик,
+  а не внешний ввод приложения;
+- CVSS v4 - 6.9 (medium), EPSS - 0.3%;
+- исправление придёт штатно через Dependabot, когда инструменты перейдут на
+  `minimatch` 11.
+
+Dependabot показывает это как один alert на `main` (GHSA-g3hv-75wg-m249).
+Alert закрыт как `tolerable_risk` со ссылкой на этот раздел; при появлении
+совместимого патча он откроется заново после обновления манифеста.
+
+Не запускайте `npm audit fix --force`.
 
 ## Меры в репозитории
 
 - Включены secret scanning и push protection.
 - В CI минимальные права (`contents: read`) и `HUSKY: 0` для чистой установки.
-- Dependabot следит за npm-пакетами и GitHub Actions.
+- Dependabot следит за npm-пакетами и GitHub Actions; открытые алерты
+  разбираются, принятый dev-only риск описан в разделе выше.
