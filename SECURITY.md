@@ -31,11 +31,11 @@
 
 ## npm audit
 
-Снимок на 2026-11-02. Воспроизведение:
+Снимок на 2026-11-03. Воспроизведение:
 
 ```bash
 npm audit --omit=dev --audit-level=high   # production-дерево: 0 уязвимостей
-npm audit                                 # полное дерево: 0 high, 15 moderate
+npm audit                                 # полное дерево: 0 high, 16 moderate
 ```
 
 `npm audit --omit=dev` чист: production-зависимостей с известными уязвимостями
@@ -43,14 +43,16 @@ npm audit                                 # полное дерево: 0 high, 1
 пустое: React и react-dom нужны только для линтинга и типов и стоят в
 `devDependencies`.
 
-В полном дереве 0 high и 15 moderate. Все 15 - одна транзитивная цепочка
+В полном дереве 0 high и 16 moderate. Пятнадцать из них - одна транзитивная цепочка
 `minimatch < 11.0.1` (GHSA-g3hv-75wg-m249, CVE-2026-118764: усиление
 glob-паттерна в `firstPhasePreProcess`, DoS по CPU и памяти). Пакет приходит
 через ESLint-плагины (`eslint-plugin-react`, `eslint-plugin-jsx-a11y`,
 `typescript-eslint`) и `markdownlint-cli`; в дереве стоят `minimatch` 10.2.6
-и пять копий 3.1.5. Патч - `minimatch@11.0.1`, он требует мажорных
-обновлений этих инструментов и смены API: `npm audit fix` без `--force`
-ничего не меняет, `--force` ломает линтеры.
+и пять копий 3.1.5. Шестнадцатая запись - сам `eslint-config-prettier`: npm
+audit показывает его зависящим от `eslint` (peer), новых high это не добавляет.
+Патч - `minimatch@11.0.1`, он требует мажорных обновлений этих инструментов и
+смены API: `npm audit fix` без `--force` ничего не меняет, `--force` ломает
+линтеры.
 
 Риск принят как dev-only:
 
