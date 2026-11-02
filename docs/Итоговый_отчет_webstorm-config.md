@@ -1,7 +1,7 @@
 # webstorm-config: итоговый отчёт и план работ
 
-Дата: 2026-11-02, статусы сверены по коммиту `251aa7d`.
-База проверки: `main` @ `251aa7d`; все правки предыдущих сеансов закоммичены,
+Дата: 2026-11-02, статусы сверены по коммиту `4108b8a`.
+База проверки: `main` @ `4108b8a`; все правки предыдущих сеансов закоммичены,
 рабочее дерево чистое. Закрытые пункты помечены `[CLOSED]`, открытые - `[OPEN]`.
 
 Методика: каждое положение двухагентного аудита перепроверено против фактического
@@ -28,6 +28,8 @@
   `ParametersPerFunction` 4 - P1-5.
 - [CLOSED] Статусы `docs/webstorm-settings.md` сверены 02.11: п. 3 закрыт,
   п. 7 решён - P1-6.
+- [CLOSED] Roadmap-гигиена: `docs/architecture.md`, `docs/security.md`,
+  `docs/api.md` созданы, whitelist будущих путей удалён из `check-docs` - P1-7.
 - [CLOSED] WebStorm на машине 2026.2.4 (build WS-262.11879.105): минимум по
   бюллетеню eMudhra выполнен; остаётся ручная проверка IJPL-101766 в редакторе -
   P0-2.
@@ -58,6 +60,8 @@
   metrics, P1-5.
 - **`webstorm-settings.md` устарел** - [CLOSED]: статусы сверены 02.11, п. 3 и
   п. 7 закрыты, P1-6.
+- **Roadmap-пути без файлов** - [CLOSED]: три документа созданы, whitelist
+  `KNOWN_FUTURE_PATHS` удалён, проверка прозы оставлена ручной, P1-7.
 - **WebStorm 2026.2.0.1** - имя каталога установки не обновляется; `product-info.json`
   и `idea.log` дают 2026.2.4 (build WS-262.11879.105) -> [CLOSED], P0-2.
 - **`react` в dependencies** - `"react": "^19.2.8"`, `"react-dom": "^19.3.0"` ->
@@ -132,9 +136,10 @@
   `docs/webstorm.md`. Где: `.idea/inspectionProfiles/`.
 - **6.** [CLOSED] Статусы `docs/webstorm-settings.md` сверены 02.11.2026: п. 3
   закрыт, п. 7 решён; расформирование файла осталось в P2-12. Где: репо.
-- **7.** [OPEN] Roadmap-гигиена: `docs/architecture.md`, `docs/security.md`,
-  `docs/api.md` либо реализовать, либо снять с плана (сейчас легализованы в
-  `KNOWN_FUTURE_PATHS` `scripts/check-docs.ts`). Где: репо.
+- **7.** [CLOSED] Roadmap-гигиена: `docs/architecture.md`, `docs/security.md` и
+  `docs/api.md` написаны; whitelist будущих путей удалён из `scripts/check-docs.ts`,
+  обещание скрипта проверки прозы снято и зафиксировано как ручная проверка.
+  Где: репо.
 - **8.** [OPEN] Coverage-гейт: выбрать вариант per-file coverage по изменённым
   файлам (порог 80%) и зафиксировать решением; до воплощения пункт правил ->
   тикет. Где: CI.
@@ -230,3 +235,4 @@ rg -n "OverlyLongFunctionJS" .idea/inspectionProfiles/   # после P1-5: ли
 | 2026-11-02 | `45a85b8` | SECURITY: снимок audit 02.11, alert `minimatch` разобран   |
 | 2026-11-02 | `46f1bd1` | PR #18 влит: N2, N3 и изоляция git-фикстур закрыты         |
 | 2026-11-02 | `251aa7d` | P1-4, P1-5, P1-6 закрыты: `.env.example`, профиль, статусы |
+| 2026-11-02 | `4108b8a` | P1-7 закрыт: architecture/security/api, whitelist удалён   |
