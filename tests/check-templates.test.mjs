@@ -71,20 +71,27 @@ describe("check-templates", () => {
   it("параллельные вызовы чекера не затирают рендер друг друга", { timeout: 240000 }, async () => {
     // Two terminals (IDE + console) may run the renderer at once; a shared
     // render dir lets one invocation's rmSync delete the other's files
-    // mid-flight (observed: TS6053, eslint ENOENT). A slow repo-wide run
-    // overlapped by a fast delayed one reproduces it: the short run must
-    // not be able to remove the long run's render input.
+    // mid-flight (observed: TS6053, eslint ENOENT). Keep the concurrency but
+    // bound the work: a 2 GB CI box must not SIGKILL both processes, and the
+    // pid-dir isolation does not depend on the repository template count.
     const rafce =
       '<template name="rafce" value="import type { ReactElement, ReactNode } from &quot;react&quot;;&#xA;&#xA;interface $NAME$Props {&#xA;  children?: ReactNode;&#xA;}&#xA;&#xA;/**&#xA; * $NAME$ component.&#xA; */&#xA;export const $NAME$ = ({ children }: $NAME$Props): ReactElement =&gt; {&#xA;  return &lt;div&gt;{children}&lt;/div&gt;;&#xA;};&#xA;&#xA;export default $NAME$;" description="React Arrow Function Component"></template>';
+    const simple = (name) => `<template name="${name}" value="const $NAME$ = 1;"></template>`;
     const attempt = (templatesDir) =>
       execFileP(process.execPath, [SCRIPT, templatesDir], { timeout: 180000 }).then(
         () => ({ ok: true, stderr: "" }),
-        (error) => ({ ok: false, stderr: String(error.stderr ?? error.message ?? "") }),
+        (error) => ({
+          ok: false,
+          stderr: String(error.stderr || error.stdout || error.message || ""),
+        }),
       );
+    const longFixture = makeFixture([
+      { name: "react.xml", xml: xmlOf("React", [rafce, simple("one"), simple("two")]) },
+    ]);
     const fixture = makeFixture([{ name: "react.xml", xml: xmlOf("React", [rafce]) }]);
     try {
-      const longRun = attempt(REPO_TEMPLATES);
-      await sleep(3000);
+      const longRun = attempt(longFixture);
+      await sleep(1500);
       const shortRun = attempt(fixture);
       const [first, second] = await Promise.all([longRun, shortRun]);
       for (const [label, attemptResult] of [
@@ -94,6 +101,7 @@ describe("check-templates", () => {
         assert.ok(attemptResult.ok, `${label}: ${attemptResult.stderr}`);
       }
     } finally {
+      rmSync(longFixture, { recursive: true, force: true });
       rmSync(fixture, { recursive: true, force: true });
     }
   });
@@ -117,10 +125,17 @@ describe("check-templates", () => {
     assert.equal(result.status, 0);
   });
 
+  it("значение с '>' в атрибуте не пропускается", { timeout: 120000 }, () => {
+    const arrow = '<template name="arrow" value="const $NAME$ = (x: number): number => x + 1;"></template>';
+    const result = runFixture([{ name: "typescript.xml", xml: xmlOf("TSx", [arrow]) }]);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /\[OK\] typescript\/arrow/);
+  });
+
   it("шаблоны живого репозитория проходят рендер, eslint и tsc", { timeout: 120000 }, () => {
     const result = run(REPO_TEMPLATES);
     assert.equal(result.status, 0);
     assert.match(result.stdout, /\[OK\] react\/rafce/);
-    assert.match(result.stdout, /\[OK\] templates checked/);
+    assert.match(result.stdout, /templates checked: 18/);
   });
 });

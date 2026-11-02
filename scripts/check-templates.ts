@@ -8,12 +8,13 @@
 // ordinary gates).
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
 // noinspection NpmUsedModulesInstalled
 import { ESLint } from "eslint";
-import { AMBIENT_DECLARATIONS, VAR_OVERRIDES, VAR_SAMPLES } from "./check-templates-tables.ts";
+import { AMBIENT_DECLARATIONS } from "./check-templates-tables.ts";
+import { collectTemplates, render, type LiveTemplate } from "./lib/live-templates.ts";
 
 const TSC = join("node_modules", "typescript", "lib", "tsc.js");
 // No dot segment in the directory name: TypeScript include globs do not
@@ -23,80 +24,6 @@ const TSC = join("node_modules", "typescript", "lib", "tsc.js");
 // and console) must not delete each other's rendered files mid-flight.
 const LEGACY_RENDER_DIR = join("dev", "templates-check");
 const RENDER_DIR = join("dev", `templates-check-${process.pid}`);
-const TEMPLATE_TAG = /<template\b([^>]*)>/g;
-
-/**
- * Read an XML attribute value; template values carry no raw quotes.
- * @param tag - attribute string of one template element
- * @param name - attribute name
- * @returns attribute value or undefined
- */
-function attr(tag: string, name: string): string | undefined {
-  return new RegExp(`\\b${name}="([^"]*)"`).exec(tag)?.[1];
-}
-
-/**
- * Unescape XML entities that WebStorm writes into live template values.
- * @param raw - raw attribute value
- * @returns plain template text
- */
-function unescape(raw: string): string {
-  return raw
-    .replaceAll("&quot;", '"')
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&#xA;", "\n")
-    .replaceAll("&#10;", "\n")
-    .replaceAll("&amp;", "&");
-}
-
-/**
- * Render a template: variables replaced, identical everywhere - the rafce
- * drift (different value in different places) cannot pass unnoticed.
- * @param set - set key (file base name)
- * @param name - template name
- * @param value - raw template text with $VARS$
- * @returns rendered code
- */
-function render(set: string, name: string, value: string): string {
-  return value.replaceAll(/\$([A-Z][A-Z0-9_]*)\$/g, (_whole, variable: string) => {
-    const override = VAR_OVERRIDES[`${set}::${name}::${variable}`];
-    return override ?? VAR_SAMPLES[variable] ?? "0";
-  });
-}
-
-/**
- * Collect all templates of one set file.
- * @param file - path to the template set XML
- * @returns parsed templates with names and unescaped values
- */
-function parseSet(file: string): { name: string; value: string }[] {
-  const raw = readFileSync(file, "utf8");
-  const templates: { name: string; value: string }[] = [];
-  for (const match of raw.matchAll(TEMPLATE_TAG)) {
-    const name = attr(match[1], "name");
-    const value = attr(match[1], "value");
-    if (name !== undefined && value !== undefined) {
-      templates.push({ name, value: unescape(value) });
-    }
-  }
-  return templates;
-}
-
-/**
- * Every template an argv dir holds; flat list keyed by set name.
- * @param dir - directory with template set XML files
- * @returns list with set, name and raw value per template
- */
-function collectTemplates(dir: string): { set: string; name: string; value: string }[] {
-  let entries: string[];
-  try {
-    entries = readdirSync(dir).filter((file) => file.endsWith(".xml"));
-  } catch {
-    return [];
-  }
-  return entries.flatMap((file) => parseSet(join(dir, file)).map((tpl) => ({ set: file.slice(0, -4), ...tpl })));
-}
 
 /**
  * Lint all rendered files: repository config plus a snippet-override block.
@@ -175,7 +102,14 @@ function typecheck(files: { path: string; label: string }[]): string[] {
  */
 async function main(): Promise<void> {
   const dir = process.argv[2] ?? join(".idea", "liveTemplates");
-  const templates = collectTemplates(dir);
+  let templates: LiveTemplate[];
+  try {
+    templates = collectTemplates(dir);
+  } catch (error) {
+    console.error(`[FAIL] ${(error as Error).message}`);
+    process.exitCode = 1;
+    return;
+  }
   const files: { path: string; label: string }[] = [];
   // Leftovers of the shared pre-2026-11 era or of a crash with the same
   // pid would beat the tsconfig globs into the next program; remove first.
