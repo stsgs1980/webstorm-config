@@ -20,13 +20,13 @@
 > **Шаблон настроек, не приложение:** нет `src/`, нет `npm run dev` до Steps 2–4 в
 > [docs/getting-started.md](docs/getting-started.md).
 
-| Есть сразу после `npm install`  | Нет до настройки проекта |
-| ------------------------------- | ------------------------ |
-| Линтеры, Prettier, Husky        | `src/`, UI-код           |
-| Vitest (`passWithNoTests`)      | `npm run dev` / сборщик  |
-| `react` в deps (для ESLint/TSX) | Vite / Next (Step 2)     |
+| Есть сразу после `npm install`   | Нет до настройки проекта |
+| -------------------------------- | ------------------------ |
+| Линтеры, Prettier, Husky         | `src/`, UI-код           |
+| Vitest (`passWithNoTests`)       | `npm run dev` / сборщик  |
+| `react` в devDeps (ESLint и TSX) | Vite / Next (Step 2)     |
 
-`react` и `react-dom` в `dependencies` — **для линтинга и TypeScript (JSX)**, не для запуска
+`react` и `react-dom` в `devDependencies` — **для линтинга и TypeScript (JSX)**, не для запуска
 приложения. Сборщик добавляете на Step 2. Проект без React: удалите их и поправьте
 `tsconfig.json` (`jsx`) и `eslint.config.js` (React-правила) — детали в Step 2
 [getting-started](docs/getting-started.md).

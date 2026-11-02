@@ -38,8 +38,10 @@ npm audit --omit=dev --audit-level=high   # production-дерево: 0 уязв�
 npm audit                                 # полное дерево: 0 high, 15 moderate
 ```
 
-`npm audit --omit=dev` чист: в production-зависимостях известных уязвимостей
-нет, и CI блокирует high/critical именно на этом дереве.
+`npm audit --omit=dev` чист: production-зависимостей с известными уязвимостями
+нет, и CI блокирует high/critical именно на этом дереве. У шаблона production-дерево
+пустое: React и react-dom нужны только для линтинга и типов и стоят в
+`devDependencies`.
 
 В полном дереве 0 high и 15 moderate. Все 15 - одна транзитивная цепочка
 `minimatch < 11.0.1` (GHSA-g3hv-75wg-m249, CVE-2026-118764: усиление
