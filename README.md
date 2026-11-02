@@ -87,19 +87,22 @@ npm install
 | **Security**     | `SECURITY.md` — политика уязвимостей        |
 
 **Docs (едут в fork):** [getting-started](docs/getting-started.md),
-[kickoff](docs/kickoff.md), [WebStorm](docs/webstorm.md), [testing](docs/testing.md),
+[WebStorm](docs/webstorm.md), [testing](docs/testing.md),
 [markdown](docs/markdown.md), [live templates](docs/live-templates/README.md),
 [architecture](docs/architecture.md), [security](docs/security.md), [api](docs/api.md).
+
+Стартовый промт - [kickoff](docs/kickoff.md): он нужен только для шаблона и
+удаляется на Step 1 в новом проекте.
 
 ## After fork (кратко)
 
 1. Обновите `package.json`: `name`, `description`.
 2. `README.template.md` -> `README.md`, заполнить Overview / Features / Architecture
    и заменить плейсхолдеры `${PROJECT_NAME}`, `${DATE}`, `${GITHUB_USER}`.
-3. Удалить `CHANGELOG.md` (история шаблона, не вашего проекта):
+3. Удалить `CHANGELOG.md` (история шаблона) и `docs/kickoff.md` (стартовый промт):
 
    ```bash
-   rm CHANGELOG.md && git add CHANGELOG.md && git commit -m "chore: reset changelog for new project"
+   rm CHANGELOG.md docs/kickoff.md && git add -A && git commit -m "chore: reset template files"
    ```
 
 4. WebStorm — [docs/webstorm.md](docs/webstorm.md).

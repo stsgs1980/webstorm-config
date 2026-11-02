@@ -17,7 +17,10 @@
    git commit -m "chore: reset changelog for new project"
    ```
 
-4. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
+4. Удалите `docs/kickoff.md`: это стартовый промт для шаблона, в новом проекте
+   он не нужен.
+
+5. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
 
 ## Step 2: Framework dependencies
 

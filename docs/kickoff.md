@@ -4,6 +4,9 @@
 проекта обсуждается заранее, в любом чате, до создания репозитория; в чат
 WebStorm он вставляется руками.
 
+Файл нужен только для шаблона: в созданном проекте он не используется, удалите
+его на Step 1 в [getting-started.md](getting-started.md).
+
 ## Как использовать
 
 1. Соберите бриф проекта заранее (состав — в конце файла).
@@ -34,6 +37,7 @@ WebStorm он вставляется руками.
 5. На Step 5 пройди гейты до зелёного: npm run lint, npm run typecheck,
    npm run lint:css, npm run lint:md, npm run format:check, npm test,
    npm run check:file-length, npm run check:docs.
+6. После настройки удали `docs/kickoff.md`: в новом проекте он не нужен.
 ```
 
 ## Из чего состоит бриф
