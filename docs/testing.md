@@ -105,6 +105,27 @@ describe("Button", () => {
 - **Vitest + `jsdom` + Testing Library** — компоненты и интеграция в изолированном DOM.
 - **Playwright / Cypress** — e2e в реальном браузере; дополняют Vitest, а не заменяют его.
 
+## E2E: Playwright (когда есть UI)
+
+Vitest не заменяет реальный браузер: клики, формы, маршрутизация, загрузка
+данных. Playwright добавляется после Steps 2-4 в [getting-started.md](getting-started.md),
+когда приложение уже запускается.
+
+```bash
+npm install -D @playwright/test
+npx playwright install --with-deps chromium
+```
+
+`playwright.config.ts` в корне: `testDir: "tests/e2e"`, `webServer` с командой
+запуска приложения (`npm run dev`), `baseURL` из окружения. Скрипт `test:e2e`
+(`playwright test`) добавляется в `package.json` вместе с зависимостью; в таблице
+скриптов шаблона он помечен как план.
+
+Что покрывать: критический путь (вход, оформление заказа, сохранение формы), а
+не каждый компонент. Селекторы - по роли и подписи (`getByRole`), не по
+CSS-классам. В CI e2e идёт отдельной джобой с установленными браузерами; в
+шаблоне её нет, пока нет UI.
+
 ## Coverage-гейт: принятое решение
 
 Порог - 80% строк на изменённых файлах, не глобальный. Схема (ещё не в CI):

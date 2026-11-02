@@ -89,6 +89,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | `npm test`              | Vitest                                    |
 | `npm run test:watch`    | Vitest (watch)                            |
 | `npm run test:coverage` | Vitest + coverage                         |
+| `npm run test:e2e`      | Playwright (план; после установки)        |
 | `npm run dev`           | _добавьте после Step 3 в getting-started_ |
 
 ## Docs
