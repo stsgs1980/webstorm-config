@@ -44,6 +44,8 @@
   пояснение добавлено в `docs/settings-levels.md`.
 - [CLOSED] P2-14: пакет правок по аудиту 31.10 - миграция, Vue/Next, Analyze code,
   плейсхолдеры, `workspace.xml`, словарь, watchers, указатель в `README.md`.
+- [CLOSED] P3: сноски и низкие находки закрыты; скрипт копирования шаблонов и
+  `check:settings-drift` отклонены как хрупкие и машинно-специфичные.
 - [CLOSED] WebStorm на машине 2026.2.4 (build WS-262.11879.105): минимум по
   бюллетеню eMudhra выполнен; остаётся ручная проверка IJPL-101766 в редакторе -
   P0-2.
@@ -186,15 +188,17 @@
 
 ### 4.4 P3
 
-- **15.** [OPEN] Node-скрипт копирования live-templates XML в глобальный каталог
-  IDE. Где: репо.
-- **16.** [OPEN] Один пример footnotes в `docs/markdown.md`. Где: репо.
-- **17.** [OPEN] Скрипт `check:settings-drift` (Windows-специфика, дрейф машинный).
-  Где: репо.
-- **18.** [OPEN, частично] Низкие находки: `bun.lock` вместо `bun.lockb` в
-  `README.md`, шаг установки React Buddy в параграфе 9. Снимок npm audit в
-  `SECURITY.md` обновлён 02.11 (0 high, 15 moderate dev-only) вместе с
-  разбором alert `minimatch`. Где: репо.
+- **15.** [WONTFIX] Node-скрипт копирования live-templates XML в глобальный
+  каталог IDE: Windows-специфичные пути и номер версии каталога делают его
+  хрупким; уже есть плагин Live Template Sharing (id 25007) и гейт
+  `check:templates`. Решение: не делать.
+- **16.** [CLOSED] Пример сносок добавлен в `docs/markdown.md`.
+- **17.** [WONTFIX] Скрап `check:settings-drift`: машинный дрейф, Windows-специфика,
+  в CI не воспроизводится; вместо скрипта - runbook `docs/webstorm-settings.md`.
+  Решение: не делать.
+- **18.** [CLOSED] Низкие находки: `bun.lock` в `README.md`, шаг установки React
+  Buddy в параграфе 9, снимок npm audit уже датирован 02.11 (0 high, 15 moderate
+  dev-only). Где: репо.
 
 ### 4.5 FIX-DOC - правки текста правил (один PR)
 
@@ -252,3 +256,4 @@ rg -n "OverlyLongFunctionJS" .idea/inspectionProfiles/   # после P1-5: ли
 | 2026-11-02 | `0a7e85b` | P2-9, P2-10 закрыты: Playwright, react в devDeps, exempt   |
 | 2026-11-02 | `39e87f9` | P2-11, P2-12, P2-13 закрыты: версии IDE, runbook, пути     |
 | 2026-11-02 | `da9d648` | P2-14 закрыт: аудит документации 31.10                     |
+| 2026-11-02 | `ec855f3` | P3 закрыт: сноски, bun.lock, React Buddy; 15/17 отклонены  |
