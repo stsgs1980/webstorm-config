@@ -151,8 +151,9 @@ the signal.
 - Every bug fix ships with a regression test. Every exported function with branching
   logic gets a unit test. Do not add tests without assertions.
 - No network in unit tests: mock at the module boundary, not by patching globals.
-- Coverage gate (planned, not yet wired into CI): 80% lines on changed files. Do not
-  chase global coverage meanwhile.
+- Coverage gate (decided, not yet wired into CI): 80% lines per changed file, from
+  `vitest related --coverage`; do not chase global coverage meanwhile. The scheme
+  and its status are recorded in `docs/testing.md`.
 
 ## 9. Security & Dependencies
 
@@ -183,4 +184,6 @@ actually exist there.
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
-  `docs/markdown.md` (markdown style), `SECURITY.md` (vulnerability policy).
+  `docs/markdown.md` (markdown style), `docs/architecture.md` (module boundaries),
+  `docs/security.md` (secrets, auth), `docs/api.md` (HTTP conventions), `SECURITY.md`
+  (vulnerability policy).
