@@ -1,13 +1,17 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFile, execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
+import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath, URL } from "node:url";
+import { promisify } from "node:util";
 // noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";
+
+const execFileP = promisify(execFile);
 
 const SCRIPT = fileURLToPath(new URL("../scripts/check-templates.ts", import.meta.url));
 const REPO_TEMPLATES = fileURLToPath(new URL("../.idea/liveTemplates", import.meta.url));
@@ -62,6 +66,36 @@ describe("check-templates", () => {
     const result = runFixture([{ name: "react.xml", xml: xmlOf("React", [rafce]) }]);
     assert.equal(result.status, 0);
     assert.match(result.stdout, /\[OK\] react\/rafce.*(eslint|tsc)/);
+  });
+
+  it("параллельные вызовы чекера не затирают рендер друг друга", { timeout: 240000 }, async () => {
+    // Two terminals (IDE + console) may run the renderer at once; a shared
+    // render dir lets one invocation's rmSync delete the other's files
+    // mid-flight (observed: TS6053, eslint ENOENT). A slow repo-wide run
+    // overlapped by a fast delayed one reproduces it: the short run must
+    // not be able to remove the long run's render input.
+    const rafce =
+      '<template name="rafce" value="import type { ReactElement, ReactNode } from &quot;react&quot;;&#xA;&#xA;interface $NAME$Props {&#xA;  children?: ReactNode;&#xA;}&#xA;&#xA;/**&#xA; * $NAME$ component.&#xA; */&#xA;export const $NAME$ = ({ children }: $NAME$Props): ReactElement =&gt; {&#xA;  return &lt;div&gt;{children}&lt;/div&gt;;&#xA;};&#xA;&#xA;export default $NAME$;" description="React Arrow Function Component"></template>';
+    const attempt = (templatesDir) =>
+      execFileP(process.execPath, [SCRIPT, templatesDir], { timeout: 180000 }).then(
+        () => ({ ok: true, stderr: "" }),
+        (error) => ({ ok: false, stderr: String(error.stderr ?? error.message ?? "") }),
+      );
+    const fixture = makeFixture([{ name: "react.xml", xml: xmlOf("React", [rafce]) }]);
+    try {
+      const longRun = attempt(REPO_TEMPLATES);
+      await sleep(3000);
+      const shortRun = attempt(fixture);
+      const [first, second] = await Promise.all([longRun, shortRun]);
+      for (const [label, attemptResult] of [
+        ["long", first],
+        ["short", second],
+      ]) {
+        assert.ok(attemptResult.ok, `${label}: ${attemptResult.stderr}`);
+      }
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
   });
 
   it("синтаксически сломанный шаблон падает и называет шаблон", { timeout: 120000 }, () => {

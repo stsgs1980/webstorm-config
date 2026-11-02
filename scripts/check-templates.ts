@@ -18,8 +18,11 @@ import { AMBIENT_DECLARATIONS, VAR_OVERRIDES, VAR_SAMPLES } from "./check-templa
 const TSC = join("node_modules", "typescript", "lib", "tsc.js");
 // No dot segment in the directory name: TypeScript include globs do not
 // enter dotted directories, and with the type-aware lint layer the
-// rendered files must be part of the tsconfig project.
-const RENDER_DIR = join("dev", "templates-check");
+// rendered files must be part of the tsconfig project. The pid suffix
+// makes the directory private to this invocation: concurrent runs (IDE
+// and console) must not delete each other's rendered files mid-flight.
+const LEGACY_RENDER_DIR = join("dev", "templates-check");
+const RENDER_DIR = join("dev", `templates-check-${process.pid}`);
 const TEMPLATE_TAG = /<template\b([^>]*)>/g;
 
 /**
@@ -174,6 +177,10 @@ async function main(): Promise<void> {
   const dir = process.argv[2] ?? join(".idea", "liveTemplates");
   const templates = collectTemplates(dir);
   const files: { path: string; label: string }[] = [];
+  // Leftovers of the shared pre-2026-11 era or of a crash with the same
+  // pid would beat the tsconfig globs into the next program; remove first.
+  rmSync(RENDER_DIR, { recursive: true, force: true });
+  rmSync(LEGACY_RENDER_DIR, { recursive: true, force: true });
   mkdirSync(RENDER_DIR, { recursive: true });
 
   let okCount = 0;
