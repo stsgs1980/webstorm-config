@@ -21,18 +21,22 @@
 
 ## Step 2: Framework dependencies
 
-`react` и `react-dom` уже в `dependencies` (шаблон React-centric). Если проект **без React**:
-удалите их из `dependencies` и добавьте свой фреймворк. После удаления проверьте конфиги:
-уберите `jsx: react-jsx` из `tsconfig.json` (или переключите под свой стек), отключите
-React-правила в `eslint.config.js`, затем выполните `npm run lint` и `npm run typecheck`.
+`react` и `react-dom` уже в `devDependencies` (нужны для ESLint и JSX-типов). Если проект
+**без React**: удалите их из `devDependencies` и добавьте свой фреймворк. После удаления
+проверьте конфиги: уберите `jsx: react-jsx` из `tsconfig.json` (или переключите под свой
+стек), отключите React-правила в `eslint.config.js`, затем выполните `npm run lint` и
+`npm run typecheck`.
 
-Выберите стек и установите (сборщики и плагины нужны только для разработки, поэтому `-D`):
+Выберите стек и установите: рантайм-пакеты - в `dependencies`, сборщики и плагины - в
+`devDependencies` (`-D`):
 
 ```bash
 # React/Vite
+npm install react react-dom
 npm install -D vite @vitejs/plugin-react
 
 # Vue/Vite
+npm install vue
 npm install -D vite @vitejs/plugin-vue
 
 # Svelte/SvelteKit
@@ -42,6 +46,7 @@ npm install -D @sveltejs/kit vite
 npm install -D astro @astrojs/react
 
 # Next.js
+npm install next react react-dom
 npm install -D @next/eslint-plugin-next eslint-plugin-testing-library
 ```
 
@@ -58,6 +63,9 @@ npm install -D @next/eslint-plugin-next eslint-plugin-testing-library
   }
 }
 ```
+
+Для Next.js те же три шага выглядят так: `"dev": "next dev"`, `"build": "next build"`,
+`"start": "next start"`.
 
 ## Step 4: Entry point
 
@@ -149,8 +157,9 @@ Markdown (`.md`) ограничен 120 символами на строку (к
 
 ### 0. Проверьте dependencies
 
-- Если проект **React-centric**: `react` и `react-dom` в `dependencies` — ок.
-- Если проект **без React**: удалите `react`/`react-dom` из `dependencies`.
+- Если проект **React-centric**: `react` и `react-dom` в `devDependencies` — ок
+  для линтинга; для запуска приложения перенесите их в `dependencies`.
+- Если проект **без React**: удалите `react`/`react-dom` из `devDependencies`.
 - Если проект **не React**: установите свой фреймворк (см. Step 2).
 
 ### 1. Скопируйте конфиги
@@ -162,6 +171,7 @@ eslint.config.js
 eslint-parsers/
 eslint-rules/
 eslint-processors/
+scripts/
 .prettierrc
 .stylelintrc.json
 .markdownlint.json
@@ -169,6 +179,9 @@ eslint-processors/
 tsconfig.base.json
 vitest.config.ts
 ```
+
+`scripts/` нужен для `check:file-length` и `check:docs` из шага 5; без него эти
+команды в Verify упадут с `ENOENT`.
 
 ### 2. Установите devDependencies
 
@@ -222,6 +235,8 @@ npx husky init
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "check:file-length": "node scripts/check-file-length.ts --all",
+    "check:docs": "node scripts/check-docs.ts",
     "prepare": "husky"
   }
 }
