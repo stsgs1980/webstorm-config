@@ -85,6 +85,9 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:prettier-conflicts
+      # Advisory lane, same as on Linux: a warning must not fail the job.
+      - run: npm run lint:metrics
+        continue-on-error: true
       - run: npm run typecheck
       - run: npm run lint:css
       - run: npm run lint:md
