@@ -92,6 +92,7 @@ src/
 ```bash
 npm run lint
 npm run lint:prettier-conflicts
+npm run lint:metrics   # advisory, не блокирует
 npm run typecheck
 npm run lint:css
 npm run lint:md
@@ -253,6 +254,7 @@ npx husky init
 ```bash
 npm run lint
 npm run lint:prettier-conflicts
+npm run lint:metrics   # advisory, не блокирует
 npm run typecheck
 npm run lint:css
 npm run lint:md

@@ -130,7 +130,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 Конфиг: `vitest.config.ts`. Подробнее — [testing.md](testing.md).
 
 > В шаблоне есть `tests/` (проверки тулчейна, не удалять), но нет папки `src/` — это нормально.
-> Пустой набор тестов считается ошибкой: `passWithNoTests` в конфиге нет.
+> Пустой набор тестов считается ошибкой: `passWithNoTests` явно выключен (`false`).
 
 ## 6. Markdown и `.editorconfig`
 

@@ -56,6 +56,10 @@
     "*.md": "markdownlint --fix --ignore node_modules"
   },
   "name": "webstorm-config",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stsgs1980/webstorm-config.git"
+  },
   "scripts": {
     "lint": "eslint . --max-warnings=0",
     "lint:prettier-conflicts": "eslint-config-prettier scripts/check-docs.ts",
