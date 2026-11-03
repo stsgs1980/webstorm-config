@@ -37,7 +37,11 @@ function collect(dir: string, pattern: RegExp): string[] {
   return found;
 }
 
-const files = [...collect(join(ROOT, "src"), SRC_TEST), ...collect(join(ROOT, "tests"), ALL_TEST)];
+const files = [
+  ...collect(join(ROOT, "src"), SRC_TEST),
+  ...collect(join(ROOT, "tests"), ALL_TEST),
+  ...collect(join(ROOT, "scripts"), ALL_TEST),
+];
 
 if (files.length === 0) {
   console.error("[FAIL] No test files found.");

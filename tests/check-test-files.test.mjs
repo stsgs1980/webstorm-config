@@ -67,4 +67,17 @@ describe("check-test-files", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("тест в scripts проходит проверку", () => {
+    const root = mkdtempSync(join(tmpdir(), "wsc-scripts-"));
+    try {
+      mkdirSync(join(root, "scripts"));
+      writeFileSync(join(root, "scripts", "check.test.ts"), "export {};\n");
+      const result = run(root);
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, /test files: 1/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
 });
