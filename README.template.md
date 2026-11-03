@@ -81,6 +81,8 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 
 ## Scripts
 
+<!-- check-docs:allow-missing-scripts dev test:e2e -->
+
 | Команда                           | Описание                                  |
 | --------------------------------- | ----------------------------------------- |
 | `npm run lint`                    | ESLint                                    |

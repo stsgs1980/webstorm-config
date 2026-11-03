@@ -51,6 +51,8 @@
 
 ## Quick Start (создать проект из шаблона)
 
+<!-- check-docs:allow-missing-scripts dev test:e2e -->
+
 После любого Option выполните обязательные шаги из [After fork](#after-fork-кратко).
 
 ### Option 1: GitHub Template (recommended)

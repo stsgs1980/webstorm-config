@@ -91,10 +91,56 @@ describe("check-docs", () => {
     assert.match(result.stderr, /npm run test:e3e is not in package\.json scripts/);
   });
 
-  it("будущий скрипт dev по-прежнему не считается битой ссылкой", () => {
-    const doc = "# Планы\n\n`npm run dev`.\n";
+  it("будущий скрипт разрешён только явным маркером", () => {
+    const doc = "# Планы\n\n<!-- check-docs:allow-missing-scripts dev -->\n\n`npm run dev`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 0);
+  });
+
+  it("без маркера будущий скрипт считается битой ссылкой", () => {
+    const doc = "# Планы\n\n`npm run dev`.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /npm run dev is not in package\.json scripts/);
+  });
+
+  it("маркер не разрешает скрипты, которых в нём нет", () => {
+    const doc = "# Планы\n\n<!-- check-docs:allow-missing-scripts dev -->\n\n`npm run test:e2e`.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /npm run test:e2e is not in package\.json scripts/);
+  });
+
+  it("битая относительная ссылка ловится", () => {
+    const doc = "# Ссылки\n\n[missing](no-such.md).\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/links.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /link target no-such\.md does not exist/);
+  });
+
+  it("валидная относительная ссылка и якорь проходят", () => {
+    const docs = [
+      { file: "docs/target.md", content: "# Target\n\n## Раздел\n\nТекст.\n" },
+      { file: "docs/links.md", content: "# Ссылки\n\n[target](target.md#раздел).\n" },
+    ];
+    const result = runFixture(PKG, "22.22.2", docs);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("битый якорь ловится", () => {
+    const docs = [
+      { file: "docs/target.md", content: "# Target\n\n## Раздел\n\nТекст.\n" },
+      { file: "docs/links.md", content: "# Ссылки\n\n[target](target.md#нет).\n" },
+    ];
+    const result = runFixture(PKG, "22.22.2", docs);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /anchor #нет not found in target\.md/);
+  });
+
+  it("ссылки внутри fenced-блоков не проверяются", () => {
+    const doc = "# Код\n\n```md\n[missing](no-such.md)\n```\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/links.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
   });
 
   it("путь, снятый с плана, больше не легализован", () => {

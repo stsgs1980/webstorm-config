@@ -3,15 +3,15 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { checkLinks } from "./lib/docs-links.ts";
 import { checkVersionAlignment } from "./lib/version-alignment.ts";
 
 /**
- * Documented future scripts that intentionally do not exist yet.
- * `dev` is a documented workspace bootstrap script, `test:e2e` is the
- * Playwright plan: until they are added to package.json the doc reference is a
- * plan, not a dead link.
+ * Per-file opt-in for scripts that are documented as future work. Without the
+ * marker a missing script is an error, so a typo cannot hide behind the list.
+ * Format: <!-- check-docs:allow-missing-scripts dev test:e2e -->
  */
-const KNOWN_FUTURE_SCRIPTS = ["dev", "test:e2e"];
+const FUTURE_SCRIPTS_MARKER = /<!--\s*check-docs:allow-missing-scripts\s+([^>]+?)\s*-->/;
 
 /** Inline-code path prefixes that must exist in the repository. */
 const PATH_PREFIXES = [
@@ -19,6 +19,8 @@ const PATH_PREFIXES = [
   ".idea/",
   "scripts/",
   ".husky/",
+  ".github/",
+  ".aiassistant/",
   "eslint-rules/",
   "eslint-processors/",
   "eslint-parsers/",
@@ -67,7 +69,7 @@ function collectMarkdown(dir: string): string[] {
  * @returns list of file paths
  */
 function getDocFiles(): string[] {
-  const root = ["AGENTS.md", "README.md", "README.template.md"].filter((file) => existsSync(file));
+  const root = ["AGENTS.md", "README.md", "README.template.md", "SECURITY.md"].filter((file) => existsSync(file));
   return [...root, ...collectMarkdown("docs")];
 }
 
@@ -89,12 +91,14 @@ function lineOf(text: string, index: number): number {
  * @param failures - collector for error lines
  */
 function checkScriptNames(file: string, text: string, scripts: Record<string, string>, failures: string[]): void {
+  const allowed = new Set((FUTURE_SCRIPTS_MARKER.exec(text)?.[1] ?? "").split(/\s+/).filter(Boolean));
+
   for (const match of text.matchAll(SCRIPT_PATTERN)) {
     // Strip trailing sentence punctuation: "…run `npm run lint.`".
     const name = match[1].replace(/[.-]+$/, "");
     const at = match.index ?? 0;
 
-    if (KNOWN_FUTURE_SCRIPTS.includes(name)) {
+    if (allowed.has(name)) {
       continue;
     }
     if (!(name in scripts)) {
@@ -198,6 +202,7 @@ function main(): void {
 
     checkScriptNames(file, text, pkg.scripts, failures);
     checkPaths(file, text, failures);
+    checkLinks(file, text, failures);
     readmeMarkers += checkNodeVersionMarkers(file, text, engineMin, failures);
   }
 

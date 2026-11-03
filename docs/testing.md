@@ -1,5 +1,7 @@
 # Testing with Vitest
 
+<!-- check-docs:allow-missing-scripts dev test:e2e -->
+
 Шаблон включает Vitest с `environment: "node"` — этого достаточно для юнит-тестов
 чистых функций и Node-логики. Менять конфиг **не нужно**, пока вы не начнёте
 тестировать React-компоненты или код с DOM (`document`, `window`, `localStorage`).
