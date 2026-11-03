@@ -55,6 +55,9 @@ IDE **не читает**: такой возможности в IntelliJ/WebStor
 и `tsc --noEmit` без правок. Это проверено вручную: `check:templates` покрывает только
 live-шаблоны, file templates автоматическим гейтом не проверяются.
 
+Внутри live-шаблонов `check:templates` отключает `no-unused-vars` (шаблон - фрагмент,
+а не модуль) и `no-empty` только для `try`/`for`.
+
 ## File templates
 
 File templates из `.idea/fileTemplates/` работают иначе: WebStorm подхватывает их
