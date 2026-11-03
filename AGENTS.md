@@ -53,8 +53,9 @@ Two different things, do not mix them up.
 
 ### 4.1 Hard gate (blocks the commit and CI)
 
-A TS/JS file over 250 lines blocks the commit - `node scripts/check-file-length.ts
---all`, CI runs `npm run check:file-length`. Exempt, each printed with its reason:
+A TS/JS file over 250 lines blocks the commit: pre-commit checks staged files
+via `scripts/check-file-length.ts`; CI runs `npm run check:file-length` (`--all`).
+Exempt, each printed with its reason:
 
 - tests (`*.test.*`, `*.spec.*`, `tests/`, `__tests__/`);
 - type declarations (`*.d.ts`, `*.d.mts`, `*.d.cts`);

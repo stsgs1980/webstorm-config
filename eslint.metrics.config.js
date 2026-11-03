@@ -5,7 +5,11 @@
 // Plain Node file: TS annotations are not parseable there (see eslint.config.js).
 import tsParser from "@typescript-eslint/parser";
 
-/** Directories and files exempt from metrics, same logic as check-file-length. */
+/**
+ * Directory and test exemptions for the metrics lane. File-level kinds
+ * (.d.ts, *.config.*, generated suffixes, barrels, the file-length escape
+ * hatch) are owned by scripts/check-file-length.ts; this list need not mirror it.
+ */
 const EXEMPT = [
   "node_modules/**",
   "dist/**",
