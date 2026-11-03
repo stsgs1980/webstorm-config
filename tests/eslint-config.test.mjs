@@ -70,6 +70,42 @@ describe("eslint-config environment globals", () => {
     const rules = await reportRules('console.warn("deprecation");\n', "src/app.mjs");
     assert.ok(!rules.includes("no-undef"), `unexpected no-undef, got: ${rules.join(", ")}`);
   });
+
+  /**
+   * Lint a real file at a repo-relative path: no-undef is off for .ts, so the
+   * boundary is enforced by no-restricted-globals and must be checked on disk.
+   * @param {string} code - snippet source
+   * @param {string} relPath - repo-relative path, e.g. scripts/probe.ts
+   * @returns {Promise<string[]>} rule ids reported for the snippet
+   */
+  const lintAt = async (code, relPath) => {
+    const path = join(REPO, relPath);
+    const dir = join(REPO, relPath.split(/[\\/]/)[0]);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(path, code);
+    try {
+      const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });
+      const results = await eslint.lintFiles([path]);
+      return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
+    } finally {
+      rmSync(path, { force: true });
+      try {
+        rmSync(dir, { recursive: false });
+      } catch {
+        // Directory still holds other files: leave it.
+      }
+    }
+  };
+
+  it("браузерное имя в Node-скрипте ловится и для .ts", { timeout: 120000 }, async () => {
+    const rules = await lintAt('window.alert("audit");\n', "scripts/__env_probe.ts");
+    assert.ok(rules.includes("no-restricted-globals"), `expected no-restricted-globals, got: ${rules.join(", ")}`);
+  });
+
+  it("Node-имя в src ловится и для .ts", { timeout: 120000 }, async () => {
+    const rules = await lintAt("process.exit(0);\n", "src/__env_probe.ts");
+    assert.ok(rules.includes("no-restricted-globals"), `expected no-restricted-globals, got: ${rules.join(", ")}`);
+  });
 });
 
 describe("eslint-config prettier compatibility", () => {

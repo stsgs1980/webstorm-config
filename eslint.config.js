@@ -196,6 +196,33 @@ export default [
     },
   },
   {
+    // no-undef is off for TypeScript, so globals alone cannot enforce the
+    // boundary there: restrict the browser names explicitly in Node code.
+    files: ["scripts/**", "server/**", "*.config.*"],
+    rules: {
+      "no-restricted-globals": [
+        "error",
+        { name: "window", message: "Browser globals belong to src/**." },
+        { name: "document", message: "Browser globals belong to src/**." },
+        { name: "navigator", message: "Browser globals belong to src/**." },
+        { name: "localStorage", message: "Browser globals belong to src/**." },
+      ],
+    },
+  },
+  {
+    // The inverse boundary: application code must not reach into Node.
+    files: ["src/**"],
+    rules: {
+      "no-restricted-globals": [
+        "error",
+        { name: "process", message: "Node globals belong to scripts/ and server/." },
+        { name: "Buffer", message: "Node globals belong to scripts/ and server/." },
+        { name: "__dirname", message: "Node globals belong to scripts/ and server/." },
+        { name: "__filename", message: "Node globals belong to scripts/ and server/." },
+      ],
+    },
+  },
+  {
     // Template's own tooling tests: vitest globals + intentional fixtures.
     // Must stay last: overrides the code rules above for tests/**.
     files: ["tests/**"],
