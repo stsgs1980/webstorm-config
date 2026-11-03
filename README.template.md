@@ -95,7 +95,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc         |
 | `npm run lint:metrics`            | Метрики (advisory)                        |
 | `npm run changelog`               | Пересборка `CHANGELOG.md`                 |
-| `npm test`                        | Vitest                                    |
+| `npm test`                        | Vitest (пустой набор - ошибка)            |
 | `npm run test:watch`              | Vitest (watch)                            |
 | `npm run test:coverage`           | Vitest + coverage                         |
 | `npm run test:e2e`                | Playwright (план; после установки)        |
