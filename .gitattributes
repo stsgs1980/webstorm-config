@@ -39,6 +39,7 @@
 .prettierignore text eol=lf
 .nvmrc text eol=lf
 .npmrc text eol=lf
+.env.example text eol=lf
 *.jpeg binary
 *.gif binary
 *.ico binary
