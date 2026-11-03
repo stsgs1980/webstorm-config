@@ -4,6 +4,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
+    // Explicit false: a suite with zero tests must not look green even if a
+    // future Vitest major changes its default. scripts/check-test-files.ts
+    // runs first through pretest and prints the actionable message.
+    passWithNoTests: false,
     // Fixture tests spawn git, npx, eslint and tsc. On a loaded machine a
     // single spawn regularly exceeds the 5 s default and fails a green run.
     testTimeout: 30_000,
