@@ -13,7 +13,9 @@ updates:
           - minor
           - patch
     ignore:
-      # ESLint 10 is blocked by eslint-plugin-react and eslint-plugin-jsx-a11y.
+      # ESLint 10 is blocked by eslint-plugin-react, eslint-plugin-jsx-a11y
+      # and typescript-eslint. Tracking issue:
+      # https://github.com/stsgs1980/webstorm-config/issues/20
       # @eslint/js versions pair module by module with eslint (10.x needs
       # eslint 10), and the bump bypasses the "eslint" ignore above: the
       # name is different, the constraint is the same.
