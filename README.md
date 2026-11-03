@@ -109,7 +109,7 @@ npm install
 
 ## After fork (кратко)
 
-1. Обновите `package.json`: `name`, `description`.
+1. Обновите `package.json`: `name`, `description`, `repository` (URL форка).
 2. `README.template.md` -> `README.md`, заполнить Overview / Features / Architecture
    и заменить плейсхолдеры `${PROJECT_NAME}`, `${DATE}`, `${GITHUB_USER}`.
 3. Удалить `CHANGELOG.md` (история шаблона) и `docs/kickoff.md` (стартовый промт):

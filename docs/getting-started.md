@@ -7,7 +7,7 @@
 
 Порядок шагов единый с `README.md` After fork.
 
-1. Обновите `package.json`: `name`, `description`.
+1. Обновите `package.json`: `name`, `description`, `repository` (URL форка).
 2. Скопируйте `README.template.md` -> `README.md`, заполните Overview, Features, Architecture.
 3. Сбросьте `CHANGELOG.md` (история шаблона, не вашего проекта):
 
