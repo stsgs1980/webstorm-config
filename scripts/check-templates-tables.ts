@@ -21,7 +21,6 @@ export const VAR_SAMPLES: Record<string, string> = {
   VALUE: "0",
   EXPECTED: "1",
   DESC: "behave correctly",
-  UNKNOWN: "0",
 };
 
 /** Per-template overrides: fragments render valid TS for their shape. */

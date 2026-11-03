@@ -1,7 +1,7 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
-import { execFile, execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { execFile, spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
@@ -35,12 +35,8 @@ const makeFixture = (sets) => {
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
 const run = (dir) => {
-  try {
-    const stdout = execFileSync(process.execPath, [SCRIPT, dir], { encoding: "utf8" });
-    return { status: 0, stdout, stderr: "" };
-  } catch (error) {
-    return { status: error.status ?? 1, stdout: error.stdout ?? "", stderr: error.stderr ?? "" };
-  }
+  const result = spawnSync(process.execPath, [SCRIPT, dir], { encoding: "utf8" });
+  return { status: result.status ?? 1, stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
 };
 
 /**
@@ -119,10 +115,11 @@ describe("check-templates", () => {
     assert.equal(result.status, 0);
   });
 
-  it("неизвестная переменная рендерится с fallback, чекер не падает", { timeout: 120000 }, () => {
+  it("неизвестная переменная рендерится с fallback и предупреждением", { timeout: 120000 }, () => {
     const tpl = '<template name="fallback" value="const u = $UNKNOWN$;"></template>';
     const result = runFixture([{ name: "typescript.xml", xml: xmlOf("TSx", [tpl]) }]);
     assert.equal(result.status, 0);
+    assert.match(result.stderr, /\[WARN\].*\$UNKNOWN\$/);
   });
 
   it("значение с '>' в атрибуте не пропускается", { timeout: 120000 }, () => {
@@ -150,6 +147,21 @@ describe("check-templates", () => {
     const rejected = runFixture([{ name: "utilities.xml", xml: xmlOf("Utilities", [other]) }]);
     assert.equal(rejected.status, 1);
     assert.match(rejected.stderr, /no-empty/);
+  });
+
+  it("удаляет устаревший каталог рендера", { timeout: 120000 }, () => {
+    const stale = join(process.cwd(), "dev", `templates-check-stale-${process.pid}-${Date.now()}`);
+    mkdirSync(stale, { recursive: true });
+    const old = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    utimesSync(stale, old, old);
+    try {
+      const tpl = '<template name="real" value="const $NAME$ = 1;"></template>';
+      const result = runFixture([{ name: "typescript.xml", xml: xmlOf("TSx", [tpl]) }]);
+      assert.equal(result.status, 0, result.stderr);
+      assert.equal(existsSync(stale), false);
+    } finally {
+      rmSync(stale, { recursive: true, force: true });
+    }
   });
 
   it("шаблоны живого репозитория проходят рендер, eslint и tsc", { timeout: 120000 }, () => {

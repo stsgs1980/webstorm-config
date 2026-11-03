@@ -8,13 +8,14 @@
 // ordinary gates).
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
 // noinspection NpmUsedModulesInstalled
 import { ESLint } from "eslint";
 import { AMBIENT_DECLARATIONS } from "./check-templates-tables.ts";
-import { collectTemplates, render, type LiveTemplate } from "./lib/live-templates.ts";
+import { collectTemplates, render, unknownVariables, type LiveTemplate } from "./lib/live-templates.ts";
+import { tscFailureText } from "./lib/tsc-output.ts";
 
 const TSC = join("node_modules", "typescript", "lib", "tsc.js");
 // No dot segment in the directory name: TypeScript include globs do not
@@ -24,6 +25,35 @@ const TSC = join("node_modules", "typescript", "lib", "tsc.js");
 // and console) must not delete each other's rendered files mid-flight.
 const LEGACY_RENDER_DIR = join("dev", "templates-check");
 const RENDER_DIR = join("dev", `templates-check-${process.pid}`);
+/** Leftovers older than this are from a crashed run, not a concurrent one. */
+const STALE_RENDER_MS = 60 * 60 * 1000;
+
+/**
+ * Remove render directories abandoned by a crashed run. Fresh dirs are kept:
+ * a concurrent checker may still be using them, and the pid suffix makes the
+ * live one distinct from ours.
+ */
+function cleanupStaleRenderDirs(): void {
+  if (!existsSync("dev")) {
+    return;
+  }
+  for (const entry of readdirSync("dev", { withFileTypes: true })) {
+    if (!entry.isDirectory() || !entry.name.startsWith("templates-check-")) {
+      continue;
+    }
+    const full = join("dev", entry.name);
+    if (full === RENDER_DIR) {
+      continue;
+    }
+    try {
+      if (Date.now() - statSync(full).mtimeMs > STALE_RENDER_MS) {
+        rmSync(full, { recursive: true, force: true });
+      }
+    } catch {
+      // Another run removed it between readdir and stat.
+    }
+  }
+}
 
 /**
  * Skeleton exceptions: these templates intentionally render an empty block
@@ -97,12 +127,25 @@ function typecheck(files: { path: string; label: string }[]): string[] {
       { encoding: "utf8" },
     );
   } catch (error) {
-    output = (error as { stdout?: string }).stdout ?? String(error);
+    output = tscFailureText(error);
   }
   return output
     .split("\n")
     .filter(Boolean)
     .map((line) => `[FAIL] ${line}`);
+}
+
+/**
+ * Warn about template variables that fall back to 0: usually a missing entry
+ * in the tables, not a deliberate value.
+ * @param templates - parsed templates with their set and name
+ */
+function warnUnknownVariables(templates: LiveTemplate[]): void {
+  for (const { set, name, value } of templates) {
+    for (const variable of unknownVariables(set, name, value)) {
+      console.error(`[WARN] ${set}/${name}: unknown variable $${variable}$ rendered as 0.`);
+    }
+  }
 }
 
 /**
@@ -120,8 +163,10 @@ async function main(): Promise<void> {
     return;
   }
   const files: { path: string; label: string }[] = [];
+  warnUnknownVariables(templates);
   // Leftovers of the shared pre-2026-11 era or of a crash with the same
   // pid would beat the tsconfig globs into the next program; remove first.
+  cleanupStaleRenderDirs();
   rmSync(RENDER_DIR, { recursive: true, force: true });
   rmSync(LEGACY_RENDER_DIR, { recursive: true, force: true });
   mkdirSync(RENDER_DIR, { recursive: true });

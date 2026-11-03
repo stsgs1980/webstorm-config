@@ -57,6 +57,27 @@ export function render(set: string, name: string, value: string): string {
 }
 
 /**
+ * Variables the renderer has no sample or override for. They still render as
+ * "0" so the checker can proceed, but the caller should warn: a new template
+ * variable quietly producing 0 is usually a forgotten table entry.
+ * @param set - set key (file base name)
+ * @param name - template name
+ * @param value - raw template text with $VARS$
+ * @returns unknown variable names, without dollar signs
+ */
+export function unknownVariables(set: string, name: string, value: string): string[] {
+  const unknown = new Set<string>();
+  for (const match of value.matchAll(/\$([A-Z][A-Z0-9_]*)\$/g)) {
+    const variable = match[1];
+    const override = `${set}::${name}::${variable}`;
+    if (!(override in VAR_OVERRIDES) && !(variable in VAR_SAMPLES)) {
+      unknown.add(variable);
+    }
+  }
+  return [...unknown];
+}
+
+/**
  * Collect all templates of one set file.
  * @param file - path to the template set XML
  * @returns parsed templates with names and unescaped values
