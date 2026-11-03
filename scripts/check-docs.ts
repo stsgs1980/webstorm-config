@@ -64,12 +64,14 @@ function collectMarkdown(dir: string): string[] {
 }
 
 /**
- * Markdown files the verifier scans (root AGENTS.md and README files plus docs/, agent
- * workspace excluded).
+ * Markdown files the verifier scans: root AGENTS/README/SECURITY, the AI rules
+ * pointer and docs/. Other agent workspace files are not documentation.
  * @returns list of file paths
  */
 function getDocFiles(): string[] {
-  const root = ["AGENTS.md", "README.md", "README.template.md", "SECURITY.md"].filter((file) => existsSync(file));
+  const root = ["AGENTS.md", "README.md", "README.template.md", "SECURITY.md", ".aiassistant/rules/AI Rules.md"].filter(
+    (file) => existsSync(file),
+  );
   return [...root, ...collectMarkdown("docs")];
 }
 

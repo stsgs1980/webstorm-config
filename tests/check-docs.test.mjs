@@ -227,6 +227,13 @@ describe("check-docs", () => {
     assert.match(result.stderr, /AGENTS\.md:\d+ npm run nosuchscript/);
   });
 
+  it("AI Rules.md сканируется: битый npm run даёт [FAIL]", () => {
+    const doc = "# Rules\n\nЗапускается `npm run nosuchscript`.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: ".aiassistant/rules/AI Rules.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /AI Rules\.md:\d+ npm run nosuchscript/);
+  });
+
   it("валидный AGENTS.md в корне проходит и учитывается в счётчике", () => {
     const result = runFixture(PKG, "22.22.2", [
       { file: "AGENTS.md", content: "# Rules\n\nAlways read a file before editing it.\n" },
