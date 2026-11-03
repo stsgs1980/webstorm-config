@@ -6,11 +6,13 @@
 
 - **changelog:** generate the unreleased chunk and keep the file idempotent ([ff87744](https://github.com/stsgs1980/webstorm-config/commit/ff8774467e7cc835bd4811dad89e1bd82ebcb1b0))
 - **check-docs:** accept git-ignored paths as legitimate doc references ([3ba78a3](https://github.com/stsgs1980/webstorm-config/commit/3ba78a3019693be634f0d55011c6ae077348970e))
+- **check-docs:** skip example paths in fenced blocks ([f4c899c](https://github.com/stsgs1980/webstorm-config/commit/f4c899c25e5e9d54d62762cf2972e490116308a3))
 - **check-templates:** ignore XML comments when collecting templates ([542ecdb](https://github.com/stsgs1980/webstorm-config/commit/542ecdb8fa30fa75a07a862091fb64d71835516a))
 - **check-templates:** keep no-empty checked outside skeletons ([ba24a3f](https://github.com/stsgs1980/webstorm-config/commit/ba24a3f84292bbe59d07491b90e774dfe2df9903))
 - **check-templates:** render into pid-unique dir to survive parallel runs ([45f242f](https://github.com/stsgs1980/webstorm-config/commit/45f242f9600e08ddcafd4f9caeb8ceaef9c749e6))
 - **check-templates:** render templates whose values contain '>' ([273ac68](https://github.com/stsgs1980/webstorm-config/commit/273ac68578767a30ff8dcef997176d6ee35609ed))
 - **check-templates:** stop swallowing tsc stderr and warn on unknown vars ([065c18c](https://github.com/stsgs1980/webstorm-config/commit/065c18cc1c7eaf06d076ac58224b5c81ccc17fed))
+- **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
 
