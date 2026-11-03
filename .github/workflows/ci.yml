@@ -71,10 +71,11 @@ jobs:
       - run: npm test
 
   windows:
-    # Windows-specific surface: path separators, git spawns and Cyrillic file
-    # names; the tooling checks and tests exercise exactly these.
+    # Windows is the primary developer platform: run the same CLI gate set as
+    # the lint/test jobs, not a subset. The changelog job stays Linux-only
+    # because it needs full history and tags.
     runs-on: windows-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -82,9 +83,17 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: npm run lint
+      - run: npm run lint:prettier-conflicts
+      - run: npm run typecheck
+      - run: npm run lint:css
+      - run: npm run lint:md
+      - run: npm run format:check
       - run: npm run check:file-length
       - run: npm run check:docs
+      - run: npm run check:templates
       - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
 
   changelog:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
