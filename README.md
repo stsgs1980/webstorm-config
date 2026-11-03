@@ -44,10 +44,11 @@
 | Vitest (тесты в `tests/`)        | `npm run dev` / сборщик  |
 | `react` в devDeps (ESLint и TSX) | Vite / Next (Step 2)     |
 
-`react` и `react-dom` в `devDependencies` — **для линтинга и TypeScript (JSX)**, не для запуска
-приложения. Сборщик добавляете на Step 2. Проект без React: удалите их и поправьте
-`tsconfig.json` (`jsx`) и `eslint.config.js` (React-правила) — детали в Step 2
-[getting-started](docs/getting-started.md).
+`react` в `devDependencies` нужен для ESLint (`eslint-plugin-react`) и JSX-типов;
+`react-dom` лежит рядом, чтобы при переносе в `dependencies` версии уже совпадали.
+Для линтинга и `tsc` `react-dom` не требуется. Сборщик добавляете на Step 2. Проект без
+React: удалите оба пакета и поправьте `tsconfig.json` (`jsx`) и `eslint.config.js`
+(React-правила) — детали в Step 2 [getting-started](docs/getting-started.md).
 
 ## Quick Start (создать проект из шаблона)
 

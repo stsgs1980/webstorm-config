@@ -134,7 +134,8 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 6. Markdown и `.editorconfig`
 
-`.editorconfig` устанавливает `max_line_length = 120` для `*.md` (согласно `.aiassistant/rules/AI Rules.md`).
+`.editorconfig` устанавливает `max_line_length = 120` для `*.md` (то же правило в
+`AGENTS.md` §3, `.markdownlint.json` и `.prettierrc`).
 Визуальная направляющая `SOFT_MARGINS=120` для Markdown задана в `.idea/codeStyles/Project.xml`;
 жёсткий лимит держит markdownlint (`MD013` с `line_length: 120` в `.markdownlint.json`).
 

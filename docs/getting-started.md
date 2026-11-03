@@ -24,8 +24,10 @@
 
 ## Step 2: Framework dependencies
 
-`react` и `react-dom` уже в `devDependencies` (нужны для ESLint и JSX-типов). Если проект
-**без React**: удалите их из `devDependencies` и добавьте свой фреймворк. После удаления
+`react` уже в `devDependencies`: он нужен для ESLint (`eslint-plugin-react`) и JSX-типов.
+`react-dom` лежит рядом, чтобы при переносе в `dependencies` версии уже совпадали; для
+линтинга и `tsc` он не требуется. Если проект **без React**: удалите оба пакета и добавьте
+свой фреймворк. После удаления
 проверьте конфиги: уберите `jsx: react-jsx` из `tsconfig.json` (или переключите под свой
 стек), отключите React-правила в `eslint.config.js`, затем выполните `npm run lint` и
 `npm run typecheck`.
@@ -131,7 +133,8 @@ Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотс
 
 ## Markdown правила
 
-Markdown (`.md`) ограничен 120 символами на строку (как в `.aiassistant/rules/AI Rules.md`):
+Markdown (`.md`) ограничен 120 символами на строку (как в `AGENTS.md` §3, `.editorconfig`
+и `.markdownlint.json`):
 
 - `.editorconfig`: `[*.md] max_line_length = 120`
 - `.markdownlint.json`: `MD013` (лимит 120 символов)
