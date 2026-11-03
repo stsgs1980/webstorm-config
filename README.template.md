@@ -48,6 +48,8 @@
 ### Prerequisites
 
 - Node.js >= 22.22.2 (основные джобы CI и локально — 24.15.0 из `.nvmrc`; floor-джоба — ровно 22.22.2)
+- npm проверяет `engines` (`engine-strict=true` в `.npmrc`): неподходящая версия Node/npm
+  останавливает `npm ci`.
 
 Pre-commit останавливается на первой ошибке: сначала `lint-staged`, затем проверка длины файлов.
 Перед пушем pre-push дополнительно прогоняет `npm run typecheck` и `npm test`.
