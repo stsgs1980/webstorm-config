@@ -26,9 +26,20 @@ const LEGACY_RENDER_DIR = join("dev", "templates-check");
 const RENDER_DIR = join("dev", `templates-check-${process.pid}`);
 
 /**
- * Lint all rendered files: repository config plus a snippet-override block.
- * A template is a skeleton, so unused declarations and empty blocks are
- * expected there; every other rule stays at full strength.
+ * Skeleton exceptions: these templates intentionally render an empty block
+ * (`try {}`, `for (...) {}`) that the user fills in. Only no-empty is
+ * relaxed here; unused declarations are handled globally because a live
+ * template is a fragment, not a complete module.
+ */
+const SKELETON_DISABLES: Record<string, string[]> = {
+  "utilities/try": ["no-empty"],
+  "utilities/for": ["no-empty"],
+};
+
+/**
+ * Lint all rendered files with the repository config. Unused declarations are
+ * expected in a fragment, so that one rule stays off; no-empty is relaxed per
+ * template through SKELETON_DISABLES.
  * @param files - rendered file label/path pairs
  * @returns [FAIL] lines for every error message
  */
@@ -41,8 +52,6 @@ async function lint(files: { path: string; label: string }[]): Promise<string[]>
       {
         rules: {
           "@typescript-eslint/no-unused-vars": "off",
-          "no-unused-vars": "off",
-          "no-empty": "off",
         },
       },
     ],
@@ -135,7 +144,9 @@ async function main(): Promise<void> {
       ? `const TemplateSnippet = (): void => {\n${rendered}\n};\nTemplateSnippet();\n`
       : `${rendered}\n`;
     // A module per file: top-level consts can then collide with nothing.
-    const text = `${body}export {};\n`;
+    const disables = SKELETON_DISABLES[label] ?? [];
+    const header = disables.length > 0 ? `/* eslint-disable ${disables.join(", ")} -- template skeleton */\n` : "";
+    const text = `${header}${body}export {};\n`;
 
     mkdirSync(join(RENDER_DIR, set), { recursive: true });
     const ext = set === "react" ? ".tsx" : ".ts";

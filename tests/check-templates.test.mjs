@@ -141,6 +141,17 @@ describe("check-templates", () => {
     assert.doesNotMatch(result.stdout, /ghost/);
   });
 
+  it("пустой блок разрешён только шаблонам-заготовкам", { timeout: 120000 }, () => {
+    const skeleton = '<template name="try" value="try {} catch {}"></template>';
+    const allowed = runFixture([{ name: "utilities.xml", xml: xmlOf("Utilities", [skeleton]) }]);
+    assert.equal(allowed.status, 0, allowed.stderr);
+
+    const other = '<template name="other" value="try {} catch {}"></template>';
+    const rejected = runFixture([{ name: "utilities.xml", xml: xmlOf("Utilities", [other]) }]);
+    assert.equal(rejected.status, 1);
+    assert.match(rejected.stderr, /no-empty/);
+  });
+
   it("шаблоны живого репозитория проходят рендер, eslint и tsc", { timeout: 120000 }, () => {
     const result = run(REPO_TEMPLATES);
     assert.equal(result.status, 0);
