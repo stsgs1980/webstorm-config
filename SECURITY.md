@@ -69,6 +69,16 @@ Alert закрыт как `tolerable_risk` со ссылкой на этот р�
 
 Не запускайте `npm audit fix --force`.
 
+## Overrides
+
+`overrides` в `package.json` фиксируют транзитивные версии:
+
+- `katex`, `smol-toml`, `js-yaml` - вывод из уязвимых диапазонов (история в `CHANGELOG.md`);
+- `re2js: 2.8.7` - точный pin выше GHSA-gg6h-894w-4m9c (high, quadratic-time
+  lookbehind). `markdownlint 0.42` пинит уязвимый 2.8.6; патч - 2.8.7. Диапазон
+  `^2.8.7` не используется намеренно: он подтянет 2.9.x без проверки совместимости
+  с `markdownlint`. При обновлении `markdownlint` pin пересматривается.
+
 ## Меры в репозитории
 
 - Включены secret scanning и push protection.
