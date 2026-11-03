@@ -175,6 +175,26 @@ describe("check-docs", () => {
     assert.match(result.stderr, /npm run lint:metrics-extra is not in package\.json scripts/);
   });
 
+  it("путь в fenced-блоке - пример, а не контракт", () => {
+    const doc = "# Fence\n\n```bash\n`docs/no-such.md`\n```\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/fence.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("npm run в fenced-блоке проверяется: это реальная команда", () => {
+    const doc = "# Fence\n\n```bash\nnpm run nosuchscript\n```\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/fence.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /npm run nosuchscript is not in package\.json scripts/);
+  });
+
+  it("inline-путь после fence не теряется из-за спаривания бэктиков", () => {
+    const doc = "# Fence\n\n```bash\necho hi\n```\n\n`docs/no-such.md`\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/fence.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /path docs\/no-such\.md does not exist/);
+  });
+
   it("ссылка на личный файл из .gitignore не считается несуществующей", { timeout: 120000 }, () => {
     // A checkout (CI) has no personal files like .idea/workspace.xml: the
     // fixture is a git repo whose .gitignore ignores the named path.

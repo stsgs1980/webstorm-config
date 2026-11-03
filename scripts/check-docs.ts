@@ -126,10 +126,23 @@ function isGitIgnored(path: string): boolean {
   }
 }
 
+/** Fenced code block: its examples are illustrative, not contract paths. */
+const FENCE_PATTERN = /```[\s\S]*?```/g;
+
+/**
+ * Replace fenced blocks with spaces while preserving offsets and newlines.
+ * Scripts are checked in fences (they are real commands); paths are not.
+ * @param text - markdown content
+ * @returns content with fenced blocks masked
+ */
+function maskFences(text: string): string {
+  return text.replace(FENCE_PATTERN, (block) => block.replace(/[^\n]/g, " "));
+}
+
 /**
  * Check that file paths in a doc file's inline code exist.
  * @param file - doc file being checked
- * @param text - file content
+ * @param text - file content with fenced blocks masked
  * @param failures - collector for error lines
  */
 function checkPaths(file: string, text: string, failures: string[]): void {
@@ -201,7 +214,7 @@ function main(): void {
     const text = readFileSync(file, "utf8");
 
     checkScriptNames(file, text, pkg.scripts, failures);
-    checkPaths(file, text, failures);
+    checkPaths(file, maskFences(text), failures);
     checkLinks(file, text, failures);
     readmeMarkers += checkNodeVersionMarkers(file, text, engineMin, failures);
   }
