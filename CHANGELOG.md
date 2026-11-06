@@ -14,6 +14,7 @@
 - **check-templates:** stop swallowing tsc stderr and warn on unknown vars ([065c18c](https://github.com/stsgs1980/webstorm-config/commit/065c18cc1c7eaf06d076ac58224b5c81ccc17fed))
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
+- **live-templates:** restore the missing context blocks ([23107d3](https://github.com/stsgs1980/webstorm-config/commit/23107d3290baeb9529aaffbb14544393202b2838))
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
 
 ### Features
