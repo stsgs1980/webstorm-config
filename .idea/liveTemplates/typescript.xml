@@ -1,11 +1,23 @@
 <templateSet group="TypeScript">
   <template name="interface" value="interface $NAME$ {$END$}" description="TypeScript interface" toReformat="false" toShortenFQNames="true">
     <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="TSX" value="true" />
+      <option name="TypeScript" value="true" />
+    </context>
   </template>
   <template name="type" value="type $NAME$ = $END$;" description="TypeScript type" toReformat="false" toShortenFQNames="true">
     <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="TSX" value="true" />
+      <option name="TypeScript" value="true" />
+    </context>
   </template>
   <template name="enum" value="enum $NAME$ {$END$}" description="TypeScript enum" toReformat="false" toShortenFQNames="true">
     <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="TSX" value="true" />
+      <option name="TypeScript" value="true" />
+    </context>
   </template>
 </templateSet>
