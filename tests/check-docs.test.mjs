@@ -156,7 +156,7 @@ describe("check-docs", () => {
       scripts: { "lint:metrics": "eslint . --config eslint.metrics.config.js" },
       engines: { node: ">=22.22.2" },
     });
-    const doc = "# Ретонка\n\nЗапускается `npm run lint:metrics`.\n";
+    const doc = "# Проверка\n\nЗапускается `npm run lint:metrics`.\n";
     const result = runFixture(pkg, "22.22.2", [{ file: "docs/lane.md", content: doc }]);
     assert.equal(result.status, 0);
   });
