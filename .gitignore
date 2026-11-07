@@ -50,6 +50,9 @@ coverage/
 .agents/
 .opencode/
 
+# JetBrains Air session data
+.awb/
+
 # OS files
 .DS_Store
 Thumbs.db
