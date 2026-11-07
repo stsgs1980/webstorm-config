@@ -7,7 +7,12 @@ trim_trailing_whitespace = true
 charset = utf-8
 indent_style = space
 indent_size = 2
+tab_width = 2
 max_line_length = 120
+ij_continuation_indent_size = 2
+ij_visual_guides = 120
+ij_smart_tabs = false
+ij_wrap_on_typing = false
 
 [*.md]
 trim_trailing_whitespace = false

@@ -73,6 +73,19 @@ WebStorm часть из них **не подхватывает автомати
 120 символов. Для TS/JS основной форматтер — **Prettier**; code style — запасная
 согласованность и языки без Prettier.
 
+Единые параметры заданы для всех языков (24 блока в `Project.xml`, включая Python
+и PowerShell): `INDENT_SIZE=2`, `CONTINUATION_INDENT_SIZE=2`, `TAB_SIZE=2`,
+`USE_TAB_CHARACTER=false`, `SOFT_MARGINS=120`; общий `RIGHT_MARGIN=120`.
+`.editorconfig` дублирует это для инструментов вне IDE: `indent_style=space`,
+`indent_size=2`, `tab_width=2`, `ij_continuation_indent_size=2`,
+`ij_visual_guides=120`.
+
+Глобальная схема `webstorm-config` лежит в
+`%APPDATA%\JetBrains\WebStorm<версия>\codestyles\`, содержит те же значения и
+выбрана схемой по умолчанию для новых проектов (`options\project.default.xml`,
+`PREFERRED_SCHEME=webstorm-config`). Проект со своим `.idea/codeStyles` или
+`.editorconfig` её перекрывает.
+
 > При необходимости схему можно перенести на другую машину или в глобальные
 > настройки IDE штатным экспортом из диалога Code Style.
 
@@ -134,10 +147,15 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 6. Markdown и `.editorconfig`
 
-`.editorconfig` устанавливает `max_line_length = 120` для `*.md` (то же правило в
-`AGENTS.md` §3, `.markdownlint.json` и `.prettierrc`).
-Визуальная направляющая `SOFT_MARGINS=120` для Markdown задана в `.idea/codeStyles/Project.xml`;
-жёсткий лимит держит markdownlint (`MD013` с `line_length: 120` в `.markdownlint.json`).
+`.editorconfig` задаёт `max_line_length = 120` для `[*]`, то есть для всех файлов,
+а не только для `*.md` (то же правило в `AGENTS.md` §3, `.markdownlint.json` и
+`.prettierrc`). Секция `[*.md]` переопределяет только `trim_trailing_whitespace`.
+
+Отступы заданы там же: `indent_style = space`, `indent_size = 2`, `tab_width = 2`,
+`ij_continuation_indent_size = 2`, `ij_visual_guides = 120`. Эти ключи действуют
+поверх схемы code style, поэтому расхождение с `.prettierrc` видно сразу.
+Жёсткий лимит для Markdown держит markdownlint (`MD013` с `line_length: 120`
+в `.markdownlint.json`), направляющую рисует IDE по `ij_visual_guides`.
 
 Инспекция IDE «Line is longer than allowed by code style» берёт лимит из code style
 («Hard wrap at»), а не из `.editorconfig`. Для генерируемого `CHANGELOG.md` (строки
@@ -271,9 +289,10 @@ XML-файлы там это склад. Импорт: откройте нужн
 - Git Worktree UX (IJPL-258594): хуки экспортируют `GIT_DIR`, поэтому тесты
   фикстур запускают git через `tests/lib/git-env.mjs` - при работе в worktree
   это обязательно.
-- 2026.3.202 (проверено 06.11.2026): трекаемые `.idea/` не изменились, живые
-  шаблоны и Prettier/ESLint on save перенесены; project-level live templates
-  по-прежнему не читаются (IJPL-37162).
+- 2026.3 (`WS-263.7307.202`): живые шаблоны и Prettier/ESLint on save перенесены;
+  project-level live templates по-прежнему не читаются (IJPL-37162). При первом
+  открытии после обновления трекаемые `.idea/` меняются: схема code style
+  дополняется языками, поэтому проверяйте `git diff` перед коммитом.
 
 ## Согласованность IDE и CI
 
