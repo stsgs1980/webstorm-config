@@ -16,6 +16,7 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 // noinspection NpmUsedModulesInstalled
 import globals from "globals";
+import { fileURLToPath } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import tseslint from "typescript-eslint";
 import plainTextParser from "./eslint-parsers/plain-text.js";
@@ -172,7 +173,7 @@ export default [
         sourceType: "module",
         ecmaFeatures: { jsx: true },
         projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: fileURLToPath(new URL(".", import.meta.url)),
       },
     },
     rules: {

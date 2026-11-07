@@ -106,7 +106,7 @@ async function lint(files: { path: string; label: string }[]): Promise<string[]>
  * @returns [FAIL] lines naming label and message
  */
 function typecheck(files: { path: string; label: string }[]): string[] {
-  let output = "";
+  let output: string;
   try {
     output = execFileSync(
       process.execPath,
