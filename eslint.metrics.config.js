@@ -1,4 +1,4 @@
-// noinspection ES6UnusedImports,NpmUsedModulesInstalled
+// noinspection ES6UnusedImports,NpmUsedModulesInstalled,ES6UnusedDefaultExport
 // Advisory metrics lane: run via `npm run lint:metrics`, never part of `npm run lint`,
 // pre-commit or CI gates. A warning here does not fail the run: metrics answer
 // "where is the code worth a responsibility check", they do not forbid anything.

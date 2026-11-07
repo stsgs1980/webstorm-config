@@ -94,6 +94,7 @@ describe("check-templates", () => {
         ["long", first],
         ["short", second],
       ]) {
+        // noinspection JSUnresolvedVariable
         assert.ok(attemptResult.ok, `${label}: ${attemptResult.stderr}`);
       }
     } finally {

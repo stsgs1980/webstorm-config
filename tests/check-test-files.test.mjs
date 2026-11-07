@@ -17,6 +17,7 @@ const SCRIPT = fileURLToPath(new URL("../scripts/check-test-files.ts", import.me
  */
 const run = (root) => {
   try {
+    // noinspection JSUnresolvedVariable
     const stdout = execFileSync(process.execPath, [SCRIPT, root], { encoding: "utf8" });
     return { status: 0, stdout, stderr: "" };
   } catch (error) {
