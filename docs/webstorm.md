@@ -297,7 +297,7 @@ XML-файлы там это склад. Импорт: откройте нужн
 ## Согласованность IDE и CI
 
 ```text
-Save в WebStorm  →  Prettier + ESLint + Stylelint
+Save в WebStorm  →  Prettier + ESLint (Stylelint — подсветка)
 git commit       →  Husky + lint-staged (те же инструменты из CLI)
 git push         →  typecheck + тесты (pre-push)
 ```
