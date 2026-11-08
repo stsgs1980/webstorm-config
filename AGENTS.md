@@ -13,7 +13,7 @@ Related docs: `docs/markdown.md` (markdown style), `docs/webstorm.md` (IDE setup
 - Code, commands, file names, commit messages, and JSDoc stay in English.
 - UI copy and user-facing error messages are English unless the feature spec says otherwise.
 - Never use emoji or Unicode box/line drawing characters in responses or code.
-  Use text tags like [OK], [FAIL], [TODO], [WARNING], [INFO] instead.
+  Use text tags like `[OK]`, `[FAIL]`, `[TODO]`, `[WARNING]`, `[INFO]` instead.
 
 ## 2. Rule Zero: Answer Before Act
 

@@ -9,12 +9,12 @@ Runbook: как перенести настройки из репозитори�
 
 | Настройка         | Файл в репозитории                       | Из клона | Действие на машине    |
 | ----------------- | ---------------------------------------- | -------- | --------------------- |
-| Code Style        | `.idea/codeStyles/`                      | [OK]     | шаг 1: Save as Global |
-| Профиль инспекций | `.idea/inspectionProfiles/`              | [OK]     | шаг 2: IDE Default    |
-| ESLint и Prettier | `.idea/jsLinters/`, `.idea/prettier.xml` | [OK]     | шаг 5: для новых      |
-| File templates    | `.idea/fileTemplates/`                   | [OK]     | шаг 3: Copy to IDE    |
-| Live templates    | `.idea/liveTemplates/`                   | [FAIL]   | шаг 4: импорт XML     |
-| Словарь           | `.idea/dictionaries/`                    | [OK]     | шаг 7: Accepted Words |
+| Code Style        | `.idea/codeStyles/`                      | `[OK]`   | шаг 1: Save as Global |
+| Профиль инспекций | `.idea/inspectionProfiles/`              | `[OK]`   | шаг 2: IDE Default    |
+| ESLint и Prettier | `.idea/jsLinters/`, `.idea/prettier.xml` | `[OK]`   | шаг 5: для новых      |
+| File templates    | `.idea/fileTemplates/`                   | `[OK]`   | шаг 3: Copy to IDE    |
+| Live templates    | `.idea/liveTemplates/`                   | `[FAIL]` | шаг 4: импорт XML     |
+| Словарь           | `.idea/dictionaries/`                    | `[OK]`   | шаг 7: Accepted Words |
 | File Watchers     | нет                                      | -        | шаг 6: вручную        |
 
 `%APPDATA%\JetBrains\WebStorm<версия>` - каталог конкретной установки; номер

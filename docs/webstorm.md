@@ -38,15 +38,15 @@ WebStorm часть из них **не подхватывает автомати
 
 | Настройка               | Файл в репо                              | Из клона               | На машину              |
 | ----------------------- | ---------------------------------------- | ---------------------- | ---------------------- |
-| Code Style              | `.idea/codeStyles/`                      | [OK]                   | шаг 1: Global          |
-| Профиль инспекций       | `.idea/inspectionProfiles/`              | [OK]                   | шаг 2: IDE Default     |
-| ESLint и Prettier       | `.idea/jsLinters/`, `.idea/prettier.xml` | [OK]                   | шаг 5: New Projects    |
-| Шаблоны файлов          | `.idea/fileTemplates/`                   | [OK] «Файл -> Создать» | шаг 3: Copy to IDE     |
-| Живые шаблоны           | `.idea/liveTemplates/`                   | [FAIL] IDE не читает   | шаг 4: импорт XML, §12 |
-| Словарь                 | `.idea/dictionaries/`                    | [OK]                   | шаг 7: Accepted Words  |
+| Code Style              | `.idea/codeStyles/`                      | `[OK]`                 | шаг 1: Global          |
+| Профиль инспекций       | `.idea/inspectionProfiles/`              | `[OK]`                 | шаг 2: IDE Default     |
+| ESLint и Prettier       | `.idea/jsLinters/`, `.idea/prettier.xml` | `[OK]`                 | шаг 5: New Projects    |
+| Шаблоны файлов          | `.idea/fileTemplates/`                   | `[OK]` Файл -> Создать | шаг 3: Copy to IDE     |
+| Живые шаблоны           | `.idea/liveTemplates/`                   | `[FAIL]` IDE не читает | шаг 4: импорт XML, §12 |
+| Словарь                 | `.idea/dictionaries/`                    | `[OK]`                 | шаг 7: Accepted Words  |
 | File Watchers           | нет в репо                               | -                      | шаг 6: вручную, §11    |
 | Analyze code на коммите | нет в репо                               | -                      | шаг 8: per-project, §8 |
-| EditorConfig и линтеры  | корень репозитория                       | [OK]                   | не нужна               |
+| EditorConfig и линтеры  | корень репозитория                       | `[OK]`                 | не нужна               |
 
 Скоуп `generated_changelog` работает только в этом репозитории: он привязан
 к пути проекта. EditorConfig и конфиги линтеров - не настройки IDE: их читают
@@ -54,7 +54,7 @@ WebStorm часть из них **не подхватывает автомати
 
 ### Новый проект и проверка
 
-- Клон webstorm-config: всё из строк [OK] таблицы уже на месте.
+- Клон webstorm-config: всё из строк `[OK]` таблицы уже на месте.
 - Свежий проект: только `%APPDATA%` (живые шаблоны), остальное - дефолты IDE
   до шагов runbook.
 - Проверка: `rafce` + Tab в `.tsx`, «Файл -> Создать -> React Component»,
