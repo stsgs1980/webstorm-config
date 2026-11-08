@@ -38,7 +38,7 @@ const NODE_VERSION_PATTERN = /Node\.js-?\s*(?:%3E%3D|>=)\s*(\d+\.\d+\.\d+)/g;
 /**
  * Recursively collect .md files under a directory.
  * @param dir - directory to walk
- * @returns markdown file paths with forward slashes
+ * @returns Markdown file paths with forward slashes
  */
 function collectMarkdown(dir: string): string[] {
   if (!existsSync(dir)) {
@@ -134,7 +134,7 @@ const FENCE_PATTERN = /```[\s\S]*?```/g;
 /**
  * Replace fenced blocks with spaces while preserving offsets and newlines.
  * Scripts are checked in fences (they are real commands); paths are not.
- * @param text - markdown content
+ * @param text - Markdown content
  * @returns content with fenced blocks masked
  */
 function maskFences(text: string): string {
@@ -173,7 +173,7 @@ function checkPaths(file: string, text: string, failures: string[]): void {
  * Count Node.js version markers in a doc file and flag version mismatches.
  * @param file - doc file being checked
  * @param text - file content
- * @param engineMin - min version from engines.node, if parseable
+ * @param engineMin - min version from the engines field, when parseable
  * @param failures - collector for error lines
  * @returns marker count for README.md, otherwise 0
  */

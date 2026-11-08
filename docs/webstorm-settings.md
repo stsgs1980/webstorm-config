@@ -22,21 +22,21 @@ Runbook: как перенести настройки из репозитори�
 
 ## Порядок синхронизации
 
-1. **Code Style -> Global.** Settings -> Editor -> Code Style, схема проекта,
-   Save as Global. Глобальная копия - мягкая база для чужих проектов.
+1. **`Code Style -> Global`.** В `Settings -> Editor -> Code Style` выберите схему
+   проекта и нажмите Save as Global. Глобальная копия - мягкая база для чужих проектов.
 2. **Профиль инспекций.** IDE Default без FileLength 250 и без скоупа
    generated_changelog: лимит и скоуп привязаны к этому репозиторию.
-3. **File templates -> IDE.** File and Code Templates -> Copy to IDE; шаблоны
+3. **`File templates -> IDE`.** `File and Code Templates -> Copy to IDE`; шаблоны
    станут доступны во всех проектах машины.
 4. **Live templates.** Скопировать XML из `.idea/liveTemplates/` и вставить в
-   Settings -> Editor -> Live Templates; включить контексты TypeScript/TSX.
+   `Settings -> Editor -> Live Templates`; включить контексты TypeScript/TSX.
    Каталог проекта IDE не читает (IDEABKL-5033).
 5. **Settings for New Projects.** Prettier и ESLint - Automatic + on save;
    Stylelint - on save, если проект с CSS.
 6. **File Watchers.** Stylelint и markdownlint; вотчер длины файла не нужен -
    его проверяет pre-commit.
-7. **Словарь.** Spelling -> Accepted Words: перенести слова проекта.
-8. **Analyze code.** Включить в Commit tool window -> Settings -> Commit Checks.
+7. **Словарь.** `Spelling -> Accepted Words`: перенести слова проекта.
+8. **Analyze code.** Включить в `Commit tool window -> Settings -> Commit Checks`.
 
 ## Проверка
 

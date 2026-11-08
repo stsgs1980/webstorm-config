@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";

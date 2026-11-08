@@ -7,7 +7,7 @@ const DEFAULT_MAX_LINES = 250;
 const EXTENSIONS = /\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
 /** Test files are exempt: the limit must not force splitting one test suite. */
 const TEST_FILE = /\.(test|spec)\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
-/** Everything under tests/ or __tests__/ is test support code. */
+/** Test support code lives under tests/ or __tests__/. */
 const TEST_DIR = /(?:^|[\\/])(?:__tests__|tests?)[\\/]/;
 
 /**
@@ -136,6 +136,7 @@ function isBarrel(file: string, content: string): boolean {
   return statements.length > 0 && statements.every((line) => /^\s*export\s/.test(line));
 }
 
+// A linear CLI pipeline: the order of checks is the contract; splitting it would hide that order.
 /**
  * Anti-monolith check: TS/JS source files must not exceed MAX_LINES.
  * Test files (*.test.*, *.spec.*, tests/, __tests__/), generated or
@@ -144,6 +145,7 @@ function isBarrel(file: string, content: string): boolean {
  * is reported with its reason.
  * @returns {void}
  */
+// noinspection FunctionTooLongJS
 function main(): void {
   const candidates = listFiles();
 

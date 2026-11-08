@@ -307,7 +307,7 @@ git push         →  typecheck + тесты (pre-push)
 ### Где проверяется каждое правило
 
 Обязательность не угадывается: у каждого правила назван канал проверки.
-«commit» — husky pre-commit, «CI» — `.github/workflows/ci.yml`, «IDE» —
+Канал «commit» — husky pre-commit, «CI» — `.github/workflows/ci.yml`, «IDE» —
 инспекции WebStorm, «advisory» — `npm run lint:metrics` (CI-шаг не блокирует).
 
 | Правило                                                | Закреплено                              | Проверяется       |

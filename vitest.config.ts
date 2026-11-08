@@ -22,7 +22,7 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html"],
       // Scripts run in child processes (execFileSync), so v8 cannot instrument
-      // them; their behaviour is covered by fixture tests, not line coverage.
+      // them; their behavior is covered by fixture tests, not line coverage.
       include: ["eslint-rules/**", "eslint-parsers/**", "eslint-processors/**", "tests/lib/**"],
     },
   },

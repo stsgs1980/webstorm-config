@@ -34,9 +34,9 @@ export function compareVersions(a: string, b: string): number {
 /**
  * Check that the .nvmrc version satisfies engines.node.
  * @param {string | undefined} nvmRaw - raw .nvmrc content, if the file exists
- * @param {string | undefined} enginesNode - engines.node value from package.json, if set
+ * @param {string | undefined} enginesNode - engines field value from package.json, when set
  * @param {string[]} failures - collector for error lines
- * @returns {string | undefined} min version extracted from engines.node, if parseable
+ * @returns {string | undefined} min version extracted from the engines field, when parseable
  */
 export function checkVersionAlignment(
   nvmRaw: string | undefined,

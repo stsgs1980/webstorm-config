@@ -160,7 +160,7 @@ export default [
   {
     // Promise rules need type information (guide 5.2, item 6): syntax-only
     // linting sees no difference between a returned Promise and a void call.
-    // projectService picks the nearest tsconfig from the file; markdown
+    // projectService picks the nearest tsconfig from the file; Markdown
     // snippets are virtual files that exist only in the processor, and the
     // type service cannot resolve a file that is not on disk, so they are
     // excluded here and keep the syntax-only parserOptions of the main block.
@@ -224,7 +224,7 @@ export default [
     },
   },
   {
-    // Template's own tooling tests: vitest globals + intentional fixtures.
+    // Template's own tooling tests: Vitest globals + intentional fixtures.
     // Must stay last: overrides the code rules above for tests/**.
     files: ["tests/**"],
     languageOptions: {

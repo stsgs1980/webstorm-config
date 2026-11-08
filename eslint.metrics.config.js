@@ -41,6 +41,8 @@ const EXEMPT = [
   "**/__tests__/**",
 ];
 
+// ESLint loads this config; no project module imports it.
+// noinspection JSUnusedGlobalSymbols
 export default [
   {
     ignores: EXEMPT,

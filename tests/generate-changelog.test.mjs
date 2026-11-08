@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { platform, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
@@ -69,7 +69,7 @@ const makeLiveRepo = () => {
   // real dependency files makes git slow and floods stderr with line-ending
   // warnings.
   writeFileSync(join(dir, ".gitignore"), "node_modules/\n");
-  symlinkSync(REPO_NODE_MODULES, join(dir, "node_modules"), process.platform === "win32" ? "junction" : "dir");
+  symlinkSync(REPO_NODE_MODULES, join(dir, "node_modules"), platform() === "win32" ? "junction" : "dir");
   execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
   execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
   commitAll(dir, "chore: init");
@@ -83,7 +83,7 @@ const makeLiveRepo = () => {
  */
 const makeFailingNpx = () => {
   const dir = mkdtempSync(join(tmpdir(), "wsc-npx-shim-"));
-  if (process.platform === "win32") {
+  if (platform() === "win32") {
     writeFileSync(join(dir, "npx.cmd"), "@exit /b 1\r\n");
   } else {
     writeFileSync(join(dir, "npx"), "#!/bin/sh\nexit 1\n");
@@ -102,7 +102,7 @@ const makeFailingNpx = () => {
  */
 const makeGeneratedNpx = (content) => {
   const dir = makeFailingNpx();
-  if (process.platform === "win32") {
+  if (platform() === "win32") {
     writeFileSync(
       join(dir, "npx.cmd"),
       ["@echo off", 'set "args=%*"', 'if "%args%" neq "%args:-i=%" type "%~dp0content.txt"'].join("\r\n"),

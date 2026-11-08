@@ -45,7 +45,7 @@ const run = (dir, args) => {
 };
 
 /**
- * Run a fixture and clean it up afterwards.
+ * Run a fixture and clean it up afterward.
  * @param {string} name - file name
  * @param {string} content - file content
  * @param {string[]} args - script arguments
@@ -171,6 +171,7 @@ describe("check-file-length", () => {
   });
 
   it("index.ts с логикой barrel не является и ловится", () => {
+    // noinspection LongLine
     const barrel = `${Array.from({ length: 260 }, (_, index) => `export { x${index} } from "./x${index}.js";`).join("\n")}\nconsole.log("loaded");`;
     const result = runFixture(join("src", "index.ts"), barrel, ["--all"]);
     assert.equal(result.status, 1);

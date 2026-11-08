@@ -26,7 +26,7 @@ const TW_V4_DIRECTIVES = [
 /**
  * Lint a snippet against the template stylelint config.
  * @param {string} code - stylesheet source
- * @param {string} codeFilename - virtual file name that selects css or scss syntax
+ * @param {string} codeFilename - virtual file name that selects CSS or SCSS syntax
  * @returns {Promise<Array<{ rule: string }>>} warnings reported by stylelint
  */
 const lint = async (code, codeFilename) => {

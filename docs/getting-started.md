@@ -104,9 +104,8 @@ npm run check:templates
 npm audit --omit=dev --audit-level=high
 ```
 
-Anti-monolith (`check:file-length`) смотрит `git ls-files` — неотслеживаемые (не
-добавленные в индекс) файлы не проверяются. В CI это не имеет значения: там
-проверяются все tracked-файлы.
+Anti-monolith (`check:file-length`) смотрит `git ls-files`: файлы вне индекса не
+проверяются. В CI это не имеет значения: там проверяются все tracked-файлы.
 
 ## Если у проекта UI
 

@@ -29,7 +29,7 @@ function lineOf(text: string, index: number): number {
  * Collect character ranges occupied by a pattern.
  * @param text - full file content
  * @param pattern - global pattern to locate
- * @returns [start, end) ranges
+ * @returns pairs of start and end offsets
  */
 function rangesOf(text: string, pattern: RegExp): [number, number][] {
   return [...text.matchAll(pattern)].map((match) => [match.index ?? 0, (match.index ?? 0) + match[0].length]);
@@ -38,7 +38,7 @@ function rangesOf(text: string, pattern: RegExp): [number, number][] {
 /**
  * Whether an offset falls inside one of the ranges.
  * @param index - character offset
- * @param ranges - sorted or unsorted [start, end) ranges
+ * @param ranges - sorted or unsorted start/end offset pairs
  * @returns true when masked (code span, fence or comment)
  */
 function isMasked(index: number, ranges: [number, number][]): boolean {
@@ -63,7 +63,7 @@ function slugify(heading: string): string {
 }
 
 /**
- * Anchors of a markdown file, with GitHub's duplicate-heading suffixes.
+ * Anchors of a Markdown file, with GitHub's duplicate-heading suffixes.
  * @param path - file to read
  * @returns set of anchors (including -1, -2 duplicates)
  */
@@ -99,7 +99,7 @@ interface ParsedLink {
  * Parse one link target into its path and fragment; undefined means "skip".
  * External URLs, empty targets and pure "#" links are not local checks.
  * @param file - document containing the link
- * @param raw - raw markdown target
+ * @param raw - raw Markdown target
  * @returns parsed link or undefined when it must be ignored
  */
 function parseLink(file: string, raw: string): ParsedLink | undefined {
@@ -147,7 +147,7 @@ function verifyLink(file: string, line: number, link: ParsedLink, failures: stri
 }
 
 /**
- * Verify relative markdown links and #anchors in one document.
+ * Verify relative Markdown links and #anchors in one document.
  * External URLs and code spans/fences are ignored on purpose.
  * @param file - doc file being checked
  * @param text - file content

@@ -165,9 +165,11 @@ function checkLanguageBlock(language: string, fragment: string): void {
   }
 }
 
+// One linear pass over the XML; the sequence mirrors the file layout.
 /**
  * Check project code style XML completely.
  */
+// noinspection FunctionTooLongJS
 function checkProjectXml(): void {
   const path = join(ROOT, ".idea", "codeStyles", "Project.xml");
   const xml = readFileSync(path, "utf8");

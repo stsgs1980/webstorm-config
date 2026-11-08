@@ -148,10 +148,12 @@ function warnUnknownVariables(templates: LiveTemplate[]): void {
   }
 }
 
+// The CLI pipeline is linear: render, lint, typecheck, report; splitting hides the order.
 /**
  * Render, lint, typecheck every template; failures go to stderr, exit 1.
  * @returns {Promise<void>}
  */
+// noinspection FunctionTooLongJS
 async function main(): Promise<void> {
   const dir = process.argv[2] ?? join(".idea", "liveTemplates");
   let templates: LiveTemplate[];

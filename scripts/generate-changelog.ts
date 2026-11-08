@@ -5,7 +5,7 @@ import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-// A shallow clone hides most of git log, so the regenerated changelog would
+// A shallow clone hides most of the git log, so the regenerated changelog would
 // silently drop old releases.
 const isShallowClone = execSync("git rev-parse --is-shallow-repository", { encoding: "utf8" }).trim() === "true";
 

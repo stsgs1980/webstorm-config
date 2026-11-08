@@ -4,7 +4,7 @@ Canonical source of truth for agent and developer workflow rules. Agent engines 
 this file as-is; other rule locations (`.aiassistant/rules/`, `.junie/`, per-IDE configs)
 point here instead of duplicating it.
 
-Related docs: `docs/markdown.md` (markdown style), `docs/webstorm.md` (IDE setup),
+Related docs: `docs/markdown.md` (Markdown style), `docs/webstorm.md` (IDE setup),
 `docs/testing.md` (test conventions).
 
 ## 1. Language & Communication
@@ -185,7 +185,7 @@ actually exist there.
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
-  `docs/markdown.md` (markdown style), `docs/architecture.md` (module boundaries),
+  `docs/markdown.md` (Markdown style), `docs/architecture.md` (module boundaries),
   `docs/security.md` (secrets, auth), `docs/api.md` (HTTP conventions), `SECURITY.md`
   (vulnerability policy).
 - `docs/kickoff.md` is template-only: the starter prompt runs once, before the

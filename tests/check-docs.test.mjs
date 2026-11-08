@@ -19,7 +19,7 @@ const PKG_NO_ENGINES = JSON.stringify({ name: "fixture", scripts: {} });
  * Run check-docs inside a throwaway project (no docs/ directory on purpose).
  * @param {string} pkg - package.json content
  * @param {string} nvm - .nvmrc content; an empty string omits the file
- * @param {{file: string, content: string}[]} [docs] - extra markdown files
+ * @param {{file: string, content: string}[]} [docs] - extra Markdown files
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
 const runFixture = (pkg, nvm, docs = []) => {

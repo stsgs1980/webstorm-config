@@ -30,7 +30,7 @@ const makeFixture = (sets) => {
 };
 
 /**
- * Run the template checker against a templates directory.
+ * Run the template checker for a directory of templates.
  * @param {string} dir - directory with *.xml template sets
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
@@ -40,7 +40,7 @@ const run = (dir) => {
 };
 
 /**
- * Run a fixture and clean it up afterwards.
+ * Run a fixture and clean it up afterward.
  * @param {{name: string, xml: string}[]} sets - template set files
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
@@ -57,6 +57,7 @@ const xmlOf = (group, templates) => `<templateSet group="${group}">\n${templates
 
 describe("check-templates", () => {
   it("валидный шаблон отвечает [OK] с прогонами lint и tsc", { timeout: 120000 }, () => {
+    // noinspection LongLine
     const rafce =
       '<template name="rafce" value="import type { ReactElement, ReactNode } from &quot;react&quot;;&#xA;&#xA;interface $NAME$Props {&#xA;  children?: ReactNode;&#xA;}&#xA;&#xA;/**&#xA; * $NAME$ component.&#xA; */&#xA;export const $NAME$ = ({ children }: $NAME$Props): ReactElement =&gt; {&#xA;  return &lt;div&gt;{children}&lt;/div&gt;;&#xA;};&#xA;&#xA;export default $NAME$;" description="React Arrow Function Component"></template>';
     const result = runFixture([{ name: "react.xml", xml: xmlOf("React", [rafce]) }]);
@@ -70,6 +71,7 @@ describe("check-templates", () => {
     // mid-flight (observed: TS6053, eslint ENOENT). Keep the concurrency but
     // bound the work: a 2 GB CI box must not SIGKILL both processes, and the
     // pid-dir isolation does not depend on the repository template count.
+    // noinspection LongLine
     const rafce =
       '<template name="rafce" value="import type { ReactElement, ReactNode } from &quot;react&quot;;&#xA;&#xA;interface $NAME$Props {&#xA;  children?: ReactNode;&#xA;}&#xA;&#xA;/**&#xA; * $NAME$ component.&#xA; */&#xA;export const $NAME$ = ({ children }: $NAME$Props): ReactElement =&gt; {&#xA;  return &lt;div&gt;{children}&lt;/div&gt;;&#xA;};&#xA;&#xA;export default $NAME$;" description="React Arrow Function Component"></template>';
     const simple = (name) => `<template name="${name}" value="const $NAME$ = 1;"></template>`;
@@ -132,6 +134,7 @@ describe("check-templates", () => {
 
   it("XML-комментарий с <template> не создаёт ghost-шаблон", { timeout: 120000 }, () => {
     const real = '<template name="real" value="const $NAME$ = 1;"></template>';
+    // noinspection LongLine
     const xml = `<templateSet group="Probe">\n<!-- <template name="ghost" value="const ghost = 1;"></template> -->\n${real}\n</templateSet>\n`;
     const result = runFixture([{ name: "probe.xml", xml }]);
     assert.equal(result.status, 0, result.stderr);
