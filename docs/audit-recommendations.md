@@ -53,6 +53,8 @@
 | `idea.log`                 | grep              | нет `duplicated name` с 07.11          |
 | watcher Markdownlint       | чтение            | `node.exe` + `node_modules`            |
 | coverage gate              | grep `ci.yml`     | шага coverage нет                      |
+| `scripts/*.ts` (лимит)     | `wc -l`           | 238, 238, 236; лимит 250               |
+| `799512d` в CHANGELOG      | `git grep`        | chore не попадает в changelog          |
 
 ## 4. План действий
 
@@ -218,6 +220,28 @@
 - Действие: добавить проверку строк таблицы docs map на валидный
   link-синтаксис.
 - Приёмка: тест на фикстуре `arkdown.md](docs/markdown.md)` падает.
+
+#### A15. [INFO] Учесть близость гейт-скриптов к лимиту 250 строк
+
+- Источник: `Отчёт проверка файла.md`, дополнительное наблюдение §7.
+- Факт: `DEFAULT_MAX_LINES = 250` в `scripts/check-file-length.ts`;
+  `check-docs.ts` — 238 строк, `check-style-consistency.ts` — 238,
+  `check-templates.ts` — 236.
+- Риск: один содержательный PR в любом из них уронит hard gate. Общая логика
+  уже вынесена в `scripts/lib/` (4 модуля), но сами гейты остаются крупными.
+- Действие: при следующем изменении этих скриптов вынести вспомогательные
+  функции в `scripts/lib/`, не дожидаясь отказа гейта.
+- Приёмка: ни один гейт-скрипт не превышает 250 строк, поведение не меняется.
+
+#### A16. [INFO] Решить видимость гейта `check:style-consistency` в CHANGELOG
+
+- Источник: первый аудит, опциональный пункт 8.
+- Факт: коммит `799512d` — `chore(ci): check code style consistency across all 24 languages`;
+  `conventional-changelog -p angular` не включает `chore`,
+  поэтому записи о гейте в `CHANGELOG.md` нет.
+- Действие: либо принять, что CI-гейт — это `chore` и в CHANGELOG ему не место,
+  либо провести отдельным `feat`-коммитом, чтобы он попал в changelog.
+- Приёмка: решение зафиксировано; при выборе `feat` запись есть в `CHANGELOG.md`.
 
 ## 5. Закрыто и не требует действий
 
