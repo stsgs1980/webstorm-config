@@ -337,14 +337,15 @@ git push         →  typecheck + тесты (pre-push)
 | docs согласованы с конфигами                           | `scripts/check-docs.ts`                 | CI                |
 | ESLint-правила кода (в т.ч. без `warn`)                | `eslint.config.js`                      | IDE + commit + CI |
 | Промисы: no-floating/misused-promises                  | `eslint.config.js` (type-aware)         | IDE + CI          |
-| `no-console`: приложение error, скрипты/сервер off     | `eslint.config.js`                      | IDE + commit + CI |
-| Юникод-политика в коде и сниппетах (проза - вручную)   | `eslint-rules`                          | IDE + commit + CI |
+| Юникод в коде и сниппетах (проза - вручную)            | `eslint-rules`                          | IDE + commit + CI |
 | Markdown не длиннее 120                                | markdownlint MD013, `.editorconfig`     | IDE + commit + CI |
 | Метрики: 60/15/4/4                                     | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
-| Вложенность функций (порог 4)                          | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 | TS-типы (tsc), тесты                                   | `tsconfig.json`, `vitest.config.ts`     | push + CI         |
 | Prod-аудит зависимостей (high+)                        | `.github/workflows/ci.yml`              | CI                |
 | React-компонент 200 строк; 3+ `useState`; сложность 15 | пороги-сигналы                          | ревью             |
+| Согласованность .editorconfig/.prettierrc/Project.xml  | `scripts/check-style-consistency.ts`    | commit + CI       |
+| `no-console`: приложение error, скрипты/сервер off     | `eslint.config.js`                      | IDE + commit + CI |
+| Вложенность функций (порог 4)                          | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 
 ## Windows
 

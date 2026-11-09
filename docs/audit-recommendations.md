@@ -49,9 +49,9 @@
 | `README.md` (25)           | `git show`        | ссылка валидна на 3 SHA                |
 | `test:e2e`                 | grep README       | только строка 55 (маркер)              |
 | `.superpowers/`            | grep `.gitignore` | 0 совпадений                           |
-| `style-consistency`        | grep по `md`      | 0 совпадений                           |
-| `getting-started.md` (139) | чтение            | не та секция EditorConfig              |
-| migration scripts          | чтение            | нет двух lint-скриптов                 |
+| `style-consistency`        | grep по `md`      | [OK] в 4 md-файлах + Step 5/Verify     |
+| `getting-started.md` (139) | чтение            | [OK] EditorConfig скопирован верно     |
+| migration scripts          | чтение            | [OK] скрипты: prettier, metrics        |
 | Unicode U+2192             | grep `docs/`      | webstorm.md 17, live-templates 5       |
 | `.idea/modules.xml`        | чтение            | хардкод `webstorm-config.iml`          |
 | CHANGELOG vs pre-push      | чтение            | entry есть, хука нет                   |
@@ -85,26 +85,30 @@
 
 ### P2
 
-#### A2. [TODO] Задокументировать гейт `check:style-consistency`
+#### A2. [OK] Гейт `check:style-consistency` задокументирован
 
 - Источник: первый аудит P2-1; сравнение №2.
 - Проблема: скрипт есть в `package.json` (строка 72), CI — `ci.yml`
   (строки 37 и 99), но в `*.md` 0 упоминаний.
 - Риск: пользователь форка не знает, что CI упадёт при рассогласовании
   `.editorconfig`/`.prettierrc`/`Project.xml`.
-- Действие: добавить строку в таблицу скриптов `README.template.md`, в
+- Сделано: строка добавлена в таблицу скриптов `README.template.md`, в
   `AGENTS.md` §11, в Step 5 и Verify `getting-started.md`, строку в таблицу
-  «Где проверяется каждое правило» `docs/webstorm.md`.
+  «Где проверяется каждое правило» `docs/webstorm.md` §17.
+- Проверено: `npm run check:style-consistency` зелёный (24 языка),
+  `markdownlint` по всем правленым файлам — чисто, `check:docs` — `[OK]`.
 - Приёмка: `grep` находит все места; `npm run check:docs` зелёный.
 
-#### A3. [TODO] Починить миграционный путь `getting-started.md`
+#### A3. [OK] Миграционный путь `getting-started.md` починен
 
 - Источник: первый аудит P2-2; сравнение №3.
 - Проблема: scripts-блок миграции (строки 232-245) не добавляет
   `lint:prettier-conflicts` и `lint:metrics`; список копирования (172-185)
   не включает `eslint.metrics.config.js`; Verify (254-256) эти команды зовёт.
-- Действие: дополнить блок scripts и список конфигов либо убрать команды из
-  Verify; заодно добавить `check:style-consistency` (см. A2).
+- Сделано: в блок scripts миграции добавлены `lint:prettier-conflicts`,
+  `lint:metrics` и `check:style-consistency`; в список копирования конфигов
+  добавлен `eslint.metrics.config.js`; Verify по-прежнему вызывает все три
+  команды, плюс `check:style-consistency`.
 - Приёмка: чистый проект по инструкции проходит Verify без «missing script».
 
 ### P3

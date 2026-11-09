@@ -85,25 +85,26 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 
 <!-- check-docs:allow-missing-scripts dev test:e2e -->
 
-| Команда                           | Описание                                  |
-| --------------------------------- | ----------------------------------------- |
-| `npm run lint`                    | ESLint                                    |
-| `npm run lint:prettier-conflicts` | Конфликты правил ESLint с Prettier        |
-| `npm run typecheck`               | TypeScript (`tsc --noEmit`)               |
-| `npm run lint:css`                | Stylelint                                 |
-| `npm run lint:md`                 | markdownlint                              |
-| `npm run format`                  | Prettier (запись)                         |
-| `npm run format:check`            | Prettier (проверка, как в CI)             |
-| `npm run check:docs`              | Сверка доков с конфигами (шаблон)         |
-| `npm run check:file-length`       | Лимит 250 строк                           |
-| `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc         |
-| `npm run lint:metrics`            | Метрики (advisory)                        |
-| `npm run changelog`               | Пересборка `CHANGELOG.md`                 |
-| `npm test`                        | Vitest (пустой набор - ошибка)            |
-| `npm run test:watch`              | Vitest (watch)                            |
-| `npm run test:coverage`           | Vitest + coverage                         |
-| `npm run test:e2e`                | Playwright (план; после установки)        |
-| `npm run dev`                     | _добавьте после Step 3 в getting-started_ |
+| Команда                           | Описание                                              |
+| --------------------------------- | ----------------------------------------------------- |
+| `npm run lint`                    | ESLint                                                |
+| `npm run lint:prettier-conflicts` | Конфликты правил ESLint с Prettier                    |
+| `npm run typecheck`               | TypeScript (`tsc --noEmit`)                           |
+| `npm run lint:css`                | Stylelint                                             |
+| `npm run lint:md`                 | markdownlint                                          |
+| `npm run format`                  | Prettier (запись)                                     |
+| `npm run format:check`            | Prettier (проверка, как в CI)                         |
+| `npm run check:docs`              | Сверка доков с конфигами (шаблон)                     |
+| `npm run check:file-length`       | Лимит 250 строк                                       |
+| `npm run check:style-consistency` | Согласованность .editorconfig/.prettierrc/Project.xml |
+| `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc                     |
+| `npm run lint:metrics`            | Метрики (advisory)                                    |
+| `npm run changelog`               | Пересборка `CHANGELOG.md`                             |
+| `npm test`                        | Vitest (пустой набор - ошибка)                        |
+| `npm run test:watch`              | Vitest (watch)                                        |
+| `npm run test:coverage`           | Vitest + coverage                                     |
+| `npm run test:e2e`                | Playwright (план; после установки)                    |
+| `npm run dev`                     | _добавьте после Step 3 в getting-started_             |
 
 ## Docs
 

@@ -181,6 +181,7 @@ Fork note: when this template lands in a new project, keep only the entries that
 actually exist there.
 
 - `npm run check:file-length` - 250-line hard gate (`scripts/check-file-length.ts`).
+- `npm run check:style-consistency` - согласованность .editorconfig/.prettierrc/Project.xml
 - `npm run check:templates` - live templates renderer (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
 - Live templates live in `.idea/liveTemplates/`.

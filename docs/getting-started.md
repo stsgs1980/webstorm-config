@@ -179,6 +179,7 @@ scripts/
 .stylelintrc.json
 .stylelintignore
 .markdownlint.json
+eslint.metrics.config.js
 .editorconfig
 tsconfig.base.json
 vitest.config.ts
@@ -234,6 +235,9 @@ npx husky init
     "typecheck": "tsc --noEmit",
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "lint:prettier-conflicts": "eslint-config-prettier scripts/check-docs.ts",
+    "lint:metrics": "eslint . --config eslint.metrics.config.js --no-warn-ignored",
+    "check:style-consistency": "node scripts/check-style-consistency.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
