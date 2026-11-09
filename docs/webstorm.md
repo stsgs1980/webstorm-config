@@ -294,6 +294,26 @@ XML-файлы там это склад. Импорт: откройте нужн
   открытии после обновления трекаемые `.idea/` меняются: схема code style
   дополняется языками, поэтому проверяйте `git diff` перед коммитом.
 
+### Глобальная схема code style и перезапись `Project.xml`
+
+WebStorm может хранить выбранную схему не в проекте, а в глобальном каталоге
+`%APPDATA%\JetBrains\WebStorm<версия>\codestyles\`. Если глобальная схема
+`webstorm-config` устарела, при сохранении проекта IDE запишет её содержимое в
+`.idea/codeStyles/Project.xml` и потеряет `USE_DOUBLE_QUOTES`,
+`ENFORCE_TRAILING_COMMA` и часть per-language опций.
+
+Проверка перед коммитом:
+
+```bash
+npm run check:style-consistency
+git diff .idea/codeStyles/Project.xml
+```
+
+`check:style-consistency` сравнивает `.editorconfig`, `.prettierrc` и
+`Project.xml` и падает при расхождении. После обновления IDE или смены схемы
+обновите глобальную схему из проектного `Project.xml` либо выберите схему
+`Project` в `Settings -> Editor -> Code Style`.
+
 ## Согласованность IDE и CI
 
 ```text

@@ -247,7 +247,7 @@
   либо провести отдельным `feat`-коммитом, чтобы он попал в changelog.
 - Приёмка: решение зафиксировано; при выборе `feat` запись есть в `CHANGELOG.md`.
 
-#### A17. [TODO] Задокументировать глобальную схему code style
+#### A17. [OK] Глобальная схема code style задокументирована
 
 - Источник: инцидент 09.11.2026 04:29; повтор пункта R10 из
   `Отчёт проверка файла.md`.
@@ -261,13 +261,13 @@
 - Причина: глобальная схема `webstorm-config` устарела; на неё указывают
   `options/project.default.xml` (`PREFERRED_SCHEME`) и
   `codestyles/codeStyleConfig.xml` (`PREFERRED_PROJECT_CODE_STYLE`).
-- Сделано: `Project.xml` откачен из HEAD; глобальная схема пересобрана из
+- Фикс: `Project.xml` откачен из HEAD; глобальная схема пересобрана из
   HEAD (24 языка, все опции); бэкапы в `%TEMP%\opencode\*.bak`; гейт зелёный.
 - Проверено: после перезапуска IDE 09.11.2026 04:54 `Project.xml` не изменился,
   `git status` чист, гейт зелёный.
-- Действие: добавить в `docs/webstorm.md` §14 абзац о глобальной схеме:
-  при смене code style обновлять её или выбирать схему `Project`, а после
-  перезапуска IDE проверять `npm run check:style-consistency`.
+- Документация: абзац добавлен в `docs/webstorm.md` §14: при смене code style
+  обновлять глобальную схему или выбирать схему `Project`, затем проверять
+  `npm run check:style-consistency`.
 - Приёмка: после перезапуска WebStorm и сохранения проекта
   `git diff .idea/codeStyles/Project.xml` пуст, гейт зелёный.
 
