@@ -224,6 +224,10 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 - `scopes/` — скоуп `generated_changelog` (исключение `CHANGELOG.md` из подсказок IDE, см. §6);
 - `jsonSchemas.xml`, `jsonCatalog.xml`, `prettier.xml`, `vcs.xml`, `modules.xml`, `webstorm-config.iml`.
 
+При форке: переименуйте `.idea/webstorm-config.iml` в `.idea/<ваш-проект>.iml` и
+замените имя файла в `.idea/modules.xml` (строка `<module fileurl=...>`), иначе
+стaraя ссылка останется мёртвой, а WebStorm создаст второй `.iml`.
+
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
 
 Словарь в git - сознательное отклонение от рекомендации JetBrains: он держит

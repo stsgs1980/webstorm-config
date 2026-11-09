@@ -165,7 +165,7 @@
 - Важно: `docs/markdown.md` (строка 69) — намеренный контрпример, не тронут.
 - Приёмка: grep U+2192 по `docs/` пуст (кроме `markdown.md`).
 
-#### A9. [TODO] Добавить шаг переименования `.iml` при форке
+#### A9. [OK] Шаг переименования `.iml` при форке добавлен
 
 - Источник: второй аудит P3/WARN; сравнение №10.
 - Проблема: `.idea/modules.xml` жёстко ссылается на
@@ -174,9 +174,9 @@
   `.iml`.
 - В форке `my-project` WebStorm создаст `my-project.iml`, старый останется
   мёртвым.
-- Действие: в Step 1 `getting-started.md` и/или `docs/webstorm.md` добавить
-  шаг переименования `.idea/<old>.iml` -> `.idea/<new>.iml` и правки
-  `.idea/modules.xml`.
+- Сделано: в Step 1 `getting-started.md` добавлен пункт 5 — переименование
+  `.idea/webstorm-config.iml` в `.idea/<ваш-проект>.iml` и правка
+  `.idea/modules.xml`; в `docs/webstorm.md` §10 добавлено примечание.
 - Приёмка: после клона форка WebStorm не создаёт второй `.iml`.
 
 ### INFO

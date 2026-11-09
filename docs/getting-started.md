@@ -20,7 +20,17 @@
 4. Удалите `docs/kickoff.md`: это стартовый промт для шаблона, в новом проекте
    он не нужен.
 
-5. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
+5. Переименуйте `.idea/webstorm-config.iml` и поправьте `.idea/modules.xml`:
+
+   ```bash
+   mv .idea/webstorm-config.iml .idea/<ваш-проект>.iml
+   ```
+
+   В `.idea/modules.xml` замените `webstorm-config.iml` на `<ваш-проект>.iml`.
+   WebStorm при открытии форка создаст свой `.iml` под именем проекта; старый
+   `webstorm-config.iml` останется мёртвой ссылкой, если не переименовать.
+
+6. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
 
 ## Step 2: Framework dependencies
 
