@@ -228,6 +228,25 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 замените имя файла в `.idea/modules.xml` (строка `<module fileurl=...>`), иначе
 стaraя ссылка останется мёртвой, а WebStorm создаст второй `.iml`.
 
+### Профили инспекций: проект vs IDE
+
+WebStorm хранит профили инспекций на двух уровнях:
+
+- **Уровень проекта** — `.idea/inspectionProfiles/`, делятся через git.
+  В репозитории закоммичен `Project Default` (24 инспекции, `FileLength` = 250,
+  `CyclomaticComplexityJS` = 15). При клоне форка он применяется автоматически.
+- **Уровень IDE** — `%APPDATA%\JetBrains\WebStorm<версия>\inspection\`,
+  доступен во всех проектах, не делится через VCS.
+
+Если хотите, чтобы правила этого репозитория действовали во всех проектах
+в вашей WebStorm, скопируйте проектный профиль в IDE:
+
+`Settings → Editor → Inspections → Project Default → Show Scheme Actions → Copy to IDE`
+
+Это настройка вашей локальной IDE, она не попадёт в git и не перенесётся на
+другую машину. Дляチーム разработки правила живут в git через
+`.idea/inspectionProfiles/`.
+
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
 
 Словарь в git - сознательное отклонение от рекомендации JetBrains: он держит
