@@ -122,6 +122,13 @@ the signal.
 - Do not commit directly to main. "Verified" means: approved PR, pre-commit hooks
   pass, CI is green. Direct pushes to main are only allowed for the release commit
   described below.
+
+  Solo-maintainer exception (A4): for a single-contributor template repo where CI
+  re-runs every check on push, direct commits to main are permitted provided each
+  commit passes pre-commit hooks and CI is green. This exception is logged in
+  `docs/audit-recommendations.md` (A4). If a second contributor joins, revert to
+  PR-only discipline.
+
 - Pre-commit hooks (Husky + lint-staged) must pass. `--no-verify` is allowed only when
   a hook fails for reasons unrelated to the change; state the reason in the commit
   body. CI re-runs every check, so skipping locally never bypasses the gate.
