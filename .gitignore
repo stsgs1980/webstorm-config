@@ -49,6 +49,7 @@ coverage/
 # OpenCode
 .agents/
 .opencode/
+.superpowers/
 
 # JetBrains Air session data
 .awb/

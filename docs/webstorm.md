@@ -91,7 +91,7 @@ WebStorm часть из них **не подхватывает автомати
 
 ## 2. Prettier
 
-Путь: `Settings → Languages & Frameworks → JavaScript → Prettier`
+Путь: `Settings -> Languages & Frameworks -> JavaScript -> Prettier`
 
 - Prettier package: `{project}/node_modules/prettier`
 - Run on save уже включён проектом (`.idea/prettier.xml`: `myRunOnSave=true`);
@@ -102,7 +102,7 @@ WebStorm часть из них **не подхватывает автомати
 
 ## 3. ESLint
 
-Путь: `Settings → Languages & Frameworks → JavaScript → Code Quality Tools → ESLint`
+Путь: `Settings -> Languages & Frameworks -> JavaScript -> Code Quality Tools -> ESLint`
 
 - Mode: **Automatic**
 - ESLint package: `{project}/node_modules/eslint`
@@ -129,7 +129,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 4. Stylelint
 
-Путь: `Settings → Languages & Frameworks → Style Sheets → Stylelint`
+Путь: `Settings -> Languages & Frameworks -> Style Sheets -> Stylelint`
 
 - Enable Stylelint
 - Package: `{project}/node_modules/stylelint`
@@ -173,7 +173,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 8. Анализ кода при коммите (рекомендуется)
 
-Путь: `Commit tool window (Alt+0) → Settings (⚙) → Commit Checks → Analyze code`
+Путь: `Commit tool window (Alt+0) -> Settings (⚙) -> Commit Checks -> Analyze code`
 
 Включите **Analyze code** и выберите профиль **Project Default**.
 
@@ -189,13 +189,13 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 9. React Buddy (превью компонентов)
 
-Установка: `Settings → Plugins → Marketplace`, найти «React Buddy», Install,
+Установка: `Settings -> Plugins -> Marketplace`, найти «React Buddy», Install,
 перезапустить IDE. Раздел доступен только после установки; на части машин
 плагина нет — тогда шаг пропустите.
 
 Настройка при первом использовании:
 
-1. ПКМ на файле компонента → **React Buddy** → **Add to Palette**
+1. ПКМ на файле компонента -> **React Buddy** -> **Add to Palette**
 2. При появлении диалога **Настройка React Buddy Toolbox**:
    - **Файл package.json** — оставьте по умолчанию
    - **Директория тулбокса** — `dev/` (создаётся автоматически)
@@ -209,8 +209,8 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ### Использование
 
-- ПКМ на компоненте → **React Buddy** → **Preview Component**
-- Палитра: `View → Tool Windows → React Buddy Palette`
+- ПКМ на компоненте -> **React Buddy** -> **Preview Component**
+- Палитра: `View -> Tool Windows -> React Buddy Palette`
 
 ## 10. Что коммитится в `.idea/`
 
@@ -238,7 +238,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 Определения вотчеров хранятся в `.idea/watcherTasks.xml` (проектная настройка; файл
 не входит в белый список `.gitignore`, поэтому в git не попадает). На новой машине
-`Settings → Tools → File Watchers` пуст. Создайте вручную:
+`Settings -> Tools -> File Watchers` пуст. Создайте вручную:
 
 1. **Stylelint**: Program — `stylelint`, Arguments — `$FilePath$`, File type — CSS/SCSS.
    Если включена штатная интеграция Stylelint (§4), вотчер не нужен: он дублирует
@@ -252,7 +252,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 Каталог `.idea/liveTemplates/` IDE не читает (известное ограничение,
 [IJPL-37162](https://youtrack.jetbrains.com/issue/IJPL-37162), бывший IDEABKL-5033) —
 XML-файлы там это склад. Импорт: откройте нужный XML, скопируйте тело шаблона,
-`Settings → Editor → Live Templates` → `+` → вставьте.
+`Settings -> Editor -> Live Templates` -> `+` -> вставьте.
 
 Источники истины — репозиторий, а не IDE-настройки: правки шаблона вносятся в XML
 `.idea/liveTemplates/`, затем в IDE реимпортируются; сделанное только в IDE и не
@@ -268,13 +268,13 @@ XML-файлы там это склад. Импорт: откройте нужн
 ## 13. Сторонний плагин Save Actions (конфликт с Actions on Save)
 
 Плагин `software.xdev.saveactions` дублирует нативный механизм IDE
-«Actions on Save» (`Settings → Tools → Actions on Save`). Если включены оба,
+«Actions on Save» (`Settings -> Tools -> Actions on Save`). Если включены оба,
 форматирование применяется дважды (плагин + Prettier run on save), что при
 расхождении схем даёт «прыгающие» правки до pre-commit.
 
 Чеклист этого документа (шаги 2–3) рассчитан на нативный механизм. Если плагин
-установлен — выберите одно: либо отключите его (`Settings → Tools → Save Actions`,
-или удалите в `Settings → Plugins`), либо отключите его действия форматирования,
+установлен — выберите одно: либо отключите его (`Settings -> Tools -> Save Actions`,
+или удалите в `Settings -> Plugins`), либо отключите его действия форматирования,
 оставив только нативные галочки из шагов 2–4.
 
 ## 14. Версии IDE
@@ -317,9 +317,9 @@ git diff .idea/codeStyles/Project.xml
 ## Согласованность IDE и CI
 
 ```text
-Save в WebStorm  →  Prettier + ESLint (Stylelint — подсветка)
-git commit       →  Husky + lint-staged (те же инструменты из CLI)
-git push         →  typecheck + тесты (pre-push)
+Save в WebStorm  ->  Prettier + ESLint (Stylelint — подсветка)
+git commit       ->  Husky + lint-staged (те же инструменты из CLI)
+git push         ->  typecheck + тесты (pre-push)
 ```
 
 Если при коммите много неожиданных правок — проверьте шаги 2–4.
@@ -333,7 +333,7 @@ git push         →  typecheck + тесты (pre-push)
 | Правило                                                | Закреплено                              | Проверяется       |
 | ------------------------------------------------------ | --------------------------------------- | ----------------- |
 | TS/JS-файл до 250 строк; исключения — с причиной       | `scripts/check-file-length.ts`          | commit + CI       |
-| Шаблоны рендерятся чисто: render → eslint → tsc        | `scripts/check-templates.ts`            | CI                |
+| Шаблоны рендерятся чисто: render -> eslint -> tsc      | `scripts/check-templates.ts`            | CI                |
 | docs согласованы с конфигами                           | `scripts/check-docs.ts`                 | CI                |
 | ESLint-правила кода (в т.ч. без `warn`)                | `eslint.config.js`                      | IDE + commit + CI |
 | Промисы: no-floating/misused-promises                  | `eslint.config.js` (type-aware)         | IDE + CI          |

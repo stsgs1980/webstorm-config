@@ -52,7 +52,7 @@ React: удалите оба пакета и поправьте `tsconfig.json` 
 
 ## Quick Start (создать проект из шаблона)
 
-<!-- check-docs:allow-missing-scripts dev test:e2e -->
+<!-- check-docs:allow-missing-scripts dev -->
 
 После любого Option выполните обязательные шаги из [After fork](#after-fork-кратко).
 

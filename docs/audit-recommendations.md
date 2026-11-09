@@ -30,7 +30,7 @@
 | Версия в `docs/webstorm.md`           | `2026.3.202`                | [OK] закрыто: `2026.3 (WS-263.7307.202)` |
 | Снапшот `npm audit`                   | 9 moderate на 84d21a6       | [OK] исправлено: 0 vuln в тексте и факте |
 | README broken link                    | P2 во втором аудите         | [OK] не подтвердилось: ссылка валидна    |
-| Unicode-стрелки                       | не было в отчёте            | [TODO] новая: 17 + 5 строк               |
+| Unicode-стрелки                       | не было в отчёте            | [OK] исправлено: -> вместо -> в 22 места |
 | `.iml` project-name-locked            | не было в отчёте            | [TODO] новая: нет шага переименования    |
 | minimatch / Dependabot #26            | 9 moderate                  | [OK] закрыто: 0 vuln всех уровней        |
 
@@ -47,8 +47,8 @@
 | `SECURITY.md`              | чтение            | 0 vuln, дата 2026-11-09                |
 | `npm ls minimatch`         | прогон            | `11.0.5` во всех ветвях                |
 | `README.md` (25)           | `git show`        | ссылка валидна на 3 SHA                |
-| `test:e2e`                 | grep README       | только строка 55 (маркер)              |
-| `.superpowers/`            | grep `.gitignore` | 0 совпадений                           |
+| `test:e2e`                 | grep README       | маркер без test:e2e                    |
+| `.superpowers/`            | grep `.gitignore` | в .gitignore (секция OpenCode)         |
 | `style-consistency`        | grep по `md`      | [OK] в 4 md-файлах + Step 5/Verify     |
 | `getting-started.md` (139) | чтение            | [OK] EditorConfig скопирован верно     |
 | migration scripts          | чтение            | [OK] скрипты: prettier, metrics        |
@@ -124,47 +124,45 @@
   соло-мейнтейнера.
 - Приёмка: `AGENTS.md` §6 не противоречит `git log --merges`.
 
-#### A5. [TODO] Убрать `test:e2e` из маркера `README.md` (строка 55)
+#### A5. [OK] Убрано `test:e2e` из маркера `README.md`
 
 - Источник: первый аудит P3-3; сравнение №5.
 - Проблема: маркер `<!-- check-docs:allow-missing-scripts dev test:e2e -->`
-  разрешает `test:e2e`, но в тексте `README.md` он не упоминается.
+  разрешал `test:e2e`, но в тексте `README.md` он не упоминается.
 - В `README.template.md` (строка 105) маркер обоснован — там `test:e2e` есть.
-- Действие: убрать `test:e2e` из маркера `README.md`.
+- Сделано: `test:e2e` убран из маркера `README.md` (строка 55).
 - Приёмка: каждое имя маркера встречается в тексте своего файла.
 
-#### A6. [TODO] Добавить `.superpowers/` в `.gitignore`
+#### A6. [OK] Добавлен `.superpowers/` в `.gitignore`
 
 - Источник: первый аудит P3-4; сравнение №6.
 - Проблема: `eslint.config.js` и `eslint.metrics.config.js` игнорируют
   `.superpowers/**`, но `.gitignore` — нет (рядом с `.agents/`, `.opencode/`,
   `.awb/`).
-- Действие: добавить `.superpowers/` в `.gitignore`.
+- Сделано: `.superpowers/` добавлен в `.gitignore` в секцию OpenCode.
 - Приёмка: `git status` чист при локальном `.superpowers/`.
 
-#### A7. [TODO] Исправить цитату `.editorconfig` в `getting-started.md`
+#### A7. [OK] Исправлена цитата `.editorconfig` в `getting-started.md`
 
 - Источник: первый аудит P3-5; сравнение №7.
 - Проблема: строка 139 говорит, что `.editorconfig` задаёт
   `max_line_length = 120` в секции для Markdown, но лимит задан в
   глобальной секции (строка 11), а секция `.md` (17-18) меняет только
   `trim_trailing_whitespace`.
-- Действие: переформулировать: «глобальная секция: `max_line_length = 120`».
+- Сделано: переформулировано: «`[*] max_line_length = 120` (для всех файлов;
+  в `[*.md]` только `trim_trailing_whitespace = false`)».
 - Приёмка: формулировка совпадает с `docs/webstorm.md` §6; `check:docs` зелёный.
 
-#### A8. [TODO] Убрать Unicode-стрелки из прозы документации
+#### A8. [OK] Убраны Unicode-стрелки из прозы документации
 
 - Источник: второй аудит P3/WARN; сравнение №9.
 - Проблема: `docs/markdown.md` (строка 69) требует ASCII `->`, но в прозе
-  стоит U+2192:
-  - `docs/webstorm.md` — 17 строк: 94, 105, 132, 176, 192, 198, 212, 213,
-    241, 255, 271, 276, 277, 300, 301, 302, 316;
-  - `docs/live-templates/README.md` — 5 строк: 11, 69, 70, 71, 74.
-- Важно: `docs/markdown.md` (строка 69) — намеренный контрпример, не трогать.
-- Действие: заменить на `->` в прозе ИЛИ расширить `unicodeGraphicsPattern`
-  диапазоном U+2190-21FF и распространить правило на прозу `.md`.
-- Приёмка: grep U+2192 по `docs/` пуст (кроме `markdown.md`), либо правило
-  ловит нарушения.
+  stood U+2192:
+  - `docs/webstorm.md` — 17 строк;
+  - `docs/live-templates/README.md` — 5 строк.
+- Сделано: все `→` заменены на `->` в обоих файлах (37 + 9 вхождений).
+- Важно: `docs/markdown.md` (строка 69) — намеренный контрпример, не тронут.
+- Приёмка: grep U+2192 по `docs/` пуст (кроме `markdown.md`).
 
 #### A9. [TODO] Добавить шаг переименования `.iml` при форке
 

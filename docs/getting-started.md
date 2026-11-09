@@ -136,7 +136,7 @@ Anti-monolith (`check:file-length`) смотрит `git ls-files`: файлы в
 Markdown (`.md`) ограничен 120 символами на строку (как в `AGENTS.md` §3, `.editorconfig`
 и `.markdownlint.json`):
 
-- `.editorconfig`: `[*.md] max_line_length = 120`
+- `.editorconfig`: `[*] max_line_length = 120` (для всех файлов; в `[*.md]` только `trim_trailing_whitespace = false`)
 - `.markdownlint.json`: `MD013` (лимит 120 символов)
 
 ## Tailwind CSS v4

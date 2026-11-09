@@ -8,7 +8,7 @@ IDE **не читает**: такой возможности в IntelliJ/WebStor
 
 1. Откройте нужный XML из `.idea/liveTemplates/` любым редактором.
 2. Скопируйте **всё содержимое** файла (включая `<templateSet ...>`).
-3. В WebStorm: `Settings` → `Editor` → `Live Templates`.
+3. В WebStorm: `Settings` -> `Editor` -> `Live Templates`.
 4. Нажмите `Ctrl+V` — появится группа с шаблонами.
 5. Контексты заданы в XML; после импорта проверьте их в `Change` и при необходимости
    включите нужные языки (`TypeScript`, `TSX`, `JavaScript`).
@@ -64,14 +64,14 @@ live-шаблоны, file templates автоматическим гейтом н
 File templates из `.idea/fileTemplates/` работают иначе: WebStorm подхватывает их
 автоматически, менять ничего не нужно.
 
-| Шаблон                | Где доступен                       |
-| --------------------- | ---------------------------------- |
-| `React Component.tsx` | `File` → `New` → `React Component` |
-| `Vitest Test.test.ts` | `File` → `New` → `Vitest Test`     |
-| `Astro Page.astro`    | `File` → `New` → `Astro Page`      |
+| Шаблон                | Где доступен                         |
+| --------------------- | ------------------------------------ |
+| `React Component.tsx` | `File` -> `New` -> `React Component` |
+| `Vitest Test.test.ts` | `File` -> `New` -> `Vitest Test`     |
+| `Astro Page.astro`    | `File` -> `New` -> `Astro Page`      |
 
 Автоматического гейта для file templates нет и в этом шаблоне не планируется: ими
-пользуются люди в IDE (`File` → `New`), а не агенты, которые создают файлы кодом.
+пользуются люди в IDE (`File` -> `New`), а не агенты, которые создают файлы кодом.
 Содержимое проверяется вручную при изменении шаблона. Гейт имеет смысл только если
 шаблон начнут использовать как продукт для ручной разработки; тогда его можно
 добавить по образцу `check:templates`.
