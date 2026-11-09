@@ -16,6 +16,8 @@
   - `Сравнение двух аудитов webstorm-config.md`.
 
 - Проверенный HEAD на 09.11.2026: `385cb7f`, совпадает со вторым аудитом.
+- Инцидент 09.11.2026: WebStorm перезаписала `.idea/codeStyles/Project.xml`;
+  причина найдена и устранена (A17).
 - Цель: свести находки в один план с приоритетами и критериями приёмки.
 - Оформление: `docs/markdown.md` (строки ≤ 120, ASCII `->`, теги вместо emoji).
 
@@ -23,7 +25,7 @@
 
 | Тема                                  | Было                        | Стало на 09.11.2026                         |
 | ------------------------------------- | --------------------------- | ------------------------------------------- |
-| Рабочее дерево `.idea/`               | 4 изменения, опции потеряны | [OK] закрыто: tracked-изменений нет         |
+| Рабочее дерево `.idea/`               | 4 изменения, опции потеряны | [WARNING] повтор 09.11; причина устранена   |
 | Дубль `ProjectCodeStyleConfiguration` | warning в `idea.log`        | [OK] закрыто: с 07.11 warning нет           |
 | Версия в `docs/webstorm.md`           | `2026.3.202`                | [OK] закрыто: `2026.3 (WS-263.7307.202)`    |
 | Снапшот `npm audit`                   | 9 moderate на 84d21a6       | [FAIL] хуже: факт 0 vuln, текст 16 moderate |
@@ -36,8 +38,10 @@
 
 | Факт                       | Проверка          | Результат                              |
 | -------------------------- | ----------------- | -------------------------------------- |
-| `git status --short`       | git               | только untracked-файлы                 |
+| `git status --short`       | git               | чисто после отката                     |
+| `codestyles/*.xml`         | сравнение         | глобальная схема синхронизирована      |
 | `Project.xml`              | чтение            | 24 языка, кавычки, trailing comma, 120 |
+| `check:style-consistency`  | прогон            | 33 mismatch -> green после фикса       |
 | `profiles_settings.xml`    | чтение            | файл на месте                          |
 | `npm audit --json`         | прогон            | 0 vuln всех уровней                    |
 | `npm ls minimatch`         | прогон            | `11.0.5` во всех ветвях                |
@@ -243,11 +247,32 @@
   либо провести отдельным `feat`-коммитом, чтобы он попал в changelog.
 - Приёмка: решение зафиксировано; при выборе `feat` запись есть в `CHANGELOG.md`.
 
+#### A17. [TODO] Задокументировать глобальную схему code style
+
+- Источник: инцидент 09.11.2026 04:29; повтор пункта R10 из
+  `Отчёт проверка файла.md`.
+- Факт: при сохранении проекта WebStorm записала в
+  `.idea/codeStyles/Project.xml` содержимое глобальной схемы
+  `%APPDATA%\JetBrains\WebStorm2026.3\codestyles\webstorm-config.xml`.
+  В ней не было `USE_DOUBLE_QUOTES`, `ENFORCE_TRAILING_COMMA` и части
+  per-language опций.
+- Последствие: `npm run check:style-consistency` упал с 33 расхождениями,
+  `git status` показывал `M .idea/codeStyles/Project.xml`.
+- Причина: глобальная схема `webstorm-config` устарела; на неё указывают
+  `options/project.default.xml` (`PREFERRED_SCHEME`) и
+  `codestyles/codeStyleConfig.xml` (`PREFERRED_PROJECT_CODE_STYLE`).
+- Сделано: `Project.xml` откачен из HEAD; глобальная схема пересобрана из
+  HEAD (24 языка, все опции); бэкапы в `%TEMP%\opencode\*.bak`; гейт зелёный.
+- Действие: добавить в `docs/webstorm.md` §14 абзац о глобальной схеме:
+  при смене code style обновлять её или выбирать схему `Project`, а после
+  перезапуска IDE проверять `npm run check:style-consistency`.
+- Приёмка: после перезапуска WebStorm и сохранения проекта
+  `git diff .idea/codeStyles/Project.xml` пуст, гейт зелёный.
+
 ## 5. Закрыто и не требует действий
 
 | Пункт                                    | Проверка                     | Статус                      |
 | ---------------------------------------- | ---------------------------- | --------------------------- |
-| Грязное дерево `.idea/`, утерянные опции | `git status`; `Project.xml`  | [OK] закрыто                |
 | Дубль `ProjectCodeStyleConfiguration`    | текущий `idea.log`           | [OK] закрыто                |
 | Версия `2026.3.202` в `docs/webstorm.md` | grep по файлу                | [OK] закрыто                |
 | Dependabot #26 minimatch                 | `npm audit`, `npm ls`        | [OK] закрыто                |
@@ -271,6 +296,8 @@
 ## 7. Слепые зоны
 
 - Поведение IDE: on-save Prettier/ESLint, инспекции, Tab для live templates.
+- Глобальные схемы code style в `%APPDATA%\JetBrains\...`: вне репозитория,
+  проверяются вручную.
 - File templates: применимость через `File -> New` не проверяется скриптом.
 - Соответствие inspection profile правилам `AGENTS.md`.
 - Настройки GitHub: secret scanning, push protection, branch protection.
