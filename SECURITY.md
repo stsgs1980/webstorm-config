@@ -31,49 +31,31 @@
 
 ## npm audit
 
-Снимок на 2026-11-03. Воспроизведение:
+Снимок на 2026-11-09. Воспроизведение:
 
 ```bash
 npm audit --omit=dev --audit-level=high   # production-дерево: 0 уязвимостей
-npm audit                                 # полное дерево: 0 high, 16 moderate
+npm audit                                 # полное дерево: 0 уязвимостей
 ```
 
 `npm audit --omit=dev` чист: production-зависимостей с известными уязвимостями
-нет, и CI блокирует high/critical именно на этом дереве. У шаблона production-дерево
-пустое: React и react-dom нужны только для линтинга и типов и стоят в
-`devDependencies`.
+нет, и CI блокирует high/critical именно на этом дереве. У шаблона нет
+production-зависимостей: React и react-dom нужны только для линтинга и типов и
+стоят в `devDependencies`.
 
-В полном дереве 0 high и 16 moderate. Пятнадцать из них - одна транзитивная цепочка
-`minimatch < 11.0.1` (GHSA-g3hv-75wg-m249, CVE-2026-118764: усиление
-glob-паттерна в `firstPhasePreProcess`, DoS по CPU и памяти). Пакет приходит
-через ESLint-плагины (`eslint-plugin-react`, `eslint-plugin-jsx-a11y`,
-`typescript-eslint`) и `markdownlint-cli`; в дереве стоят `minimatch` 10.2.6
-и пять копий 3.1.5. Шестнадцатая запись - сам `eslint-config-prettier`: npm
-audit показывает его зависящим от `eslint` (peer), новых high это не добавляет.
-Патч - `minimatch@11.0.1`, он требует мажорных обновлений этих инструментов и
-смены API: `npm audit fix` без `--force` ничего не меняет, `--force` ломает
-линтеры.
-
-Риск принят как dev-only:
-
-- пакета нет в production-дереве, пользовательские сборки его не содержат;
-- эксплуатируется шаблоном glob, который локально подаёт сам разработчик,
-  а не внешний ввод приложения;
-- CVSS v4 - 6.9 (medium), EPSS - 0.3%;
-- исправление придёт штатно через Dependabot, когда инструменты перейдут на
-  `minimatch` 11.
-
-Dependabot показывает это как один alert на `main` (GHSA-g3hv-75wg-m249).
-Alert закрыт как `tolerable_risk` со ссылкой на этот раздел; при появлении
-совместимого патча он откроется заново после обновления манифеста.
-
-Не запускайте `npm audit fix --force`.
+Полное дерево тоже чистое: 0 уязвимостей всех уровней. Цепочка
+`minimatch < 11.0.1` (GHSA-g3hv-75wg-m249, CVE-2026-118764) закрыта override
+`minimatch: ">=11.0.1"`; `npm ls minimatch` показывает `11.0.5` во всех ветвях
+(ESLint-плагины, `typescript-eslint`, `markdownlint-cli`). `npm audit fix --force`
+не нужен и может сломать линтеры.
 
 ## Overrides
 
 `overrides` в `package.json` фиксируют транзитивные версии:
 
 - `katex`, `smol-toml`, `js-yaml` - вывод из уязвимых диапазонов (история в `CHANGELOG.md`);
+- `minimatch: ">=11.0.1"` - вывод из GHSA-g3hv-75wg-m249 (CVE-2026-118764);
+  в дереве `11.0.5`. Override закрывает все транзитивные ветви без `--force`.
 - `re2js: 2.8.7` - точный pin выше GHSA-gg6h-894w-4m9c (high, quadratic-time
   lookbehind). `markdownlint 0.42` пинит уязвимый 2.8.6; патч - 2.8.7. Диапазон
   `^2.8.7` не используется намеренно: он подтянет 2.9.x без проверки совместимости
@@ -84,4 +66,4 @@ Alert закрыт как `tolerable_risk` со ссылкой на этот р�
 - Включены secret scanning и push protection.
 - В CI минимальные права (`contents: read`) и `HUSKY: 0` для чистой установки.
 - Dependabot следит за npm-пакетами и GitHub Actions; открытые алерты
-  разбираются, принятый dev-only риск описан в разделе выше.
+  разбираются, история обновлений - в `CHANGELOG.md`.

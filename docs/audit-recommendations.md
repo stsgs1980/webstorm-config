@@ -23,16 +23,16 @@
 
 ## 2. Что изменилось после повторного анализа
 
-| Тема                                  | Было                        | Стало на 09.11.2026                         |
-| ------------------------------------- | --------------------------- | ------------------------------------------- |
-| Рабочее дерево `.idea/`               | 4 изменения, опции потеряны | [OK] проверено после перезапуска IDE        |
-| Дубль `ProjectCodeStyleConfiguration` | warning в `idea.log`        | [OK] закрыто: с 07.11 warning нет           |
-| Версия в `docs/webstorm.md`           | `2026.3.202`                | [OK] закрыто: `2026.3 (WS-263.7307.202)`    |
-| Снапшот `npm audit`                   | 9 moderate на 84d21a6       | [FAIL] хуже: факт 0 vuln, текст 16 moderate |
-| README broken link                    | P2 во втором аудите         | [OK] не подтвердилось: ссылка валидна       |
-| Unicode-стрелки                       | не было в отчёте            | [TODO] новая: 17 + 5 строк                  |
-| `.iml` project-name-locked            | не было в отчёте            | [TODO] новая: нет шага переименования       |
-| minimatch / Dependabot #26            | 9 moderate                  | [OK] закрыто: 0 vuln всех уровней           |
+| Тема                                  | Было                        | Стало на 09.11.2026                      |
+| ------------------------------------- | --------------------------- | ---------------------------------------- |
+| Рабочее дерево `.idea/`               | 4 изменения, опции потеряны | [OK] проверено после перезапуска IDE     |
+| Дубль `ProjectCodeStyleConfiguration` | warning в `idea.log`        | [OK] закрыто: с 07.11 warning нет        |
+| Версия в `docs/webstorm.md`           | `2026.3.202`                | [OK] закрыто: `2026.3 (WS-263.7307.202)` |
+| Снапшот `npm audit`                   | 9 moderate на 84d21a6       | [OK] исправлено: 0 vuln в тексте и факте |
+| README broken link                    | P2 во втором аудите         | [OK] не подтвердилось: ссылка валидна    |
+| Unicode-стрелки                       | не было в отчёте            | [TODO] новая: 17 + 5 строк               |
+| `.iml` project-name-locked            | не было в отчёте            | [TODO] новая: нет шага переименования    |
+| minimatch / Dependabot #26            | 9 moderate                  | [OK] закрыто: 0 vuln всех уровней        |
 
 ## 3. Проверка фактов по репозиторию (HEAD 385cb7f)
 
@@ -44,6 +44,7 @@
 | `check:style-consistency`  | прогон            | 33 mismatch -> green после фикса       |
 | `profiles_settings.xml`    | чтение            | файл на месте                          |
 | `npm audit --json`         | прогон            | 0 vuln всех уровней                    |
+| `SECURITY.md`              | чтение            | 0 vuln, дата 2026-11-09                |
 | `npm ls minimatch`         | прогон            | `11.0.5` во всех ветвях                |
 | `README.md` (25)           | `git show`        | ссылка валидна на 3 SHA                |
 | `test:e2e`                 | grep README       | только строка 55 (маркер)              |
@@ -66,16 +67,20 @@
 
 ### P1
 
-#### A1. [TODO] Обновить снапшот `npm audit` в `SECURITY.md`
+#### A1. [OK] Снапшот `npm audit` в `SECURITY.md` обновлён
 
 - Источник: второй аудит P1; сравнение аудитов №1.
 - Проблема: `SECURITY.md` (строки 34-52) датирован 2026-11-03 и говорит
   «0 high и 16 moderate», «minimatch 10.2.6 и пять копий 3.1.5».
 - Факт на 09.11.2026: `npm audit --json` -> 0 vuln всех уровней;
+  `npm audit --omit=dev --audit-level=high` -> 0 vuln;
   `npm ls minimatch` -> только `11.0.5`.
 - Причина: override `minimatch: ">=11.0.1"` от 08.11.2026 закрыл цепочку.
-- Действие: переписать раздел «npm audit»: 0 vuln по всем уровням, дата
-  снимка 2026-11-08, причина — override; убрать абзац про 16 moderate.
+- Сделано: раздел «npm audit» переписан на снимок 2026-11-09: полное дерево
+  0 vuln, production-гейт 0 vuln; убраны 16 moderate, `tolerable_risk` и
+  `eslint-config-prettier`. В «Overrides» добавлен пункт `minimatch`.
+- Проверено: `npm audit --json` -> 0; `npm audit --omit=dev` ->
+  `found 0 vulnerabilities`; `npm ls minimatch` -> `11.0.5` во всех ветвях.
 - Приёмка: цифры в `SECURITY.md` совпадают с `npm audit --json`.
 
 ### P2
