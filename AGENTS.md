@@ -148,6 +148,15 @@ the signal.
   the same commit `git tag -a vX.Y.Z -m "..."` and push the tag. The untagged chunk is
   re-dated on every regeneration, so the tag must point at the changelog commit, not
   later.
+- Теги и changelog: генератор ведёт себя по-разному с тегами и без — блок `Unreleased`
+  появляется только после создания тега. При release порядок пуша важен:
+  1. `git tag -a vX.Y.Z -m "..."` — тег на текущем HEAD;
+  2. `npm run changelog` -> коммит `docs: update changelog`;
+  3. `git push origin vX.Y.Z` — тег ПЕРВЫМ;
+  4. `git push origin main` — потом main.
+     CI-джоба `changelog` делает checkout с `fetch-tags: true`. Если тег ещё не
+     долетел при пуше `main`, джоба увидит репозиторий без тегов, перегенерирует
+     файл и упадёт на `git diff --exit-code CHANGELOG.md`.
 
 ## 7. Systematic Debugging & Work Cycle
 
