@@ -12,6 +12,7 @@
 - **check-templates:** render into pid-unique dir to survive parallel runs ([45f242f](https://github.com/stsgs1980/webstorm-config/commit/45f242f9600e08ddcafd4f9caeb8ceaef9c749e6))
 - **check-templates:** render templates whose values contain '>' ([273ac68](https://github.com/stsgs1980/webstorm-config/commit/273ac68578767a30ff8dcef997176d6ee35609ed))
 - **check-templates:** stop swallowing tsc stderr and warn on unknown vars ([065c18c](https://github.com/stsgs1980/webstorm-config/commit/065c18cc1c7eaf06d076ac58224b5c81ccc17fed))
+- **docs:** add placeholder screenshot referenced from README.template.md ([23ee4aa](https://github.com/stsgs1980/webstorm-config/commit/23ee4aa549142af4fc0bfe7fce48a14f798dc2e1))
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **live-templates:** restore the missing context blocks ([23107d3](https://github.com/stsgs1980/webstorm-config/commit/23107d3290baeb9529aaffbb14544393202b2838))
