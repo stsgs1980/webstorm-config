@@ -173,7 +173,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 ## 8. Анализ кода при коммите (рекомендуется)
 
-Путь: `Commit tool window (Alt+0) -> Settings (⚙) -> Commit Checks -> Analyze code`
+Путь: `Commit tool window (Alt+0) -> Settings -> Commit Checks -> Analyze code`
 
 Включите **Analyze code** и выберите профиль **Project Default**.
 
@@ -226,7 +226,7 @@ WebStorm ложно подсвечивает `\p{Extended_Pictographic}` как 
 
 При форке: переименуйте `.idea/webstorm-config.iml` в `.idea/<ваш-проект>.iml` и
 замените имя файла в `.idea/modules.xml` (строка `<module fileurl=...>`), иначе
-стaraя ссылка останется мёртвой, а WebStorm создаст второй `.iml`.
+старая ссылка останется мёртвой, а WebStorm создаст второй `.iml`.
 
 ### Профили инспекций: проект vs IDE
 
@@ -241,10 +241,10 @@ WebStorm хранит профили инспекций на двух уровн
 Если хотите, чтобы правила этого репозитория действовали во всех проектах
 в вашей WebStorm, скопируйте проектный профиль в IDE:
 
-`Settings → Editor → Inspections → Project Default → Show Scheme Actions → Copy to IDE`
+`Settings -> Editor -> Inspections -> Project Default -> Show Scheme Actions -> Copy to IDE`
 
 Это настройка вашей локальной IDE, она не попадёт в git и не перенесётся на
-другую машину. Дляチーム разработки правила живут в git через
+другую машину. Для командной разработки правила живут в git через
 `.idea/inspectionProfiles/`.
 
 Личное (`workspace.xml`, локальные вотчеры, IDE-профили) в git не попадает.
