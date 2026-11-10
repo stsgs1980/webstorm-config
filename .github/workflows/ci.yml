@@ -26,10 +26,9 @@ jobs:
       - run: npm run lint
       # Formatting rules must stay off: Prettier owns formatting in this repo.
       - run: npm run lint:prettier-conflicts
-      # Advisory lane: metrics report candidates for a responsibility check,
-      # a warning here must not fail the build.
+      # Metrics gate: a warning here fails the build. Thresholds:
+      # complexity 15, function 60 lines, params 4, depth 4.
       - run: npm run lint:metrics
-        continue-on-error: true
       - run: npm run typecheck
       - run: npm run check:file-length
       - run: npm run check:docs
@@ -86,9 +85,9 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:prettier-conflicts
-      # Advisory lane, same as on Linux: a warning must not fail the job.
+      # Metrics gate: a warning here fails the build. Thresholds:
+      # complexity 15, function 60 lines, params 4, depth 4.
       - run: npm run lint:metrics
-        continue-on-error: true
       - run: npm run typecheck
       - run: npm run lint:css
       - run: npm run lint:md

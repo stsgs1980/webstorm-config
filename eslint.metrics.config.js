@@ -1,7 +1,7 @@
 // noinspection ES6UnusedImports,NpmUsedModulesInstalled,ES6UnusedDefaultExport
-// Advisory metrics lane: run via `npm run lint:metrics`, never part of `npm run lint`,
-// pre-commit or CI gates. A warning here does not fail the run: metrics answer
-// "where is the code worth a responsibility check", they do not forbid anything.
+// Metrics gate: run via `npm run lint:metrics`, part of CI `lint` and
+// `windows` jobs. A warning here fails the run: metrics answer
+// "where is the code worth a responsibility check" and now enforce it.
 // Plain Node file: TS annotations are not parseable there (see eslint.config.js).
 import tsParser from "@typescript-eslint/parser";
 
