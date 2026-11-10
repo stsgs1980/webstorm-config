@@ -15,6 +15,12 @@
 
 ## Overview
 
+![Project screenshot](docs/screenshots/project-screenshot.png)
+
+> Положите скриншот основного экрана проекта в `docs/screenshots/project-screenshot.png`
+> (ширина до 1200 px, формат PNG/WebP). Если скриншота нет — удалите строку с `![...]`
+> и этот блок `>`.
+
 Краткое описание проекта, его цели и решаемые задачи.
 
 ## Table of Contents
