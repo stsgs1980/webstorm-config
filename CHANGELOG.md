@@ -25,6 +25,7 @@
 - **lint:** type-aware promises layer (projectService, no-floating/misused-promises) ([5cd6dfb](https://github.com/stsgs1980/webstorm-config/commit/5cd6dfb085b5e377a1dcdf127c994e8308717655))
 - **scripts:** exempt generated and vendored paths with reasons ([2a13c6d](https://github.com/stsgs1980/webstorm-config/commit/2a13c6dc7c8a61a89baee1be09eab9e93fc512bc))
 - **scripts:** file-length escape hatch, barrel detection, unified exemptions ([d124adc](https://github.com/stsgs1980/webstorm-config/commit/d124adc477253d9e81b0adecde75ff8cbd08c72b))
+- **scripts:** restore IDE-level settings via npm run sync:ide ([1e02db9](https://github.com/stsgs1980/webstorm-config/commit/1e02db92b2d3319d7db2b80516912a84e1ca8237))
 - **scripts:** verify live templates render clean (check-templates) ([3307062](https://github.com/stsgs1980/webstorm-config/commit/33070623bd51188c9d3b4c4d82c61a7f5ed6b4e8))
 
 # 1.0.0 (2026-10-18)
