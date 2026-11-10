@@ -98,6 +98,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, а�
 | `npm run check:file-length`       | Лимит 250 строк                                       |
 | `npm run check:style-consistency` | Согласованность .editorconfig/.prettierrc/Project.xml |
 | `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc                     |
+| `npm run sync:ide`                | Восстановление IDE-профиля и схемы из эталона         |
 | `npm run lint:metrics`            | Метрики (advisory)                                    |
 | `npm run changelog`               | Пересборка `CHANGELOG.md`                             |
 | `npm test`                        | Vitest (пустой набор - ошибка)                        |

@@ -191,6 +191,8 @@ actually exist there.
 - `npm run check:style-consistency` - согласованность .editorconfig/.prettierrc/Project.xml
 - `npm run check:templates` - live templates renderer (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
+- `npm run sync:ide` - restore IDE-level `webstorm-config` scheme and inspection
+  profile from `ide-reference/` when WebStorm (or Settings Sync) overwrites them.
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
   `docs/markdown.md` (Markdown style), `docs/architecture.md` (module boundaries),
