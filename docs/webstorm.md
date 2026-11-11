@@ -307,6 +307,19 @@ XML-файлы там это склад. Импорт: откройте нужн
 - TypeScript 7: проект держит TS 5.9. IDE 2026.2+ открывает TS 7-проекты через
   LSP без миграции, но typescript-eslint требует `<6.1`, поэтому мажор
   заблокирован в dependabot - это осознанно.
+- ESLint 10: `eslint-plugin-react` и `eslint-plugin-jsx-a11y` ещё не выпустили
+  версий с ESLint 10 в peer-диапазоне, поэтому peer переопределён через
+  `overrides` в `package.json`. Из-за этого версия React в `eslint.config.js`
+  задана явно (`settings.react.version`), а не `detect`: путь определения
+  версии зовёт `context.getFilename()`, который ESLint 10 удалил, и правило
+  падает с `TypeError` при загрузке. Синхронно с версией React нужно править
+  и эту настройку.
+- Stylelint 18: `stylelint-config-standard-scss` ещё не выпустил версии с
+  `stylelint@^18` в peer-диапазоне, поэтому оба peer-диапазона
+  переопределены через `overrides`. Вложенный `stylelint-config-standard`
+  приведён к `$stylelint-config-standard`, иначе scss-конфиг тянет свою
+  копию `stylelint-config-standard@40` с правилом
+  `declaration-block-single-line-max-declarations`, удалённым в Stylelint 18.
 - Chrome Connect и скилл `@Chrome` (2026.3): агент может открыть браузер и
   проверить UI; шаблону без приложения шаг не нужен.
 - Git Worktree UX (IJPL-258594): хуки экспортируют `GIT_DIR`, поэтому тесты

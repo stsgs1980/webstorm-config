@@ -97,7 +97,13 @@ export default [
       "unicode-policy": unicodePolicy,
     },
     settings: {
-      react: { version: "detect" },
+      // An explicit version, not "detect": the detection path calls
+      // context.getFilename(), which ESLint 10 removed, so "detect" throws
+      // a TypeError while the rule loads. eslint-plugin-react 7.37.5 has no
+      // ESLint 10 release yet (jsx-eslint/eslint-plugin-react#4022 is open
+      // and does not fix this path), so the version is pinned here. Bump it
+      // together with the react dependency.
+      react: { version: "19.3" },
     },
     rules: {
       "unicode-policy/emoji": "error",

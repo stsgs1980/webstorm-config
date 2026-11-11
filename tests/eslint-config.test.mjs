@@ -120,6 +120,54 @@ describe("eslint-config prettier compatibility", () => {
   });
 });
 
+describe("eslint-config react rules under ESLint 10", () => {
+  /**
+   * Lint a real .tsx fixture: the type service resolves the file on disk
+   * through tsconfig, so a virtual path cannot exercise the .tsx scope.
+   * @param {string} code - fixture source
+   * @param {string} name - fixture file name
+   * @returns {Promise<string[]>} rule ids reported for the fixture
+   */
+  const lintTsxFixture = async (code, name) => {
+    const dir = join(REPO, "dev", "eslint-tsx-fixtures");
+    const path = join(dir, name);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(
+      join(dir, "tsconfig.json"),
+      `${JSON.stringify({ extends: "../../tsconfig.json", include: ["**/*.tsx"], exclude: [] }, null, 2)}\n`,
+    );
+    writeFileSync(path, code);
+    try {
+      const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });
+      const results = await eslint.lintFiles([path]);
+      return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  };
+
+  it("версия React задана явно, а не detect", { timeout: 120000 }, async () => {
+    const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO });
+    const config = await eslint.calculateConfigForFile(join(REPO, "src/app.tsx"));
+    const version = config.settings?.react?.version;
+    // "detect" resolves the React version through context.getFilename(),
+    // which ESLint 10 removed: the rule then throws a TypeError while it
+    // loads. eslint-plugin-react has no ESLint 10 release yet.
+    assert.notEqual(version, "detect", 'react.version must not be "detect" under ESLint 10');
+    assert.equal(typeof version, "string", `expected a string version, got: ${JSON.stringify(version)}`);
+  });
+
+  it("React-правила грузятся без TypeError", { timeout: 120000 }, async () => {
+    const rules = await lintTsxFixture("export const App = (): JSX.Element => <div>text</div>;\n", "app.tsx");
+    assert.ok(!rules.includes("parse-error"), `unexpected parse error, got: ${rules.join(", ")}`);
+  });
+
+  it("jsx-a11y правило срабатывает на .tsx", { timeout: 120000 }, async () => {
+    const rules = await lintTsxFixture('export const Img = (): JSX.Element => <img src="a.png" />;\n', "img.tsx");
+    assert.ok(rules.includes("jsx-a11y/alt-text"), `expected alt-text, got: ${rules.join(", ")}`);
+  });
+});
+
 describe("eslint-config type-aware promises", () => {
   /**
    * Lint a real .ts fixture: the type service resolves the file on disk
