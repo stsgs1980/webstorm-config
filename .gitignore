@@ -54,6 +54,9 @@ coverage/
 # JetBrains Air session data
 .awb/
 
+# IDE assistant: machine-generated local profile, not repository content.
+.aiassistant/rules/active-profile.json
+
 # OS files
 .DS_Store
 Thumbs.db
