@@ -350,6 +350,30 @@ git diff .idea/codeStyles/Project.xml
 обновите глобальную схему из проектного `Project.xml` либо выберите схему
 `Project` в `Settings -> Editor -> Code Style`.
 
+### Рабочие зоны: почему `tsconfig` не использует `**/*.ts`
+
+Репозиторий содержит служебные каталоги - `drafts/`, `coverage/`, `dev/`,
+`.superpowers/`, `.opencode/`, `.agents/`, `.awb/`. В них попадают отчёты,
+покрытие и состояние IDE-агента. Ни один из них не является частью проекта,
+поэтому все инструменты их игнорируют.
+
+Раньше `tsconfig.json` включал `**/*.ts`, и компилятор подхватывал любой
+временный файл из этих каталогов. Тогда `npm run typecheck` и pre-push хук
+падали с ошибкой в чужом файле. Сейчас `include` перечисляет корни явно:
+
+```json
+"include": ["src", "server", "scripts", "tests", "vitest.config.ts"]
+```
+
+Форк получает те же правила: его исходники лежат в `src/` или `server/`, оба
+каталога в списке.
+
+Гейт `npm run check:workspace-zones` следит, чтобы списки игнорируемых зон у
+`.gitignore`, `.prettierignore`, `.stylelintignore`, `eslint.config.js` и
+`tsconfig` не разошлись. Если зона появилась в одном списке и пропала из
+другого, гейт падает с именем зоны и списком инструментов, которые её не
+игнорируют.
+
 ## Согласованность IDE и CI
 
 ```text
@@ -380,6 +404,7 @@ git push         ->  typecheck + тесты (pre-push)
 | Prod-аудит зависимостей (high+)                        | `.github/workflows/ci.yml`              | CI                |
 | React-компонент 200 строк; 3+ `useState`; сложность 15 | пороги-сигналы                          | ревью             |
 | Согласованность .editorconfig/.prettierrc/Project.xml  | `scripts/check-style-consistency.ts`    | commit + CI       |
+| Рабочие зоны игнорируются всеми инструментами          | `scripts/check-workspace-zones.ts`      | CI                |
 | `no-console`: приложение error, скрипты/сервер off     | `eslint.config.js`                      | IDE + commit + CI |
 | Вложенность функций (порог 4)                          | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 

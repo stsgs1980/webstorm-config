@@ -4,6 +4,12 @@ dist/
 build/
 out/
 dev/
+drafts/
+.idea/
+.superpowers/
+.opencode/
+.agents/
+.awb/
 .next/
 .nuxt/
 .svelte-kit/

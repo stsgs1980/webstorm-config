@@ -3,8 +3,13 @@ dist/
 build/
 coverage/
 out/
+dev/
 .idea/
 drafts/
+.superpowers/
+.opencode/
+.agents/
+.awb/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock

@@ -47,6 +47,8 @@ export default [
       // Agent workspace: local state of the IDE agent, never committed.
       ".opencode/**",
       ".agents/**",
+      // JetBrains Air session data.
+      ".awb/**",
     ],
   },
   ...markdown.configs.recommended,

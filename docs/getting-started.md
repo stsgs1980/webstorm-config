@@ -198,6 +198,24 @@ vitest.config.ts
 `scripts/` нужен для `check:file-length` и `check:docs` из шага 5; без него эти
 команды в Verify упадут с `ENOENT`.
 
+`tsconfig.base.json` содержит только `compilerOptions` и `exclude`. Свой
+`tsconfig.json` создайте с явным списком корней, а не с глобом `**/*.ts`:
+
+```json
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+  },
+  "include": ["src", "server", "scripts", "tests", "vitest.config.ts"]
+}
+```
+
+Глоб подхватывает служебные файлы (отчёты в `drafts/`, покрытие в
+`coverage/`), и тогда `npm run typecheck` падает на чужом файле. Список
+корней расширяйте своими каталогами исходников.
+
 ### 2. Установите devDependencies
 
 ```bash
@@ -275,6 +293,7 @@ npm run format:check
 npm test
 npm run check:file-length
 npm run check:docs
+npm run check:workspace-zones
 npm audit --omit=dev --audit-level=high
 ```
 

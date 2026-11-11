@@ -14,5 +14,23 @@
     "noUnusedParameters": true,
     "noEmit": true
   },
-  "exclude": ["node_modules", "dist", "build", "dev"]
+  // The workspace zones every other tool already ignores. ESLint and Prettier
+  // skip drafts/ and coverage/, so the compiler must skip them too: a file
+  // that ESLint never sees must not fail the typecheck gate. The list must
+  // match WORKSPACE_ZONES in scripts/lib/workspace-zones.ts, and
+  // `npm run check:workspace-zones` verifies that it does.
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "out",
+    "dev",
+    "drafts",
+    "coverage",
+    ".idea",
+    ".superpowers",
+    ".opencode",
+    ".agents",
+    ".awb"
+  ]
 }
