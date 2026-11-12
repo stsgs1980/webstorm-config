@@ -330,13 +330,58 @@ XML-файлы там это склад. Импорт: откройте нужн
   открытии после обновления трекаемые `.idea/` меняются: схема code style
   дополняется языками, поэтому проверяйте `git diff` перед коммитом.
 
-### Глобальная схема code style и перезапись `Project.xml`
+### Два уровня настроек: проектный и глобальный
 
-WebStorm может хранить выбранную схему не в проекте, а в глобальном каталоге
-`%APPDATA%\JetBrains\WebStorm<версия>\codestyles\`. Если глобальная схема
-`webstorm-config` устарела, при сохранении проекта IDE запишет её содержимое в
-`.idea/codeStyles/Project.xml` и потеряет `USE_DOUBLE_QUOTES`,
-`ENFORCE_TRAILING_COMMA` и часть per-language опций.
+Одно и то же имя `webstorm-config` встречается в двух местах, и это главный
+источник путаницы. Различайте их по тому, где лежит файл:
+
+| Что                       | Где лежит                                      | Кто применяет      | В git |
+| ------------------------- | ---------------------------------------------- | ------------------ | ----- |
+| Схема стиля проекта       | `.idea/codeStyles/Project.xml`                 | этот репозиторий   | да    |
+| Профиль инспекций проекта | `.idea/inspectionProfiles/Project_Default.xml` | этот репозиторий   | да    |
+| Копия схемы               | `%APPDATA%\...\codestyles\webstorm-config.xml` | все проекты машины | нет   |
+| Копия профиля             | `%APPDATA%\...\inspection\webstorm-config.xml` | все проекты машины | нет   |
+
+В выпадающих списках IDE оба уровня называются одинаково, поэтому схема
+проекта видна как `Project` (или `Project Default`), а глобальные копии - как
+`webstorm-config`. Переключать проект на `webstorm-config` не нужно: в этом
+репозитории правильно оставить проектный уровень, иначе вы потеряете
+настройки, привязанные только к нему. В профиль инспекций проекта входит
+scope `generated_changelog`, который глушит проверки в сгенерированном
+`CHANGELOG.md`; в глобальной копии его нет.
+
+Глобальные копии нужны, чтобы другие проекты на этой машине наследовали тот
+же стиль. Они должны быть производными от репозитория, а не хранилищем:
+`ide-reference/` - эталон, `npm run sync:ide` восстанавливает копии по нему.
+
+### Указатели, из-за которых глобальная копия попадает в проект
+
+Имя выбранной схемы IDE хранит не в файле схемы, а в указателях:
+
+```text
+%APPDATA%\JetBrains\WebStorm<версия>\options\project.default.xml
+  PREFERRED_SCHEME = webstorm-config
+  PROJECT_PROFILE = webstorm-config
+%APPDATA%\JetBrains\WebStorm<версия>\codestyles\codeStyleConfig.xml
+  PREFERRED_PROJECT_CODE_STYLE = webstorm-config
+```
+
+Пока такой указатель жив, IDE при сохранении проекта записывает глобальную
+копию в `.idea/codeStyles/Project.xml`. Если копия устарела, проект теряет
+`USE_DOUBLE_QUOTES`, `ENFORCE_TRAILING_COMMA` и часть per-language опций -
+ровно тот случай, что разбирался в аудите (`docs/audit-recommendations.md`,
+A17).
+
+Гейт `npm run check:ide-state` проверяет всё это разом и падает с точной
+причиной:
+
+- глобальные копии совпадают с `ide-reference/` (иначе `npm run sync:ide`);
+- каждый указатель называет существующую схему;
+- проектные файлы в `.idea/` не изменены против HEAD.
+
+Гейт идёт в pre-push, поэтому затирание обнаруживается локально, а не в CI.
+На машине без WebStorm IDE-проверки пропускаются, и остаются только
+проверки репозитория.
 
 Проверка перед коммитом:
 
@@ -405,6 +450,7 @@ git push         ->  typecheck + тесты (pre-push)
 | React-компонент 200 строк; 3+ `useState`; сложность 15 | пороги-сигналы                          | ревью             |
 | Согласованность .editorconfig/.prettierrc/Project.xml  | `scripts/check-style-consistency.ts`    | commit + CI       |
 | Рабочие зоны игнорируются всеми инструментами          | `scripts/check-workspace-zones.ts`      | CI                |
+| Схемы и указатели IDE совпадают с репозиторием         | `scripts/check-ide-state.ts`            | push + CI         |
 | `no-console`: приложение error, скрипты/сервер off     | `eslint.config.js`                      | IDE + commit + CI |
 | Вложенность функций (порог 4)                          | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 

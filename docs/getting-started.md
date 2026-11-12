@@ -294,6 +294,7 @@ npm test
 npm run check:file-length
 npm run check:docs
 npm run check:workspace-zones
+npm run check:ide-state
 npm audit --omit=dev --audit-level=high
 ```
 

@@ -35,6 +35,7 @@ jobs:
       - run: npm run check:templates
       - run: npm run check:style-consistency
       - run: npm run check:workspace-zones
+      - run: npm run check:ide-state
       - run: npm run lint:css
       - run: npm run lint:md
       # Production dependencies only: dev-only advisories are accepted with a

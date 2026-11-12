@@ -71,6 +71,7 @@
     "check:templates": "node scripts/check-templates.ts",
     "check:style-consistency": "node scripts/check-style-consistency.ts",
     "check:workspace-zones": "node scripts/check-workspace-zones.ts",
+    "check:ide-state": "node scripts/check-ide-state.ts",
     "sync:ide": "node scripts/sync-ide-settings.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",

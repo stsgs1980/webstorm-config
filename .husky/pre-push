@@ -1,3 +1,5 @@
-# Гейты перед пушем: типы и тесты
+# Гейты перед пушем: типы, тесты и состояние IDE
 npm run typecheck
-npm test
+npm run test
+# Ловит затирание .idea/ WebStorm'ом до пуша, а не в CI.
+npm run check:ide-state
