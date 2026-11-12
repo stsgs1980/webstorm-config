@@ -172,7 +172,14 @@ export default [
     // snippets are virtual files that exist only in the processor, and the
     // type service cannot resolve a file that is not on disk, so they are
     // excluded here and keep the syntax-only parserOptions of the main block.
-    files: ["**/*.ts", "**/*.tsx"],
+    files: [
+      "src/**/*.{ts,tsx}",
+      "server/**/*.{ts,tsx}",
+      "scripts/**/*.{ts,tsx}",
+      "tests/**/*.{ts,tsx}",
+      "dev/**/*.{ts,tsx}",
+      "vitest.config.ts",
+    ],
     ignores: ["**/*.md/*"],
     languageOptions: {
       parser: tsParser,

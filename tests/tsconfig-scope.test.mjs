@@ -1,6 +1,6 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
 import { fileURLToPath, URL } from "node:url";
@@ -82,5 +82,19 @@ describe("tsconfig program scope", () => {
       files.some((file) => file.startsWith("scripts/")),
       `expected scripts/ in the program, got: ${files.join(", ")}`,
     );
+  });
+  it("type-aware scope ESLint покрывает те же корни, что и программа tsc", () => {
+    const eslintConfig = readFileSync(join(REPO, "eslint.config.js"), "utf8");
+    // The type-aware block matches the roots of the tsconfig program. A file
+    // outside them reaches the type service, which then fails to parse it
+    // with "was not found by the project service" instead of linting it.
+    const roots = [...eslintConfig.matchAll(/"([\w./-]+\/\*\*\/\*\.\{ts,tsx\})"/g)].map((match) => match[1]);
+    assert.ok(roots.length > 0, "expected a type-aware files entry in eslint.config.js");
+    for (const root of ["src/", "server/", "scripts/", "tests/"]) {
+      assert.ok(
+        roots.some((entry) => entry.startsWith(root)),
+        `expected ${root} in the type-aware scope, got: ${roots.join(", ")}`,
+      );
+    }
   });
 });
