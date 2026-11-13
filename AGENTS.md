@@ -207,8 +207,13 @@ actually exist there.
 - `npm run check:style-consistency` - согласованность .editorconfig/.prettierrc/Project.xml
 - `npm run check:templates` - live templates renderer (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
-- `npm run sync:ide` - restore IDE-level `webstorm-config` scheme and inspection
-  profile from `ide-reference/` when WebStorm (or Settings Sync) overwrites them.
+- `npm run gen:ide-reference` - build `generated/ide-reference/` from `.idea/`
+  (the single hand-edit source) after every `.idea/` change; commit both.
+- `npm run sync:ide` - deploy `generated/ide-reference/` to the machine and
+  write the scheme pointers when WebStorm (or Settings Sync) overwrites them.
+- `npm run check:ide-state` - verify reference freshness against `.idea/`,
+  machine bytes against the reference, pointer values, and the absent phantom
+  file. Machine scheme names carry the `*-ide` suffix (`webstorm-config-ide`).
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
   `docs/markdown.md` (Markdown style), `docs/architecture.md` (module boundaries),

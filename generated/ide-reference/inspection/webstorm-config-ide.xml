@@ -1,5 +1,5 @@
 <profile version="1.0">
-  <option name="myName" value="webstorm-config" />
+  <option name="myName" value="webstorm-config-ide" />
   <inspection_tool class="ConsistentTypeImports" enabled="true" level="WARNING" enabled_by_default="true" />
   <inspection_tool class="CyclomaticComplexityJS" enabled="true" level="WARNING" enabled_by_default="true">
     <option name="m_limit" value="15" />
@@ -39,7 +39,7 @@
   </inspection_tool>
   <inspection_tool class="Stylelint" enabled="true" level="ERROR" enabled_by_default="true" />
   <inspection_tool class="TrailingSpacesInProperty" enabled="true" level="WARNING" enabled_by_default="true" />
-  <inspection_tool class="TypeScriptExplicitMemberType" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="TypeScriptExplicitMemberType" enabled="true" level="WEAK WARNING" enabled_by_default="false" />
   <inspection_tool class="TypeScriptMissingAugmentationImport" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   <inspection_tool class="TypeScriptStrictTypeCheckings" enabled="true" level="ERROR" enabled_by_default="true" />
   <inspection_tool class="UnusedImports" enabled="true" level="WARNING" enabled_by_default="true" />

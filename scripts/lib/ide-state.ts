@@ -6,9 +6,10 @@
  * The machine keeps two levels of the same settings:
  * - `%APPDATA%/JetBrains/WebStorm<version>/codestyles|inspection/` holds the
  *   named schemes, copied from the repository so other projects inherit them.
- * - `options/project.default.xml` and `codestyles/codeStyleConfig.xml` hold
- *   the pointers that select those schemes. A stale pointer is what made
- *   WebStorm overwrite the project file with an outdated global scheme.
+ * - `options/project.default.xml` and `options/editor.xml` hold the pointers
+ *   that select those schemes. A stale pointer is what made WebStorm overwrite
+ *   the project file with an outdated global scheme; the phantom
+ *   `codestyles/codeStyleConfig.xml` would do the same for new projects.
  */
 
 import { join } from "node:path";
@@ -20,7 +21,7 @@ export const SCHEME_GROUPS = ["codestyles", "inspection"] as const;
 export type SchemeGroup = (typeof SCHEME_GROUPS)[number];
 
 /** The scheme name used for both the code style and the inspection profile. */
-export const SCHEME_NAME = "webstorm-config";
+export const SCHEME_NAME = "webstorm-config-ide";
 
 /** File inside a scheme group that holds the named scheme. */
 export const SCHEME_FILE = `${SCHEME_NAME}.xml`;
@@ -90,7 +91,19 @@ export const readOptionValue = (content: string, optionName: string): string | n
 };
 
 /**
- * List the pointer settings that select a named scheme.
+ * Read an attribute of a component element from an XML settings file.
+ * @param content - file content
+ * @param component - value of the component `name` attribute
+ * @param attribute - attribute to read
+ * @returns the attribute value, or null when the attribute is absent
+ */
+export const readComponentAttribute = (content: string, component: string, attribute: string): string | null => {
+  const pattern = new RegExp(`<component name="${component}"[^>]*\\s${attribute}="([^"]*)"`);
+  return pattern.exec(content)?.[1] ?? null;
+};
+
+/**
+ * List the option-based pointers that select a named scheme for new projects.
  * These are the settings that make WebStorm apply the global copy to a
  * project, so a stale pointer is what overwrites the project file.
  */
@@ -98,16 +111,25 @@ export const SCHEME_POINTERS = [
   {
     file: "options/project.default.xml",
     option: "PREFERRED_SCHEME",
-    group: "codestyles" as SchemeGroup,
+    owner: "ProjectCodeStyleConfiguration",
   },
   {
     file: "options/project.default.xml",
     option: "PROJECT_PROFILE",
-    group: "inspection" as SchemeGroup,
-  },
-  {
-    file: "codestyles/codeStyleConfig.xml",
-    option: "PREFERRED_PROJECT_CODE_STYLE",
-    group: "codestyles" as SchemeGroup,
+    owner: "InspectionProjectProfileManager",
   },
 ] as const;
+
+/** Attribute-based pointer selecting the inspection profile in `options/editor.xml`. */
+export const EDITOR_POINTER = {
+  file: "options/editor.xml",
+  component: "DaemonCodeAnalyzerSettings",
+  attribute: "profile",
+} as const;
+
+/**
+ * Machine file that must not exist: it re-points new projects at the global
+ * scheme instead of the project-level one, which is how WebStorm ended up
+ * overwriting `.idea/codeStyles/Project.xml` with an outdated copy.
+ */
+export const PHANTOM_FILE = "codestyles/codeStyleConfig.xml";

@@ -1,18 +1,18 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { afterEach, describe, it } from "vitest";
+import { EDITOR_POINTER, PHANTOM_FILE, SCHEME_FILE, SCHEME_NAME } from "../scripts/lib/ide-state.ts";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/sync-ide-settings.ts", import.meta.url));
 const REPO = fileURLToPath(new URL("..", import.meta.url));
 const GROUPS = ["codestyles", "inspection"];
-const FILE_NAME = "webstorm-config.xml";
 
 /** Temp directories created by the current test, removed in afterEach. */
 const tempDirs = [];
@@ -38,14 +38,37 @@ const run = (args) => {
 };
 
 /**
- * Canonical reference bytes for a group, straight from the repository.
- * @param {string} group - ide-reference sub-directory (codestyles, inspection)
+ * Canonical reference bytes for a group, from the generated repository reference.
+ * @param {string} group - generated/ide-reference sub-directory (codestyles, inspection)
  * @returns {Buffer}
  */
-const referenceBytes = (group) => readFileSync(join(REPO, "ide-reference", group, FILE_NAME));
+const referenceBytes = (group) => readFileSync(join(REPO, "generated", "ide-reference", group, SCHEME_FILE));
 
 /**
- * Create a fixture WebStorm directory with per-group file contents.
+ * Correct content of `options/project.default.xml` pointer values.
+ * @returns {string}
+ */
+const correctProjectOptions = () =>
+  `<application>\n  <component name="ProjectManager">\n    <defaultProject>\n` +
+  `      <component name="InspectionProjectProfileManager">\n` +
+  `        <option name="PROJECT_PROFILE" value="${SCHEME_NAME}" />\n` +
+  `        <option name="USE_PROJECT_PROFILE" value="false" />\n` +
+  `        <version value="1.0" />\n` +
+  `      </component>\n` +
+  `      <component name="ProjectCodeStyleConfiguration">\n` +
+  `        <option name="PREFERRED_SCHEME" value="${SCHEME_NAME}" />\n` +
+  `      </component>\n    </defaultProject>\n  </component>\n</application>\n`;
+
+/**
+ * Correct content of `options/editor.xml` pointer attribute.
+ * @returns {string}
+ */
+const correctEditor = () =>
+  `<application>\n  <component name="${EDITOR_POINTER.component}" ${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`;
+
+/**
+ * Create a fixture WebStorm directory with per-group payload contents and
+ * correct pointers.
  * @param {string} base - fixture JetBrains base directory
  * @param {string} version - version suffix, e.g. "2026.3"
  * @param {(group: string) => string | Buffer} contentFor - content per group
@@ -55,8 +78,11 @@ const makeIdeDir = (base, version, contentFor) => {
   const dir = join(base, `WebStorm${version}`);
   for (const group of GROUPS) {
     mkdirSync(join(dir, group), { recursive: true });
-    writeFileSync(join(dir, group, FILE_NAME), contentFor(group));
+    writeFileSync(join(dir, group, SCHEME_FILE), contentFor(group));
   }
+  mkdirSync(join(dir, "options"), { recursive: true });
+  writeFileSync(join(dir, "options", "project.default.xml"), correctProjectOptions());
+  writeFileSync(join(dir, "options", "editor.xml"), correctEditor());
   return dir;
 };
 
@@ -73,7 +99,7 @@ const newBase = () => {
 const stale = "<stale />";
 
 describe("sync-ide-settings", () => {
-  it("check mode passes when the IDE files match the references", () => {
+  it("check mode passes when the IDE files and pointers match the references", () => {
     const base = newBase();
     makeIdeDir(base, "2026.3", (group) => referenceBytes(group));
     const result = run(["--check", "--jetbrains-root", base]);
@@ -96,21 +122,51 @@ describe("sync-ide-settings", () => {
     const result = run(["--jetbrains-root", base]);
     assert.equal(result.status, 0);
     for (const group of GROUPS) {
-      const target = join(base, "WebStorm2026.3", group, FILE_NAME);
+      const target = join(base, "WebStorm2026.3", group, SCHEME_FILE);
       assert.deepEqual(readFileSync(target), referenceBytes(group));
     }
     assert.match(result.stdout, /\[OK\] restored/);
   });
 
-  it("apply mode creates missing group directories", () => {
+  it("apply mode creates missing group directories and option files", () => {
     const base = newBase();
     mkdirSync(join(base, "WebStorm2026.3"), { recursive: true });
     const result = run(["--jetbrains-root", base]);
     assert.equal(result.status, 0);
     for (const group of GROUPS) {
-      const target = join(base, "WebStorm2026.3", group, FILE_NAME);
+      const target = join(base, "WebStorm2026.3", group, SCHEME_FILE);
       assert.deepEqual(readFileSync(target), referenceBytes(group));
     }
+    const dir = join(base, "WebStorm2026.3");
+    assert.equal(readFileSync(join(dir, "options", "project.default.xml"), "utf8"), correctProjectOptions());
+    assert.equal(readFileSync(join(dir, "options", "editor.xml"), "utf8"), correctEditor());
+  });
+
+  it("apply mode repairs drifted pointers and deletes the phantom file", () => {
+    const base = newBase();
+    const dir = makeIdeDir(base, "2026.3", (group) => referenceBytes(group));
+    writeFileSync(
+      join(dir, "options", "project.default.xml"),
+      correctProjectOptions().replaceAll(`value="${SCHEME_NAME}"`, 'value="Default"'),
+    );
+    writeFileSync(join(dir, "options", "editor.xml"), correctEditor().replaceAll(`="${SCHEME_NAME}"`, '="Default"'));
+    writeFileSync(join(dir, "codestyles", "codeStyleConfig.xml"), "<state />");
+    const result = run(["--jetbrains-root", base]);
+    assert.equal(result.status, 0);
+    assert.equal(readFileSync(join(dir, "options", "project.default.xml"), "utf8"), correctProjectOptions());
+    assert.equal(readFileSync(join(dir, "options", "editor.xml"), "utf8"), correctEditor());
+    assert.equal(existsSync(join(dir, PHANTOM_FILE)), false);
+  });
+
+  it("check mode reports pointer drift without writing", () => {
+    const base = newBase();
+    const dir = makeIdeDir(base, "2026.3", (group) => referenceBytes(group));
+    const driftedEditor = correctEditor().replaceAll(`="${SCHEME_NAME}"`, '="Default"');
+    writeFileSync(join(dir, "options", "editor.xml"), driftedEditor);
+    const result = run(["--check", "--jetbrains-root", base]);
+    assert.equal(result.status, 1);
+    assert.equal(readFileSync(join(dir, "options", "editor.xml"), "utf8"), driftedEditor);
+    assert.match(result.stdout, /\[FAIL\].*pointer/);
   });
 
   it("targets the newest WebStorm directory, comparing versions numerically", () => {
@@ -121,9 +177,9 @@ describe("sync-ide-settings", () => {
     const result = run(["--jetbrains-root", base]);
     assert.equal(result.status, 0);
     for (const group of GROUPS) {
-      assert.deepEqual(readFileSync(join(base, "WebStorm2026.10", group, FILE_NAME)), referenceBytes(group));
-      assert.equal(readFileSync(join(old, group, FILE_NAME), "utf8"), stale);
-      assert.equal(readFileSync(join(middle, group, FILE_NAME), "utf8"), stale);
+      assert.deepEqual(readFileSync(join(base, "WebStorm2026.10", group, SCHEME_FILE)), referenceBytes(group));
+      assert.equal(readFileSync(join(old, group, SCHEME_FILE), "utf8"), stale);
+      assert.equal(readFileSync(join(middle, group, SCHEME_FILE), "utf8"), stale);
     }
   });
 
