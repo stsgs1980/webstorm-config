@@ -24,6 +24,7 @@
 ### Features
 
 - **check-docs:** validate markdown links and anchors ([e28eddc](https://github.com/stsgs1980/webstorm-config/commit/e28eddced04e3d885e3c10a3872e7c786330a1a9))
+- **ide:** derive machine schemes from .idea via generated/ide-reference ([c7a1be8](https://github.com/stsgs1980/webstorm-config/commit/c7a1be8d5503f479bd626f37dd2dc5ddaad61587))
 - **ide:** gate the IDE state against the repository ([e898095](https://github.com/stsgs1980/webstorm-config/commit/e898095439f68f2db0ae7a8d7ee9562067fd468d))
 - **lint:** block exhaustive-deps, add advisory lint:metrics lane ([e9d4aeb](https://github.com/stsgs1980/webstorm-config/commit/e9d4aeb2cf304bb3ab9e9e0d4e5629d7e1bd89ed))
 - **lint:** no-console by path scopes (app error, server/scripts off) ([bd08ab3](https://github.com/stsgs1980/webstorm-config/commit/bd08ab33305d766729838131e2effd499754166d))
