@@ -44,7 +44,7 @@ coverage/
 !.idea/prettier.xml
 !.idea/vcs.xml
 !.idea/modules.xml
-!.idea/webstorm-config.iml
+!.idea/*.iml
 
 # OpenCode
 .agents/

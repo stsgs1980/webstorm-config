@@ -247,3 +247,5 @@ actually exist there.
   (vulnerability policy).
 - `docs/kickoff.md` is template-only: the starter prompt runs once, before the
   project exists. In a fork, delete it at Step 1 (getting-started.md).
+- `docs/audit-recommendations.md` is template-only too: it records the template
+  audits and is deleted at Step 1 (getting-started.md).

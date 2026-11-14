@@ -12,18 +12,23 @@
 3. Сбросьте `CHANGELOG.md` (история шаблона, не вашего проекта):
 
    ```bash
-   rm CHANGELOG.md
+   printf '%s\n' '<!-- markdownlint-disable -->' > CHANGELOG.md
    git add CHANGELOG.md
    git commit -m "chore: reset changelog for new project"
    ```
 
-4. Удалите `docs/kickoff.md`: это стартовый промт для шаблона, в новом проекте
-   он не нужен.
+   Файл должен содержать ровно эту строку. В проекте без тегов генератор
+   считает header-only чанк пустым и оставляет маркер без заголовка.
+
+4. Удалите `docs/kickoff.md` (стартовый промт шаблона) и
+   `docs/audit-recommendations.md` (журнал аудитов шаблона): в новом проекте
+   они не нужны. Закоммитьте удаление.
 
 5. Переименуйте `.idea/webstorm-config.iml` и поправьте `.idea/modules.xml`:
 
    ```bash
    mv .idea/webstorm-config.iml .idea/<ваш-проект>.iml
+   git add .idea
    ```
 
    В `.idea/modules.xml` замените `webstorm-config.iml` на `<ваш-проект>.iml`.

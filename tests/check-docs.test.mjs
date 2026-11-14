@@ -241,4 +241,18 @@ describe("check-docs", () => {
     assert.equal(result.status, 0);
     assert.match(result.stdout, /\[OK\] check-docs: 2 docs files consistent with configs\./);
   });
+
+  it("шаблонные пути не требуют существования после форка", () => {
+    const doc =
+      "# Форк\n\n`docs/kickoff.md`, `docs/audit-recommendations.md` и " +
+      "`.idea/webstorm-config.iml` удаляются или переименовываются.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/fork.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("угловые скобки в inline-пути - placeholder, а не контракт", () => {
+    const doc = "# Форк\n\nЗамените `.idea/<ваш-проект>.iml` на своё имя.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/fork.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
 });

@@ -29,6 +29,14 @@ const PATH_PREFIXES = [
   "eslint-parsers/",
 ];
 
+/**
+ * Paths that exist only in the template and are removed or renamed by Step 1
+ * of the fork checklist. Historical references stay in AGENTS.md and
+ * docs/webstorm.md, but a fork must not fail the docs gate because the paths
+ * are gone: the removal is the instruction, not a broken link.
+ */
+const TEMPLATE_ONLY_PATHS = new Set([".idea/webstorm-config.iml", "docs/audit-recommendations.md", "docs/kickoff.md"]);
+
 /** `npm run <name>` references inside docs; digits occur in names like test:e2e. */
 const SCRIPT_PATTERN = /npm run ([a-z0-9:.-]+)/g;
 
@@ -155,8 +163,9 @@ function checkPaths(file: string, text: string, failures: string[]): void {
     let path = match[1];
     const at = match.index ?? 0;
 
-    if (path.includes("$") || path.includes("*")) {
-      // Template variables and globs are not concrete paths.
+    if (path.includes("$") || path.includes("*") || path.includes("<") || path.includes(">")) {
+      // Template variables, globs, and angle-bracket placeholders are not
+      // concrete paths; Windows cannot even name a file with < or >.
       continue;
     }
     const anchor = path.indexOf("#");
@@ -164,6 +173,9 @@ function checkPaths(file: string, text: string, failures: string[]): void {
       path = path.slice(0, anchor);
     }
     if (!PATH_PREFIXES.some((prefix) => path.startsWith(prefix))) {
+      continue;
+    }
+    if (TEMPLATE_ONLY_PATHS.has(path)) {
       continue;
     }
     if (!existsSync(path) && !isGitIgnored(path)) {

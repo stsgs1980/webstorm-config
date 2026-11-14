@@ -17,6 +17,7 @@
 | [README.md](README.md)                                    | это шаблон      | Что это за шаблон            |
 | [README.template.md](README.template.md)                  | заменяет README | Какой README будет у проекта |
 | [kickoff.md](docs/kickoff.md)                             | удаляется       | Промт запуска настройки      |
+| [audit-recommendations.md](docs/audit-recommendations.md) | удаляется       | Журнал аудитов шаблона       |
 | [getting-started.md](docs/getting-started.md)             | да              | Шаги после форка             |
 | [webstorm.md](docs/webstorm.md)                           | да              | Что где в IDE                |
 | [webstorm-settings.md](docs/webstorm-settings.md)         | да              | Перенос настроек на машину   |
@@ -112,11 +113,9 @@ npm install
 1. Обновите `package.json`: `name`, `description`, `repository` (URL форка).
 2. `README.template.md` -> `README.md`, заполнить Overview / Features / Architecture
    и заменить плейсхолдеры `${PROJECT_NAME}`, `${DATE}`, `${GITHUB_USER}`.
-3. Удалить `CHANGELOG.md` (история шаблона) и `docs/kickoff.md` (стартовый промт):
-
-   ```bash
-   rm CHANGELOG.md docs/kickoff.md && git add -A && git commit -m "chore: reset template files"
-   ```
+3. Сбросить `CHANGELOG.md`, удалить `docs/kickoff.md` и
+   `docs/audit-recommendations.md`, переименовать `.idea/*.iml` - точные команды
+   и порядок в [docs/getting-started.md](docs/getting-started.md), Step 1.
 
 4. WebStorm — [docs/webstorm.md](docs/webstorm.md).
 5. Фреймворк, `src/`, скрипты — [docs/getting-started.md](docs/getting-started.md) (Steps 2–5).
