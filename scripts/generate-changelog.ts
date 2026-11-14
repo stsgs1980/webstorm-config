@@ -86,6 +86,18 @@ function stableHeader(text: string): string {
 }
 
 /**
+ * Replace the generated top-level heading with the stable "# Unreleased" one.
+ * An untagged project makes the writer title the chunk with the package version
+ * and the generation date; the date differs on every run, and the CI freshness
+ * check compares bytes, so it must not survive.
+ * @param text - generated chunk
+ * @returns chunk with a stable "# Unreleased" heading
+ */
+function unreleasedHeader(text: string): string {
+  return text.replace(/^# [^\n]*/, "# Unreleased");
+}
+
+/**
  * Heading identity of a changelog block: "unreleased" for both heading forms,
  * the version for a release, null for any other line.
  * @param line - one line of markdown
@@ -139,6 +151,11 @@ try {
   const generated = execSync(CHANGELOG_COMMAND, { encoding: "utf8" });
   // Convert asterisk to dash for consistency with prettier.
   let chunk = stableHeader(generated).replace(/^\* /gm, "- ").trim();
+  if (!hasTags) {
+    // No release exists yet, and the writer dates the version heading with the
+    // run day: normalize it so a fork does not go red the next day.
+    chunk = unreleasedHeader(chunk);
+  }
   // The writer always renders the title, so a header-only chunk is not empty:
   // release mode must look for section headings, not for an empty string.
   const hasSections = /^### /m.test(chunk);

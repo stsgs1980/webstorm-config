@@ -241,6 +241,22 @@ describe("generate-changelog", () => {
     }
   });
 
+  it("в проекте без тегов заменяет версионный заголовок с датой на Unreleased", () => {
+    const repo = makeRepo();
+    const shim = makeGeneratedNpx("# 1.0.0 (2026-11-14)\n\n### Features\n\n- new\n");
+    try {
+      const result = runWithShim(repo, shim);
+      assert.equal(result.status, 0);
+      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      assert.match(content, /^# Unreleased$/m);
+      assert.doesNotMatch(content, /2026-11-14/);
+      assert.match(content, /new/);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(shim, { recursive: true, force: true });
+    }
+  });
+
   it("повторный прогон с тем же чанком заменяет блок, а не дублирует его", () => {
     const repo = makeTaggedRepo();
     const shim = makeGeneratedNpx(NEW_RELEASE_CHUNK);
@@ -392,19 +408,22 @@ describe("generate-changelog (real generator)", () => {
     }
   });
 
-  it("свежий репозиторий с feat получает версию, а не Unreleased", { timeout: 180000 }, () => {
+  it("свежий репозиторий с feat получает заголовок без даты и не меняется повторно", { timeout: 180000 }, () => {
     const repo = makeLiveRepo({
       tag: null,
       message: "feat: initial feature",
       changelog: MARKDOWNLINT_DISABLE + "\n",
     });
     try {
-      const result = runScript(repo);
-      assert.equal(result.status, 0, result.stderr);
+      const first = runScript(repo);
+      assert.equal(first.status, 0, first.stderr);
       const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
-      assert.match(content, /^# 1\.0\.0 \(/m);
-      assert.doesNotMatch(content, /# Unreleased/);
+      assert.match(content, /^# Unreleased$/m);
+      assert.doesNotMatch(content, /\d{4}-\d{2}-\d{2}/, "дата генерации не должна попадать в файл");
       assert.match(content, /initial feature/);
+      const second = runScript(repo);
+      assert.equal(second.status, 0, second.stderr);
+      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), content);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
