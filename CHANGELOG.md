@@ -18,6 +18,7 @@
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **live-templates:** restore the missing context blocks ([23107d3](https://github.com/stsgs1980/webstorm-config/commit/23107d3290baeb9529aaffbb14544393202b2838))
+- **release:** derive version from tag and stabilize changelog headers ([3832489](https://github.com/stsgs1980/webstorm-config/commit/383248957c247d45d334ed4080a0eaadf6f7d45e))
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
 - **tsconfig:** scope the compiler program to explicit roots ([396c8c1](https://github.com/stsgs1980/webstorm-config/commit/396c8c1cc704f12286149b7f5e6a045e2d34f1a5))
 
