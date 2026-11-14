@@ -82,10 +82,13 @@ WebStorm часть из них **не подхватывает автомати
 
 Глобальная схема `webstorm-config-ide` лежит в
 `%APPDATA%\JetBrains\WebStorm<версия>\codestyles\` и генерируется из
-`Project.xml` командой `npm run gen:ide-reference`. Она выбрана схемой по
-умолчанию для новых проектов (`options\project.default.xml`,
-`PREFERRED_SCHEME=webstorm-config-ide`). Проект со своим `.idea/codeStyles`
-или `.editorconfig` её перекрывает.
+`Project.xml` командой `npm run gen:ide-reference`. В проекты она не
+подтягивается автоматически: указатель `PREFERRED_SCHEME` из
+`options\project.default.xml` IDE переносит в `.idea` нового проекта, но
+схему им не активирует - новые проекты стартуют на встроенной схеме Default
+(«По умолчанию ИСР») с автодетектом отступов (проба создания проекта
+14.11.2026). Стандарт доставляется в проект клоном `.idea` из шаблона или
+его собственным `.idea/codeStyles` / `.editorconfig`.
 
 > При необходимости схему можно перенести на другую машину или в глобальные
 > настройки IDE штатным экспортом из диалога Code Style.
@@ -341,7 +344,7 @@ XML-файлы там это склад. Импорт: откройте нужн
 | ------------------------- | -------------------------------------------------- | ------------------ | ----- |
 | Схема стиля проекта       | `.idea/codeStyles/Project.xml`                     | этот репозиторий   | да    |
 | Профиль инспекций проекта | `.idea/inspectionProfiles/Project_Default.xml`     | этот репозиторий   | да    |
-| Копия схемы               | `%APPDATA%\...\codestyles\webstorm-config-ide.xml` | все проекты машины | нет   |
+| Копия схемы               | `%APPDATA%\...\codestyles\webstorm-config-ide.xml` | вручную            | нет   |
 | Копия профиля             | `%APPDATA%\...\inspection\webstorm-config-ide.xml` | все проекты машины | нет   |
 
 В выпадающих списках IDE уровни различимы по имени: проектный виден как
@@ -358,7 +361,7 @@ scope `generated_changelog`, который глушит проверки в с�
 `npm run gen:ide-reference` собирает из него `generated/ide-reference/`,
 а `npm run sync:ide` разворачивает его на машину вместе с указателями.
 
-### Указатели, из-за которых глобальная копия попадает в проект
+### Указатели на глобальные копии
 
 Имя выбранной схемы IDE хранит не в файле схемы, а в указателях:
 
@@ -370,11 +373,19 @@ scope `generated_changelog`, который глушит проверки в с�
   DaemonCodeAnalyzerSettings profile = webstorm-config-ide
 ```
 
-Пока такой указатель жив, IDE при сохранении проекта записывает глобальную
-копию в `.idea/codeStyles/Project.xml`. Если копия устарела, проект теряет
-`USE_DOUBLE_QUOTES`, `ENFORCE_TRAILING_COMMA` и часть per-language опций -
-ровно тот случай, что разбирался в аудите (`docs/audit-recommendations.md`,
-A17).
+Роли указателей различаются (проба создания проекта 14.11.2026):
+
+- `editor.xml` - машинный профиль инспекций по умолчанию; действует на все
+  проекты без собственного профиля, включая новые.
+- `project.default.xml` - шаблон настроек для новых проектов; ESLint- и
+  Prettier-компоненты и указатель инспекций материализуются в `.idea`
+  нового проекта; `PREFERRED_SCHEME` тоже переносится, но схему стиля не
+  активирует.
+- Фантомный указатель `codestyles/codeStyleConfig.xml`
+  (`PREFERRED_PROJECT_CODE_STYLE`) удалён: с ним аудит связывал затирание
+  `.idea/codeStyles/Project.xml` глобальной копией при сохранении проекта
+  (`docs/audit-recommendations.md`, A17). Гейт проверяет отсутствие
+  фантома; с 13.11.2026 затираний не зафиксировано.
 
 Гейт `npm run check:ide-state` проверяет всё это разом и падает с точной
 причиной:
