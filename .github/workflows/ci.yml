@@ -112,6 +112,9 @@ jobs:
           # Release dates in CHANGELOG.md are anchored to git tags; without
           # them the date drifts to the run day and the diff check fails.
           fetch-tags: true
+      # A fork that deletes the file would leave the diff gate blind to the
+      # untracked regenerated copy; require it in the index before generating.
+      - run: git ls-files --error-unmatch CHANGELOG.md
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
