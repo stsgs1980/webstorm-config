@@ -18,16 +18,38 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          # commitlint needs the base commit of a PR or the previous main tip.
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # Merge commits are exempt; a tag push has no branch range to lint.
+      - name: Lint commit messages
+        if: github.event_name == 'pull_request' || startsWith(github.ref, 'refs/heads/')
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            FROM="${{ github.event.pull_request.base.sha }}"
+            TO="${{ github.event.pull_request.head.sha }}"
+          else
+            FROM="${{ github.event.before }}"
+            TO="${{ github.sha }}"
+            if [ "$FROM" = "0000000000000000000000000000000000000000" ]; then
+              FROM="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+            fi
+          fi
+          if [ "$FROM" = "$TO" ]; then
+            npx --no-install commitlint --last --verbose
+            exit 0
+          fi
+          npx --no-install commitlint --from "$FROM" --to "$TO" --verbose
       - run: npm run lint
       # Formatting rules must stay off: Prettier owns formatting in this repo.
       - run: npm run lint:prettier-conflicts
-      # Metrics gate: a warning here fails the build. Thresholds:
-      # complexity 15, function 60 lines, params 4, depth 4.
+      # Advisory metrics: warnings are surfaced for review and never fail the
+      # build (AGENTS.md §4.2). Thresholds live in eslint.metrics.config.js.
       - run: npm run lint:metrics
       - run: npm run typecheck
       - run: npm run check:file-length
@@ -87,8 +109,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run lint:prettier-conflicts
-      # Metrics gate: a warning here fails the build. Thresholds:
-      # complexity 15, function 60 lines, params 4, depth 4.
+      # Advisory metrics: warnings are surfaced for review and never fail the
+      # build (AGENTS.md §4.2). Thresholds live in eslint.metrics.config.js.
       - run: npm run lint:metrics
       - run: npm run typecheck
       - run: npm run lint:css
@@ -98,6 +120,8 @@ jobs:
       - run: npm run check:docs
       - run: npm run check:templates
       - run: npm run check:style-consistency
+      - run: npm run check:workspace-zones
+      - run: npm run check:ide-state
       - run: npm test
       - run: npm audit --omit=dev --audit-level=high
 

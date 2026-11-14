@@ -1,7 +1,7 @@
 // noinspection ES6UnusedImports,NpmUsedModulesInstalled,ES6UnusedDefaultExport
-// Metrics gate: run via `npm run lint:metrics`, part of CI `lint` and
-// `windows` jobs. A warning here fails the run: metrics answer
-// "where is the code worth a responsibility check" and now enforce it.
+// Advisory metrics: run via `npm run lint:metrics` in the CI `lint` and
+// `windows` jobs. Warnings are surfaced for review and never fail the run
+// (AGENTS.md `4.2): they answer "where is the code worth a responsibility check".
 // Plain Node file: TS annotations are not parseable there (see eslint.config.js).
 import tsParser from "@typescript-eslint/parser";
 
@@ -54,8 +54,7 @@ export default [
       parserOptions: { ecmaVersion: "latest", sourceType: "module", ecmaFeatures: { jsx: true } },
     },
     rules: {
-      // Thresholds from the anti-monolith section of .aiassistant/rules:
-      // signals to analyze, not barriers.
+      // Thresholds are review signals, not barriers (AGENTS.md §4.2).
       complexity: ["warn", 15],
       "max-lines-per-function": ["warn", { max: 60, skipBlankLines: true, skipComments: true }],
       "max-params": ["warn", { max: 4 }],

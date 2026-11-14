@@ -149,7 +149,10 @@ the signal.
 
 - Pre-commit hooks (Husky + lint-staged) must pass. `--no-verify` is allowed only when
   a hook fails for reasons unrelated to the change; state the reason in the commit
-  body. CI re-runs every check, so skipping locally never bypasses the gate.
+  body. CI re-runs every repository check that can run in CI, so skipping
+  locally never bypasses a gate; machine-level IDE checks stay local.
+- Commit messages are linted locally (`commit-msg`) and in CI on branch pushes and
+  pull requests; merge commits are exempt.
 - Git environment check: `git rev-parse --show-toplevel` must return this project's
   root. Git walks up the directory tree and takes the first valid `.git`, so a
   project placed inside another repository silently commits to that repository.
