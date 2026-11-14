@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -26,16 +26,49 @@ const MARKDOWNLINT_DISABLE = "<!-- markdownlint-disable -->";
 // generated from git only: the input path below never exists, and the
 // generator leaves it untouched.
 const CHANGELOG_INPUT = join(tmpdir(), `wsc-changelog-input-${process.pid}.md`);
-// -u prints the unreleased chunk, --stdout keeps it off the file system, and
-// --no-install never downloads a package behind the user's back.
-const CHANGELOG_COMMAND = `npx --no-install conventional-changelog -p angular -u --stdout -i "${CHANGELOG_INPUT}"`;
+const CONTEXT_FILE = join(tmpdir(), `wsc-changelog-context-${process.pid}.json`);
+// Only semver tags name releases; milestone tags such as post-ide-rename are
+// informational and must not switch the generator into release mode.
+const TAG_GLOB = "v[0-9]*";
 
 const previous = existsSync(CHANGELOG) ? readFileSync(CHANGELOG, "utf8").replace(/\r\n/g, "\n") : "";
 
-// With git tags present the chunk holds only commits since the newest tag;
+// With semver tags present the chunk holds only commits since the newest tag;
 // without tags the single chunk covers the whole history (fresh projects).
-const hasTags = execSync("git tag -l", { encoding: "utf8" }).trim().length > 0;
+const hasTags = execFileSync("git", ["tag", "-l", TAG_GLOB], { encoding: "utf8" }).trim().length > 0;
 
+/**
+ * Release version from the newest reachable semver tag. The tag, not
+ * package.json, names the release: a template package stays at 1.0.0 while
+ * releases advance. Reading the version here also keeps the "Unreleased"
+ * heading in sync when the tag differs from the package version.
+ * @returns version without the leading "v", or an empty string without tags
+ */
+function releaseVersion(): string {
+  if (!hasTags) {
+    return "";
+  }
+  try {
+    const tag = execFileSync("git", ["describe", "--tags", "--abbrev=0", "--match", TAG_GLOB], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    return tag.replace(/^v/, "");
+  } catch {
+    return "";
+  }
+}
+
+const version = releaseVersion();
+const contextFlag = version === "" ? "" : ` -c "${CONTEXT_FILE}"`;
+// -u prints the unreleased chunk, --stdout keeps it off the file system,
+// --no-install never downloads a package, and -c passes the tag version.
+const CHANGELOG_COMMAND = `npx --no-install conventional-changelog -p angular -u --stdout -i "${CHANGELOG_INPUT}"${contextFlag}`;
+
+rmSync(CONTEXT_FILE, { force: true });
+if (version !== "") {
+  writeFileSync(CONTEXT_FILE, JSON.stringify({ version }));
+}
 rmSync(DRAFT, { force: true });
 rmSync(CHANGELOG_INPUT, { force: true });
 
@@ -49,7 +82,7 @@ rmSync(CHANGELOG_INPUT, { force: true });
  * @returns chunk with a stable "# Unreleased" heading
  */
 function stableHeader(text: string): string {
-  return text.replace(/^# \[Unreleased\][^\n]*$/m, "# Unreleased");
+  return text.replace(/^# (?:\[Unreleased\]|Unreleased)[^\n]*$/m, "# Unreleased");
 }
 
 /**
@@ -63,7 +96,7 @@ function blockKey(line: string): string | null {
     return "unreleased";
   }
 
-  return /^# (\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)/.exec(line)?.[1] ?? null;
+  return /^# v?(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)/.exec(line)?.[1] ?? null;
 }
 
 /**
@@ -105,22 +138,26 @@ function withoutReplacedBlock(text: string, chunk: string): string {
 try {
   const generated = execSync(CHANGELOG_COMMAND, { encoding: "utf8" });
   // Convert asterisk to dash for consistency with prettier.
-  const chunk = stableHeader(generated).replace(/^\* /gm, "- ").trim();
-
-  // After the release tag every already-published commit sits in previous
-  // releases below, so an empty chunk means nothing to release: keep the
-  // committed file byte-for-byte to make the CI diff check idempotent.
-  if (hasTags && chunk === "") {
-    process.stdout.write("CHANGELOG.md is up to date.\n");
-    process.exit(0);
+  let chunk = stableHeader(generated).replace(/^\* /gm, "- ").trim();
+  // The writer always renders the title, so a header-only chunk is not empty:
+  // release mode must look for section headings, not for an empty string.
+  const hasSections = /^### /m.test(chunk);
+  if (!hasSections) {
+    if (hasTags) {
+      process.stdout.write("CHANGELOG.md is up to date.\n");
+      process.exit(0);
+    }
+    // A fresh untagged project has no released history: the file is just the
+    // markdownlint marker, not a "1.0.0" heading with today's date.
+    chunk = "";
   }
 
   let combined;
   if (hasTags) {
     // Tags are present: the regenerated block replaces its own previous copy
     // and keeps the released history below.
-    const previousBody = previous.startsWith(`${MARKDOWNLINT_DISABLE}\n`)
-      ? previous.slice(MARKDOWNLINT_DISABLE.length + 1).replace(/^\n+/, "")
+    const previousBody = previous.startsWith(MARKDOWNLINT_DISABLE)
+      ? previous.slice(MARKDOWNLINT_DISABLE.length).replace(/^\n+/, "")
       : previous;
     const rest = withoutReplacedBlock(previousBody, chunk).trim();
     combined = rest ? `${MARKDOWNLINT_DISABLE}\n\n${chunk}\n\n${rest}\n` : `${MARKDOWNLINT_DISABLE}\n\n${chunk}\n`;
@@ -134,11 +171,13 @@ try {
   execSync(`npx --no-install prettier --write --parser markdown ${DRAFT}`, { stdio: "inherit" });
 } catch (error) {
   rmSync(DRAFT, { force: true });
+  rmSync(CONTEXT_FILE, { force: true });
   process.stderr.write("Changelog generation failed; CHANGELOG.md was left untouched.\n");
   throw error;
 }
 
 renameSync(DRAFT, CHANGELOG);
+rmSync(CONTEXT_FILE, { force: true });
 
 const updated = readFileSync(CHANGELOG, "utf8").replace(/\r\n/g, "\n");
 

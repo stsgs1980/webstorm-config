@@ -7,6 +7,24 @@ point here instead of duplicating it.
 Related docs: `docs/markdown.md` (Markdown style), `docs/webstorm.md` (IDE setup),
 `docs/testing.md` (test conventions).
 
+## 0. Invariants
+
+These apply to every section below. A rule that cannot satisfy them is a defect
+of the rule, not of the reader.
+
+- I1 Single source of truth: a list, threshold, order, or inventory lives in
+  one place; every other mention is verified against it, never copied.
+- I2 A gate must be able to fail on its defect class. A check that cannot
+  fail is a report, not a gate, and must not be called one.
+- I3 A word in a doc equals the tool's behavior: "blocks" blocks, "advisory"
+  advises. If text and tool disagree, one of them is wrong.
+- I4 An instruction is verified by execution. Steps that break gates are a
+  defect of the instruction, not of the user.
+- I5 A known blind spot of a check is documented next to the check, not left
+  silent.
+- I6 What cannot be verified in this environment is marked [ENV-LOCKED] and
+  treated as a hypothesis, never stated as fact.
+
 ## 1. Language & Communication
 
 - Always respond in Russian.
@@ -143,20 +161,27 @@ the signal.
 - Changelog freshness: CI on main fails if unreleased `fix` / `feat` / `perf` /
   breaking commits are missing from the changelog; `chore` / `docs` / `ci` merges do
   not require an entry.
-- Release flow: run `npm run changelog`, commit as `docs: update changelog`, then tag
-  the same commit `git tag -a vX.Y.Z -m "..."` and push the tag. The untagged chunk is
-  re-dated on every regeneration, so the tag must point at the changelog commit, not
-  later.
-- Tags and changelog: the generator behaves differently with and without tags —
-  the `Unreleased` block appears only after a tag exists. Push order matters for a
-  release:
-  1. `git tag -a vX.Y.Z -m "..."` — tag the current HEAD;
-  2. `npm run changelog` -> commit `docs: update changelog`;
-  3. `git push origin vX.Y.Z` — tag FIRST;
-  4. `git push origin main` — then main.
-     The CI `changelog` job checks out with `fetch-tags: true`. If the tag has not
-     landed when `main` is pushed, the job sees a repository without tags,
-     regenerates the file and fails on `git diff --exit-code CHANGELOG.md`.
+- Release flow (single order; the tag anchors the release date):
+  1. `git tag -a vX.Y.Z -m "..."` on the current HEAD;
+  2. rename the `# Unreleased` heading to `# X.Y.Z (YYYY-MM-DD)` by hand:
+     the generator only maintains the unreleased chunk and never writes
+     release blocks;
+  3. `npm run changelog` - with the tag on HEAD the run is a no-op sanity
+     check; commit the renamed file as `docs: update changelog`;
+  4. `git push origin vX.Y.Z` - the tag first;
+  5. `git push origin main` - then main.
+     The CI `changelog` job checks out with `fetch-tags: true`; with the tag
+     on HEAD the regeneration exits early and keeps the file byte-for-byte.
+     Do not rename the heading before the tag exists: a pre-tag regeneration
+     would duplicate the release entries.
+- Version practice: the generator reads the release version from the newest
+  semver tag (`vX.Y.Z`), so `package.json` stays at 1.0.0 while this repo is a
+  settings template; bump it only when the repo becomes a consumable package,
+  together with a release. Both `# X.Y.Z` and `# vX.Y.Z` headings are accepted;
+  the repository style is `# X.Y.Z`.
+- Milestone tags (non-semver, e.g. `post-ide-rename`) are informational; the
+  generator ignores them; never use them for releases. Release block dates are
+  the release day chosen at rename time.
 
 ## 7. Systematic Debugging & Work Cycle
 
@@ -212,8 +237,9 @@ actually exist there.
 - `npm run sync:ide` - deploy `generated/ide-reference/` to the machine and
   write the scheme pointers when WebStorm (or Settings Sync) overwrites them.
 - `npm run check:ide-state` - verify reference freshness against `.idea/`,
-  machine bytes against the reference, pointer values, and the absent phantom
-  file. Machine scheme names carry the `*-ide` suffix (`webstorm-config-ide`).
+  machine bytes against the reference, pointer values, the absent phantom
+  file, and project files not modified against HEAD. Machine scheme names
+  carry the `*-ide` suffix (`webstorm-config-ide`).
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
   `docs/markdown.md` (Markdown style), `docs/architecture.md` (module boundaries),

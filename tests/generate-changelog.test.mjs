@@ -59,12 +59,22 @@ const makeTaggedRepo = (text = OLD_CHANGELOG) => {
 /**
  * Create a repository wired to the real node_modules, so the script spawns the
  * installed generator and prettier instead of a stub.
+ * @param {object} [options] - fixture options
+ * @param {string} [options.message] - initial commit message
+ * @param {string|null} [options.tag] - tag to create, or null for a fresh fork
+ * @param {string} [options.version] - package.json version
+ * @param {string} [options.changelog] - initial CHANGELOG.md content
  * @returns {string} repository path
  */
-const makeLiveRepo = () => {
+const makeLiveRepo = ({
+  message = "chore: init",
+  tag = "v1.0.0",
+  version = "1.0.0",
+  changelog = OLD_CHANGELOG,
+} = {}) => {
   const dir = mkdtempSync(join(tmpdir(), "wsc-changelog-live-"));
-  writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "fixture", version: "1.0.0" }));
-  writeFileSync(join(dir, "CHANGELOG.md"), OLD_CHANGELOG);
+  writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "fixture", version }));
+  writeFileSync(join(dir, "CHANGELOG.md"), changelog);
   // The junction must stay out of the fixture index: committing thousands of
   // real dependency files makes git slow and floods stderr with line-ending
   // warnings.
@@ -72,8 +82,10 @@ const makeLiveRepo = () => {
   symlinkSync(REPO_NODE_MODULES, join(dir, "node_modules"), platform() === "win32" ? "junction" : "dir");
   execFileSync("git", ["init", "-q"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
   execFileSync("git", ["config", "core.autocrlf", "false"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
-  commitAll(dir, "chore: init");
-  execFileSync("git", ["tag", "v1.0.0"], { cwd: dir, env: gitEnv(), stdio: "ignore" });
+  commitAll(dir, message);
+  if (tag !== null) {
+    execFileSync("git", ["tag", tag], { cwd: dir, env: gitEnv(), stdio: "ignore" });
+  }
   return dir;
 };
 
@@ -213,6 +225,22 @@ describe("generate-changelog", () => {
     }
   });
 
+  it("нормализует заголовок Unreleased с датой", () => {
+    const repo = makeTaggedRepo();
+    const shim = makeGeneratedNpx("# Unreleased (2026-11-14)\n\n### Features\n\n- new\n");
+    try {
+      const result = runWithShim(repo, shim);
+      assert.equal(result.status, 0);
+      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      assert.match(content, /^# Unreleased$/m);
+      assert.doesNotMatch(content, /2026-11-14/);
+      assert.match(content, /new/);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(shim, { recursive: true, force: true });
+    }
+  });
+
   it("повторный прогон с тем же чанком заменяет блок, а не дублирует его", () => {
     const repo = makeTaggedRepo();
     const shim = makeGeneratedNpx(NEW_RELEASE_CHUNK);
@@ -315,6 +343,107 @@ describe("generate-changelog (real generator)", () => {
       assert.equal(second.status, 0, second.stderr);
       assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), afterFirst);
       assert.match(second.stdout, /up to date/);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("не меняет файл, когда HEAD стоит на теге", { timeout: 180000 }, () => {
+    const repo = makeLiveRepo();
+    const before = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+    try {
+      const result = runScript(repo);
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, /up to date/);
+      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), before);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("не меняет файл после docs-коммита за тегом", { timeout: 180000 }, () => {
+    const repo = makeLiveRepo();
+    writeFileSync(join(repo, "note.txt"), "note\n");
+    commitAll(repo, "docs: describe");
+    const before = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+    try {
+      const result = runScript(repo);
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, /up to date/);
+      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), before);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("свежий форк без тегов получает только маркер markdownlint", { timeout: 180000 }, () => {
+    const repo = makeLiveRepo({ tag: null, message: "Initial commit", changelog: MARKDOWNLINT_DISABLE + "\n" });
+    try {
+      const result = runScript(repo);
+      assert.equal(result.status, 0, result.stderr);
+      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      assert.equal(content, MARKDOWNLINT_DISABLE + "\n");
+      const second = runScript(repo);
+      assert.equal(second.status, 0, second.stderr);
+      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), content);
+      assert.match(second.stdout, /up to date/);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("свежий репозиторий с feat получает версию, а не Unreleased", { timeout: 180000 }, () => {
+    const repo = makeLiveRepo({
+      tag: null,
+      message: "feat: initial feature",
+      changelog: MARKDOWNLINT_DISABLE + "\n",
+    });
+    try {
+      const result = runScript(repo);
+      assert.equal(result.status, 0, result.stderr);
+      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      assert.match(content, /^# 1\.0\.0 \(/m);
+      assert.doesNotMatch(content, /# Unreleased/);
+      assert.match(content, /initial feature/);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("берёт версию из тега, когда package.json отстаёт", { timeout: 180000 }, () => {
+    const repo = makeLiveRepo({ tag: "v1.1.0", version: "1.0.0" });
+    writeFileSync(join(repo, "feature.txt"), "feature\n");
+    commitAll(repo, "feat: after release");
+    try {
+      const result = runScript(repo);
+      assert.equal(result.status, 0, result.stderr);
+      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      assert.match(content, /^# Unreleased$/m);
+      assert.doesNotMatch(content, /\[1\.0\.0\]/);
+      assert.match(content, /after release/);
+      const second = runScript(repo);
+      assert.equal(second.status, 0, second.stderr);
+      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), content);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("сохраняет ручной блок релиза с префиксом v", { timeout: 180000 }, () => {
+    const changelog =
+      MARKDOWNLINT_DISABLE + "\n\n# v1.1.0 (2026-11-01)\n\n### Features\n\n- released\n\n" + OLD_CHANGELOG;
+    const repo = makeLiveRepo({ tag: "v1.1.0", version: "1.0.0", changelog });
+    writeFileSync(join(repo, "feature.txt"), "feature\n");
+    commitAll(repo, "feat: next");
+    try {
+      assert.equal(runScript(repo).status, 0);
+      const afterFirst = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      const second = runScript(repo);
+      assert.equal(second.status, 0, second.stderr);
+      const afterSecond = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+      assert.equal(afterSecond, afterFirst);
+      assert.match(afterSecond, /# v1\.1\.0/);
+      assert.match(afterSecond, /released/);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
