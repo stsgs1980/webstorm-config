@@ -16,6 +16,7 @@
 - **docs:** add placeholder screenshot referenced from README.template.md ([23ee4aa](https://github.com/stsgs1980/webstorm-config/commit/23ee4aa549142af4fc0bfe7fce48a14f798dc2e1))
 - **eslint:** align the type-aware scope with the tsconfig program ([6bfe809](https://github.com/stsgs1980/webstorm-config/commit/6bfe80965c7e1b1158bef8dd2e94cbe494217158))
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
+- **fork:** make Step 1 gate-safe and keep the renamed iml ([9d6930c](https://github.com/stsgs1980/webstorm-config/commit/9d6930c5a9c664677c2908681096b084a32c6b18))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **live-templates:** restore the missing context blocks ([23107d3](https://github.com/stsgs1980/webstorm-config/commit/23107d3290baeb9529aaffbb14544393202b2838))
 - **release:** derive version from tag and stabilize changelog headers ([3832489](https://github.com/stsgs1980/webstorm-config/commit/383248957c247d45d334ed4080a0eaadf6f7d45e))
