@@ -25,14 +25,13 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
+import { pointerProblem } from "./lib/ide-pointers.ts";
 import { BUILDERS, IDEA_SOURCES } from "./lib/ide-reference.ts";
 import type { IdeStateFailure } from "./lib/ide-state.ts";
 import {
   EDITOR_POINTER,
   findNewestWebStormDir,
   PHANTOM_FILE,
-  readComponentAttribute,
-  readOptionValue,
   SCHEME_FILE,
   SCHEME_GROUPS,
   SCHEME_NAME,
@@ -101,26 +100,9 @@ const checkSchemes = (ideRoot: string): IdeStateFailure[] => {
 };
 
 /**
- * Build a failure for a pointer value that is missing or names another scheme.
- * @param file - absolute path of the file the pointer lives in
- * @param label - pointer description for the message
- * @param value - pointer value, or null when absent
- * @returns failure, or null when the pointer is correct
- */
-const pointerFailure = (file: string, label: string, value: string | null): IdeStateFailure | null => {
-  if (value === null) {
-    return { file, problem: `${label} is missing; run npm run sync:ide` };
-  }
-  if (value !== SCHEME_NAME) {
-    return { file, problem: `${label} is "${value}", expected "${SCHEME_NAME}"; run npm run sync:ide` };
-  }
-  return null;
-};
-
-/**
  * Check that every pointer selects exactly the repository scheme by value,
  * not merely an existing scheme: a valid "wrong" pointer is the drift that
- * leaves projects silently on stock settings.
+ * leaves projects silently on stock settings. A missing file is drift too.
  * @param ideRoot - WebStorm config root
  * @returns list of mismatches
  */
@@ -128,24 +110,15 @@ const checkPointers = (ideRoot: string): IdeStateFailure[] => {
   const failures: IdeStateFailure[] = [];
   for (const pointer of SCHEME_POINTERS) {
     const file = join(ideRoot, pointer.file);
-    const content = readIfExists(file);
-    if (content === null) {
-      continue;
-    }
-    const failure = pointerFailure(file, pointer.option, readOptionValue(content, pointer.option));
-    if (failure !== null) {
-      failures.push(failure);
+    const problem = pointerProblem(readIfExists(file), pointer);
+    if (problem !== null) {
+      failures.push({ file, problem });
     }
   }
-  const file = join(ideRoot, EDITOR_POINTER.file);
-  const content = readIfExists(file);
-  if (content !== null) {
-    const label = `${EDITOR_POINTER.component} ${EDITOR_POINTER.attribute}`;
-    const value = readComponentAttribute(content, EDITOR_POINTER.component, EDITOR_POINTER.attribute);
-    const failure = pointerFailure(file, label, value);
-    if (failure !== null) {
-      failures.push(failure);
-    }
+  const editorFile = join(ideRoot, EDITOR_POINTER.file);
+  const editorProblem = pointerProblem(readIfExists(editorFile), EDITOR_POINTER);
+  if (editorProblem !== null) {
+    failures.push({ file: editorFile, problem: editorProblem });
   }
   return failures;
 };

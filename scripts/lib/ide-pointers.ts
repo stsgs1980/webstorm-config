@@ -11,7 +11,39 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { EDITOR_POINTER, SCHEME_NAME, SCHEME_POINTERS } from "./ide-state.ts";
+import { EDITOR_POINTER, readComponentAttribute, readOptionValue, SCHEME_NAME, SCHEME_POINTERS } from "./ide-state.ts";
+
+/** One pointer that selects a named scheme: an option or a component attribute. */
+export type SchemePointer = (typeof SCHEME_POINTERS)[number] | typeof EDITOR_POINTER;
+
+/**
+ * Describe why a settings file does not select the repository scheme.
+ * @param content - settings file content, or null when the file is absent
+ * @param pointer - pointer descriptor
+ * @returns problem text, or null when the pointer is correct
+ */
+export const pointerProblem = (content: string | null, pointer: SchemePointer): string | null => {
+  if (content === null) {
+    return "file is missing; run npm run sync:ide";
+  }
+  if ("option" in pointer) {
+    const value = readOptionValue(content, pointer.option);
+    if (value === null) {
+      return pointer.option + " is missing; run npm run sync:ide";
+    }
+    return value === SCHEME_NAME
+      ? null
+      : pointer.option + ' is "' + value + '", expected "' + SCHEME_NAME + '"; run npm run sync:ide';
+  }
+  const value = readComponentAttribute(content, pointer.component, pointer.attribute);
+  const label = pointer.component + " " + pointer.attribute;
+  if (value === null) {
+    return label + " is missing; run npm run sync:ide";
+  }
+  return value === SCHEME_NAME
+    ? null
+    : label + ' is "' + value + '", expected "' + SCHEME_NAME + '"; run npm run sync:ide';
+};
 
 /**
  * Return the content with one option value set, inserting the option into its
@@ -77,6 +109,7 @@ export const syncPointers = (ideRoot: string, check: boolean): number => {
   const targets = [
     {
       file: join(ideRoot, "options", "project.default.xml"),
+      pointers: [...SCHEME_POINTERS],
       apply: (content: string): string =>
         SCHEME_POINTERS.reduce(
           (acc, pointer) => withOptionValue(acc, pointer.option, pointer.owner, SCHEME_NAME),
@@ -94,6 +127,7 @@ export const syncPointers = (ideRoot: string, check: boolean): number => {
     },
     {
       file: join(ideRoot, "options", "editor.xml"),
+      pointers: [EDITOR_POINTER],
       apply: (content: string): string =>
         withComponentAttribute(content, EDITOR_POINTER.component, EDITOR_POINTER.attribute, SCHEME_NAME),
       template: `<application>\n  <component name="${EDITOR_POINTER.component}" ${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`,
@@ -102,16 +136,22 @@ export const syncPointers = (ideRoot: string, check: boolean): number => {
   let mismatches = 0;
   for (const target of targets) {
     const current = existsSync(target.file) ? readFileSync(target.file, "utf8") : null;
-    const desired = current === null ? target.template : target.apply(current);
-    if (desired === current) {
+    const problems =
+      current === null
+        ? ["file is missing; run npm run sync:ide"]
+        : target.pointers
+            .map((pointer) => pointerProblem(current, pointer))
+            .filter((problem): problem is string => problem !== null);
+    if (problems.length === 0) {
       console.log(`[OK] ${target.file} pointers are correct`);
       continue;
     }
     mismatches += 1;
     if (check) {
-      console.log(`[FAIL] ${target.file} pointer(s) drift; run npm run sync:ide to repair`);
+      console.log(`[FAIL] ${target.file} pointer(s) drift: ${problems.join("; ")}`);
       continue;
     }
+    const desired = current === null ? target.template : target.apply(current);
     mkdirSync(dirname(target.file), { recursive: true });
     writeFileSync(target.file, desired, "utf8");
     console.log(`[OK] ${current === null ? "created" : "repaired"} ${target.file}`);
