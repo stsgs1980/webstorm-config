@@ -48,7 +48,9 @@ const files = {
   gitignore: read(".gitignore"),
   prettierignore: read(".prettierignore"),
   stylelintignore: read(".stylelintignore"),
+  markdownlintignore: read(".markdownlintignore"),
   eslintConfig: read("eslint.config.js"),
+  metricsConfig: read("eslint.metrics.config.js"),
 };
 
 const tsconfigExclude = readTsconfigExclude();
@@ -57,7 +59,9 @@ const tools: ZoneTool[] = [
   { name: ".gitignore", ignores: (zone: string) => mentionsZone(files.gitignore, zone) },
   { name: ".prettierignore", ignores: (zone: string) => mentionsZone(files.prettierignore, zone) },
   { name: ".stylelintignore", ignores: (zone: string) => mentionsZone(files.stylelintignore, zone) },
+  { name: ".markdownlintignore", ignores: (zone: string) => mentionsZone(files.markdownlintignore, zone) },
   { name: "eslint.config.js", ignores: (zone: string) => mentionsZone(files.eslintConfig, zone) },
+  { name: "eslint.metrics.config.js", ignores: (zone: string) => mentionsZone(files.metricsConfig, zone) },
   { name: "tsconfig exclude", ignores: (zone: string) => tsconfigExclude.includes(zone) },
 ];
 

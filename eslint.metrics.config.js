@@ -27,12 +27,15 @@ const EXEMPT = [
   ".superpowers/**",
   ".opencode/**",
   ".agents/**",
+  // Draft workspace and JetBrains Air session data: scratch, never source.
+  "drafts/**",
+  ".awb/**",
   // Metrics describe hand-edited source; vendored and generated trees answer to their tools.
   "**/vendor/**",
   "**/generated/**",
   "**/__generated__/**",
   "**/codegen/**",
-  "**/.gen.*",
+  "**/*.gen.*",
   "**/components/ui/**",
   // Tests measure coverage, not cohesion: exemption mirrors check-file-length.
   "**/*.test.*",
