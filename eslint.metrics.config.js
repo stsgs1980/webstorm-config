@@ -1,7 +1,7 @@
 // noinspection ES6UnusedImports,NpmUsedModulesInstalled,ES6UnusedDefaultExport
 // Advisory metrics: run via `npm run lint:metrics` in the CI `lint` and
 // `windows` jobs. Warnings are surfaced for review and never fail the run
-// (AGENTS.md `4.2): they answer "where is the code worth a responsibility check".
+// (AGENTS.md §4.2): they answer "where is the code worth a responsibility check".
 // Plain Node file: TS annotations are not parseable there (see eslint.config.js).
 import tsParser from "@typescript-eslint/parser";
 

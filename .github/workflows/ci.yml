@@ -133,8 +133,8 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          # Release dates in CHANGELOG.md are anchored to git tags; without
-          # them the date drifts to the run day and the diff check fails.
+          # The generator reads the version from the newest semver tag and
+          # rewrites the whole file when no tag is visible, so fetch the tags.
           fetch-tags: true
       # A fork that deletes the file would leave the diff gate blind to the
       # untracked regenerated copy; require it in the index before generating.

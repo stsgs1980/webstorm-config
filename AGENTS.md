@@ -164,11 +164,11 @@ the signal.
 - Changelog freshness: CI on main fails if unreleased `fix` / `feat` / `perf` /
   breaking commits are missing from the changelog; `chore` / `docs` / `ci` merges do
   not require an entry.
-- Release flow (single order; the tag anchors the release date):
+- Release flow (single order; the tag names the version):
   1. `git tag -a vX.Y.Z -m "..."` on the current HEAD;
   2. rename the `# Unreleased` heading to `# X.Y.Z (YYYY-MM-DD)` by hand:
      the generator only maintains the unreleased chunk and never writes
-     release blocks;
+     release blocks. The date is the release day chosen at this step;
   3. `npm run changelog` - with the tag on HEAD the run is a no-op sanity
      check; commit the renamed file as `docs: update changelog`;
   4. `git push origin vX.Y.Z` - the tag first;
@@ -183,8 +183,7 @@ the signal.
   together with a release. Both `# X.Y.Z` and `# vX.Y.Z` headings are accepted;
   the repository style is `# X.Y.Z`.
 - Milestone tags (non-semver, e.g. `post-ide-rename`) are informational; the
-  generator ignores them; never use them for releases. Release block dates are
-  the release day chosen at rename time.
+  generator ignores them; never use them for releases.
 
 ## 7. Systematic Debugging & Work Cycle
 
