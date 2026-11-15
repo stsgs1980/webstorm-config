@@ -56,7 +56,7 @@ source of truth for strictness; do not restate them here.
   (`!`) without a comment explaining why the value cannot be absent.
 - Semicolons required, strings use double quotes, trailing commas required,
   indentation is 2 spaces, max line length 120 characters.
-- Max file length: 250 lines, hard gate. See Section 4.
+- Max file length: hard-gated; the limit lives in `scripts/lib/thresholds.ts`. See Section 4.
 - JSDoc required for public API (exported functions, methods, React components).
   In TS, `@param`/`@returns` are optional (explicit types are the source of truth);
   in plain JS files, a JSDoc block must include them.
@@ -71,8 +71,8 @@ Two different things, do not mix them up.
 
 ### 4.1 Hard gate (blocks the commit and CI)
 
-A TS/JS file over 250 lines blocks the commit: pre-commit checks staged files
-via `scripts/check-file-length.ts`; CI runs `npm run check:file-length` (`--all`).
+A TS/JS file over the file-length limit (`scripts/lib/thresholds.ts`) blocks the commit: pre-commit
+checks staged files via `scripts/check-file-length.ts`; CI runs `npm run check:file-length` (`--all`).
 Exempt, each printed with its reason:
 
 - tests (`*.test.*`, `*.spec.*`, `tests/`, `__tests__/`);
@@ -91,17 +91,18 @@ avoid splitting.
 
 ### 4.2 Advisory signals, two kinds
 
-Machine-checked by `npm run lint:metrics` (a warning there never fails a run):
+Machine-checked by `npm run lint:metrics` (a warning there never fails a run); the limits are
+owned by `scripts/lib/thresholds.ts`:
 
-- a function or hook over 60 lines (comments and blank lines excluded);
-- cyclomatic complexity over 15;
-- more than 4 function parameters;
-- nesting depth over 4.
+- a function or hook over the function-length limit (comments and blank lines excluded);
+- cyclomatic complexity over the limit;
+- more function parameters than the limit;
+- nesting depth over the limit.
 
 Reviewer judgment only (not machine-checked; name them in the PR description):
 
 - a small UI component (button, card) over 200 lines: almost always mixing jobs;
-- a behavior component (form, widget) over 250 lines;
+- a behavior component (form, widget) over the hard-gate limit;
 - page-level composition over 300 lines: check it does not own data or logic;
 - a hook that bundles three or more unrelated jobs.
 
@@ -230,7 +231,7 @@ the signal.
 Fork note: when this template lands in a new project, keep only the entries that
 actually exist there.
 
-- `npm run check:file-length` - 250-line hard gate (`scripts/check-file-length.ts`).
+- `npm run check:file-length` - file-length hard gate (`scripts/check-file-length.ts`).
 - `npm run check:style-consistency` - согласованность .editorconfig/.prettierrc/Project.xml
 - `npm run check:templates` - live templates renderer (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).

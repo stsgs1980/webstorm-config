@@ -3,7 +3,10 @@
 // `windows` jobs. Warnings are surfaced for review and never fail the run
 // (AGENTS.md §4.2): they answer "where is the code worth a responsibility check".
 // Plain Node file: TS annotations are not parseable there (see eslint.config.js).
+// Threshold values are owned by scripts/lib/thresholds.ts; importing a .ts
+// module from this config works (Node 24 strips the types when loading it).
 import tsParser from "@typescript-eslint/parser";
+import { MAX_COMPLEXITY, MAX_FUNCTION_LINES, MAX_NESTING_DEPTH, MAX_PARAMS } from "./scripts/lib/thresholds.ts";
 
 /**
  * Directory and test exemptions for the metrics lane. File-level kinds
@@ -57,11 +60,11 @@ export default [
       parserOptions: { ecmaVersion: "latest", sourceType: "module", ecmaFeatures: { jsx: true } },
     },
     rules: {
-      // Thresholds are review signals, not barriers (AGENTS.md §4.2).
-      complexity: ["warn", 15],
-      "max-lines-per-function": ["warn", { max: 60, skipBlankLines: true, skipComments: true }],
-      "max-params": ["warn", { max: 4 }],
-      "max-depth": ["warn", 4],
+      // Threshold values come from scripts/lib/thresholds.ts (single owner).
+      complexity: ["warn", MAX_COMPLEXITY],
+      "max-lines-per-function": ["warn", { max: MAX_FUNCTION_LINES, skipBlankLines: true, skipComments: true }],
+      "max-params": ["warn", { max: MAX_PARAMS }],
+      "max-depth": ["warn", MAX_NESTING_DEPTH],
     },
   },
 ];

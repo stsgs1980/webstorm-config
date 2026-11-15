@@ -2,8 +2,7 @@
 
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-
-const DEFAULT_MAX_LINES = 250;
+import { MAX_FILE_LINES } from "./lib/thresholds.ts";
 const EXTENSIONS = /\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
 /** Test files are exempt: the limit must not force splitting one test suite. */
 const TEST_FILE = /\.(test|spec)\.(ts|tsx|js|jsx|mts|cts|mjs|cjs)$/;
@@ -81,7 +80,7 @@ const maxLinesArg = args.find((arg) => arg.startsWith("--max-lines="));
  */
 function parseMaxLines(raw: string | undefined): number {
   if (raw === undefined) {
-    return DEFAULT_MAX_LINES;
+    return MAX_FILE_LINES;
   }
 
   const parsed = Number(raw.slice("--max-lines=".length));
