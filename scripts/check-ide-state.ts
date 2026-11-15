@@ -32,6 +32,7 @@ import {
   EDITOR_POINTER,
   findNewestWebStormDir,
   PHANTOM_FILE,
+  resolveJetbrainsRoot,
   SCHEME_FILE,
   SCHEME_GROUPS,
   SCHEME_NAME,
@@ -163,7 +164,13 @@ let ideChecked = false;
 
 failures.push(...checkFreshness());
 
-const base = join(process.env.APPDATA ?? "", "JetBrains");
+let base = "";
+try {
+  base = resolveJetbrainsRoot(process.env, process.platform);
+} catch (error) {
+  console.error(`[FAIL] ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+}
 if (existsSync(base)) {
   const ideRoot = findNewestWebStormDir(base, readdirSync(base));
   if (ideRoot !== null) {

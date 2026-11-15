@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Deploy the repository IDE settings to `%APPDATA%\JetBrains\WebStorm<version>\`:
+ * Deploy the repository IDE settings to the machine's JetBrains config root
+ * (`resolveJetbrainsRoot`): `WebStorm<version>\` under it:
  *
  * - restore the named scheme files (`codestyles/`, `inspection/`) from
  *   `generated/ide-reference/` - the copies WebStorm and its Settings Sync can
@@ -21,7 +22,7 @@
  * Usage:
  *   node scripts/sync-ide-settings.ts          apply (default)
  *   node scripts/sync-ide-settings.ts --check  report differences, exit 1
- *   --jetbrains-root <dir>                     override %APPDATA%\JetBrains
+ *   --jetbrains-root <dir>                     override the platform JetBrains base
  */
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -30,7 +31,13 @@ import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 import { syncPointers } from "./lib/ide-pointers.ts";
 import { BUILDERS, IDEA_SOURCES } from "./lib/ide-reference.ts";
-import { findNewestWebStormDir, PHANTOM_FILE, SCHEME_FILE, SCHEME_GROUPS } from "./lib/ide-state.ts";
+import {
+  findNewestWebStormDir,
+  PHANTOM_FILE,
+  resolveJetbrainsRoot,
+  SCHEME_FILE,
+  SCHEME_GROUPS,
+} from "./lib/ide-state.ts";
 
 /** Repository root, for reading the `.idea/` sources. */
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -123,7 +130,7 @@ const syncPhantom = (ideRoot: string, check: boolean): number => {
 
 const main = (): number => {
   const { check, jetbrainsRoot } = parseArgs(process.argv.slice(2));
-  const base = jetbrainsRoot ?? join(process.env.APPDATA ?? "", "JetBrains");
+  const base = jetbrainsRoot ?? resolveJetbrainsRoot(process.env, process.platform);
   try {
     const stale = referenceProblem();
     if (stale !== null) {
@@ -131,7 +138,7 @@ const main = (): number => {
       return 1;
     }
     if (!existsSync(base)) {
-      console.error(`[FAIL] JetBrains config directory not found: ${base} (set APPDATA or --jetbrains-root)`);
+      console.error(`[FAIL] JetBrains config directory not found: ${base} (use --jetbrains-root to override)`);
       return 1;
     }
     const ideRoot = findNewestWebStormDir(base, readdirSync(base));

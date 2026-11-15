@@ -4,8 +4,9 @@
  * drifted from the repository, the restore script puts it back.
  *
  * The machine keeps two levels of the same settings:
- * - `%APPDATA%/JetBrains/WebStorm<version>/codestyles|inspection/` holds the
+ * - `<JetBrains base>/WebStorm<version>/codestyles|inspection/` holds the
  *   named schemes, copied from the repository so other projects inherit them.
+ *   The base directory is platform-dependent (`resolveJetbrainsRoot`).
  * - `options/project.default.xml` and `options/editor.xml` hold the pointers
  *   that select those schemes. A stale pointer is what made WebStorm overwrite
  *   the project file with an outdated global scheme; the phantom
@@ -133,3 +134,34 @@ export const EDITOR_POINTER = {
  * overwriting `.idea/codeStyles/Project.xml` with an outdated copy.
  */
 export const PHANTOM_FILE = "codestyles/codeStyleConfig.xml";
+
+/**
+ * Resolve the JetBrains settings base directory for the platform:
+ * `%APPDATA%` on Windows, `~/Library/Application Support` on macOS,
+ * `$XDG_CONFIG_HOME` or `~/.config` on Linux. Missing base variables are a
+ * configuration error, not a silent wrong path.
+ * @param env - environment variables consulted instead of process.env
+ * @param platform - operating system selector
+ * @returns path to the JetBrains base directory
+ */
+export const resolveJetbrainsRoot = (env: NodeJS.ProcessEnv, platform: NodeJS.Platform): string => {
+  if (platform === "win32") {
+    if (!env.APPDATA) {
+      throw new Error("APPDATA is not set; cannot locate the JetBrains config root");
+    }
+    return join(env.APPDATA, "JetBrains");
+  }
+  if (platform === "darwin") {
+    if (!env.HOME) {
+      throw new Error("HOME is not set; cannot locate the JetBrains config root");
+    }
+    return join(env.HOME, "Library", "Application Support", "JetBrains");
+  }
+  if (env.XDG_CONFIG_HOME) {
+    return join(env.XDG_CONFIG_HOME, "JetBrains");
+  }
+  if (!env.HOME) {
+    throw new Error("Neither XDG_CONFIG_HOME nor HOME is set; cannot locate the JetBrains config root");
+  }
+  return join(env.HOME, ".config", "JetBrains");
+};
