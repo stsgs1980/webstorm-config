@@ -102,23 +102,29 @@ src/
 
 ## Step 5: Verify
 
-Полный набор как в CI (`.github/workflows/ci.yml`):
+Единственный список проверок и мест их запуска — таблица ниже. `check:docs` сверяет
+её с реальными шагами `.github/workflows/ci.yml` и хуками `.husky/`; расхождение
+в любую сторону валит гейт.
 
-```bash
-npm run lint
-npm run lint:prettier-conflicts
-npm run lint:metrics   # advisory, не блокирует
-npm run typecheck
-npm run lint:css
-npm run lint:md
-npm run format:check
-npm test
-npm run check:file-length
-npm run check:docs
-npm run check:templates
-npm audit --omit=dev --audit-level=high
-```
+| Команда                           | Где запускается                | Что проверяет                                       |
+| --------------------------------- | ------------------------------ | --------------------------------------------------- |
+| `npm run lint`                    | lint, floor, windows           | ESLint, максимум 0 warnings                         |
+| `npm run lint:prettier-conflicts` | lint, windows                  | Правила ESLint, конфликтующие с Prettier            |
+| `npm run lint:metrics`            | lint, windows                  | Advisory-метрики, warning не роняет сборку          |
+| `npm run typecheck`               | lint, floor, windows, pre-push | TypeScript (`tsc --noEmit`)                         |
+| `npm test`                        | floor, test, windows, pre-push | Vitest (пустой набор - ошибка)                      |
+| `npm run check:file-length`       | lint, floor, windows           | Anti-monolith: лимит длины файла                    |
+| `npm run check:docs`              | lint, floor, windows           | Доки против конфигов                                |
+| `npm run check:templates`         | lint, windows                  | Live-шаблоны: рендер, ESLint, tsc                   |
+| `npm run check:style-consistency` | lint, windows                  | .editorconfig/.prettierrc/Project.xml согласованы   |
+| `npm run check:workspace-zones`   | lint, windows                  | Рабочие зоны игнорируются всеми инструментами       |
+| `npm run check:ide-state`         | lint, windows, pre-push        | Схемы и указатели IDE совпадают с репозиторием      |
+| `npm run lint:css`                | lint, windows                  | Stylelint                                           |
+| `npm run lint:md`                 | lint, windows                  | markdownlint                                        |
+| `npm run format:check`            | lint, windows                  | Prettier                                            |
+| `npm run changelog`               | changelog                      | Свежесть `CHANGELOG.md` против conventional commits |
 
+Дополнительно в `lint` и `windows` выполняется `npm audit --omit=dev --audit-level=high`.
 Anti-monolith (`check:file-length`) смотрит `git ls-files`: файлы вне индекса не
 проверяются. В CI это не имеет значения: там проверяются все tracked-файлы.
 
@@ -225,10 +231,11 @@ vitest.config.ts
 
 ```bash
 npm install -D \
-  eslint @typescript-eslint/parser @eslint/markdown \
+  eslint @typescript-eslint/parser @eslint/markdown @eslint/js typescript-eslint \
+  eslint-config-prettier globals \
   eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-jsx-a11y eslint-plugin-jsdoc \
   prettier prettier-plugin-organize-imports prettier-plugin-tailwindcss \
-  stylelint stylelint-config-standard \
+  stylelint stylelint-config-standard stylelint-config-standard-scss \
   markdownlint-cli \
   husky lint-staged \
   @commitlint/cli @commitlint/config-conventional \
@@ -267,10 +274,12 @@ npx husky init
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
-    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
-    "lint:prettier-conflicts": "eslint-config-prettier scripts/check-docs.ts",
+    "lint:md": "markdownlint \"**/*.md\" --dot --ignore-path .markdownlintignore",
+    "lint:prettier-conflicts": "eslint-config-prettier eslint.config.js eslint.metrics.config.js scripts/check-docs.ts tests/check-docs.test.mjs",
     "lint:metrics": "eslint . --config eslint.metrics.config.js --no-warn-ignored",
     "check:style-consistency": "node scripts/check-style-consistency.ts",
+    "check:workspace-zones": "node scripts/check-workspace-zones.ts",
+    "check:ide-state": "node scripts/check-ide-state.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
@@ -285,25 +294,9 @@ npx husky init
 
 ### 6. Verify
 
-Полный набор как в CI (`.github/workflows/ci.yml`):
-
-```bash
-npm run lint
-npm run lint:prettier-conflicts
-npm run lint:metrics   # advisory, не блокирует
-npm run typecheck
-npm run lint:css
-npm run lint:md
-npm run format:check
-npm test
-npm run check:file-length
-npm run check:docs
-npm run check:workspace-zones
-npm run check:ide-state
-npm audit --omit=dev --audit-level=high
-```
-
-`check:templates` добавьте, если переносите `.idea/liveTemplates/`.
+Прогоните набор из таблицы в Step 5 — она сверяется с `ci.yml` гейтом `check:docs`,
+так что расхождение невозможно не заметить. Дополнительно `check:templates`,
+если переносите `.idea/liveTemplates/`.
 
 Исправьте ошибки линтеров до зелёного состояния.
 

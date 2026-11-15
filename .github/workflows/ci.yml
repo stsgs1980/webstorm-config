@@ -49,7 +49,7 @@ jobs:
       # Formatting rules must stay off: Prettier owns formatting in this repo.
       - run: npm run lint:prettier-conflicts
       # Advisory metrics: warnings are surfaced for review and never fail the
-      # build (AGENTS.md §4.2). Thresholds live in eslint.metrics.config.js.
+      # build (AGENTS.md §4.2). Thresholds live in scripts/lib/thresholds.ts.
       - run: npm run lint:metrics
       - run: npm run typecheck
       - run: npm run check:file-length
@@ -110,7 +110,7 @@ jobs:
       - run: npm run lint
       - run: npm run lint:prettier-conflicts
       # Advisory metrics: warnings are surfaced for review and never fail the
-      # build (AGENTS.md §4.2). Thresholds live in eslint.metrics.config.js.
+      # build (AGENTS.md §4.2). Thresholds live in scripts/lib/thresholds.ts.
       - run: npm run lint:metrics
       - run: npm run typecheck
       - run: npm run lint:css

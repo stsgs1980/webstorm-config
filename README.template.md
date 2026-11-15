@@ -2,10 +2,10 @@
 
 [![CI][ci-badge]][ci-workflow]
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescript.org/)
-[![ESLint](https://img.shields.io/badge/ESLint-9.x-4B32C3.svg)](https://eslint.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![ESLint](https://img.shields.io/badge/ESLint-10.x-4B32C3.svg)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-3.x-F7B93E.svg)](https://prettier.io/)
-[![Stylelint](https://img.shields.io/badge/Stylelint-17.x-263227.svg)](https://stylelint.io/)
+[![Stylelint](https://img.shields.io/badge/Stylelint-18.x-263227.svg)](https://stylelint.io/)
 
 > **Status**: ACTIVE
 > **Last Updated**: ${DATE}
