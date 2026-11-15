@@ -1,7 +1,7 @@
 # AGENTS.md - Workflow Rules (WebStorm + OpenCode.ai)
 
 Canonical source of truth for agent and developer workflow rules. Agent engines read
-this file as-is; other rule locations (`.aiassistant/rules/`, `.junie/`, per-IDE configs)
+this file as-is; other rule locations (`.aiassistant/rules/`, per-IDE configs)
 point here instead of duplicating it.
 
 Related docs: `docs/markdown.md` (Markdown style), `docs/webstorm.md` (IDE setup),
@@ -252,3 +252,34 @@ actually exist there.
   project exists. In a fork, delete it at Step 1 (getting-started.md).
 - `docs/audit-recommendations.md` is template-only too: it records the template
   audits and is deleted at Step 1 (getting-started.md).
+
+## 12. Known limits (not automated)
+
+Claims the audits marked as unverifiable in this environment, per invariant I6.
+Each has an owner here so a green CI cannot be read as "verified". These stay
+hypotheses until someone checks them in the named environment.
+
+- WebStorm behavior on a real machine: on-save tools, inspections, live
+  templates by Tab, File templates, import paths, the pointer roles of
+  `options/project.default.xml` and `options/editor.xml`, the
+  `generated_changelog` scope in the IDE, project-overwrite cases.
+  [ENV-LOCKED]
+- Machine paths and files under `%APPDATA%\JetBrains\WebStorm<version>\`
+  (scheme copies, pointers, the phantom `codestyles/codeStyleConfig.xml`):
+  covered by `check:ide-state` and fixture tests, not observed on a second
+  machine. [ENV-LOCKED]
+- `check:ide-state` machine part: the repository part is gated in CI, the
+  machine part runs locally only (pre-push). [ENV-LOCKED]
+- JetBrains tickets (IJPL-101766, IJPL-37162, WEB-79586, IJPL-258594) and
+  their statuses. [ENV-LOCKED]
+- GitHub settings outside the clone: secret scanning, push protection,
+  Private Vulnerability Reporting, the 7-day response clock (`SECURITY.md`).
+  [ENV-LOCKED]
+- Hooks and scripts under Windows: the `windows` job is green, local runs on
+  a Windows machine were not reproduced. [ENV-LOCKED]
+- Import of live templates through the WebStorm UI: one manual path,
+  unverified in this environment. [ENV-LOCKED]
+- File templates (`.idea/fileTemplates/`): no automatic gate; verified
+  manually in WebStorm only. [ENV-LOCKED]
+- Coverage gate (80% lines per changed file): decided, not wired into CI yet;
+  see Section 8.
