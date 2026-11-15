@@ -85,7 +85,8 @@ git commit -m "chore: reset changelog for new project"
 Первый запуск в новом проекте из шаблона — [docs/getting-started.md](docs/getting-started.md)
 (фреймворк, `src/`, скрипты `dev`/`build`).
 
-IDE: [docs/webstorm.md](docs/webstorm.md) (импорт code style, on save, анализ при коммите, React Buddy — **вручную**).
+IDE: [docs/webstorm.md](docs/webstorm.md) — какие настройки приезжают из
+`.idea/`, какие шаги ручные (чеклист и шаги 0-8 runbook).
 
 ## Scripts
 

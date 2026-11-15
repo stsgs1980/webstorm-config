@@ -2,7 +2,7 @@
  * Pointer repair for the machine-level scheme selection. The pointers are what
  * make WebStorm apply the global copies to new projects; restoring the scheme
  * bytes without them is the blind spot that leaves projects silently on stock
- * settings (defect N2 in `docs/ide-profiles-verification.md`).
+ * settings (defect N2 in `drafts/ide-profiles-verification.md`).
  *
  * The writers are surgical: they replace the known option/attribute values in
  * place, insert a missing option into its owning component, or append a

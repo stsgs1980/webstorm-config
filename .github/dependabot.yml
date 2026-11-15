@@ -26,10 +26,12 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@eslint/js"
         update-types: ["version-update:semver-major"]
-      # TypeScript 6+ is blocked by typescript-eslint.
+      # TS 6.1+ is outside the installed typescript-eslint peer range
+      # (<6.1.0); TS majors are blocked conservatively until it widens.
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
-      # Newer majors require a newer Node than engines allows.
+      # Type majors do not track the engines.node floor (types are ahead of
+      # it); blocked pending the decision in the tracking issue.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions

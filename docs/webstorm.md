@@ -6,15 +6,15 @@ WebStorm часть из них **не подхватывает автомати
 
 ## Чеклист
 
-| Шаг | Обязательно   | Действие                                        |
-| --- | ------------- | ----------------------------------------------- |
-| 1   | Нет           | Code Style — уже в проекте (см. §1)             |
-| 2   | Да            | Включить Prettier (format on save)              |
-| 3   | Да            | ESLint — fix on save (уже в `.idea/jsLinters/`) |
-| 4   | Если есть CSS | Включить Stylelint                              |
-| 5   | Нет           | Vitest — подхватывается из `vitest.config.ts`   |
-| 6   | Нет           | EditorConfig — читается из `.editorconfig`      |
-| 7   | Рекомендуется | Включить анализ кода при коммите                |
+| Шаг | Обязательно   | Действие                                      |
+| --- | ------------- | --------------------------------------------- |
+| 1   | Нет           | Code Style — уже в проекте (см. §1)           |
+| 2   | Нет           | Prettier on save — включён проектом (§2)      |
+| 3   | Нет           | ESLint fix on save — включён проектом (§3)    |
+| 4   | Если есть CSS | Включить Stylelint (§4)                       |
+| 5   | Нет           | Vitest — подхватывается из `vitest.config.ts` |
+| 6   | Нет           | EditorConfig — читается из `.editorconfig`    |
+| 7   | Рекомендуется | Включить анализ кода при коммите (§8)         |
 
 ## Уровни настроек: проект, машина, личное
 
@@ -278,8 +278,8 @@ WebStorm хранит профили инспекций на двух уровн
 
 Каталог `.idea/liveTemplates/` IDE не читает (известное ограничение,
 [IJPL-37162](https://youtrack.jetbrains.com/issue/IJPL-37162), бывший IDEABKL-5033) —
-XML-файлы там это склад. Импорт: откройте нужный XML, скопируйте тело шаблона,
-`Settings -> Editor -> Live Templates` -> `+` -> вставьте.
+XML-файлы там это склад. Способ импорта один и описан в
+[docs/live-templates/README.md](live-templates/README.md).
 
 Источники истины — репозиторий, а не IDE-настройки: правки шаблона вносятся в XML
 `.idea/liveTemplates/`, затем в IDE реимпортируются; сделанное только в IDE и не
@@ -309,8 +309,8 @@ XML-файлы там это склад. Импорт: откройте нужн
 - Vitest 5: WEB-79586 исправлен в 2026.2.4 и 2026.3; на более ранних 2026.2.x
   Run/Debug из gutter мог вести себя нестабильно, а CLI-прогон остаётся источником истины.
 - TypeScript 7: проект держит TS 5.9. IDE 2026.2+ открывает TS 7-проекты через
-  LSP без миграции, но typescript-eslint требует `<6.1`, поэтому мажор
-  заблокирован в dependabot - это осознанно.
+  LSP без миграции, но peer-диапазон typescript-eslint - `<6.1.0`; dependabot
+  блокирует мажоры TypeScript консервативно, пока диапазон не расширят.
 - ESLint 10: `eslint-plugin-react` и `eslint-plugin-jsx-a11y` ещё не выпустили
   версий с ESLint 10 в peer-диапазоне, поэтому peer переопределён через
   `overrides` в `package.json`. Из-за этого версия React в `eslint.config.js`
@@ -454,24 +454,24 @@ git push         ->  typecheck + тесты (pre-push)
 Канал «commit» — husky pre-commit, «CI» — `.github/workflows/ci.yml`, «IDE» —
 инспекции WebStorm, «advisory» — `npm run lint:metrics` (CI-шаг не блокирует).
 
-| Правило                                                | Закреплено                              | Проверяется       |
-| ------------------------------------------------------ | --------------------------------------- | ----------------- |
-| TS/JS-файл до 250 строк; исключения — с причиной       | `scripts/check-file-length.ts`          | commit + CI       |
-| Шаблоны рендерятся чисто: render -> eslint -> tsc      | `scripts/check-templates.ts`            | CI                |
-| docs согласованы с конфигами                           | `scripts/check-docs.ts`                 | CI                |
-| ESLint-правила кода (в т.ч. без `warn`)                | `eslint.config.js`                      | IDE + commit + CI |
-| Промисы: no-floating/misused-promises                  | `eslint.config.js` (type-aware)         | IDE + CI          |
-| Юникод в коде и сниппетах (проза - вручную)            | `eslint-rules`                          | IDE + commit + CI |
-| Markdown не длиннее 120                                | markdownlint MD013, `.editorconfig`     | IDE + commit + CI |
-| Метрики: 60/15/4/4                                     | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
-| TS-типы (tsc), тесты                                   | `tsconfig.json`, `vitest.config.ts`     | push + CI         |
-| Prod-аудит зависимостей (high+)                        | `.github/workflows/ci.yml`              | CI                |
-| React-компонент 200 строк; 3+ `useState`; сложность 15 | пороги-сигналы                          | ревью             |
-| Согласованность .editorconfig/.prettierrc/Project.xml  | `scripts/check-style-consistency.ts`    | commit + CI       |
-| Рабочие зоны игнорируются всеми инструментами          | `scripts/check-workspace-zones.ts`      | CI                |
-| Схемы и указатели IDE совпадают с репозиторием         | `scripts/check-ide-state.ts`            | pre-push + CI     |
-| `no-console`: приложение error, скрипты/сервер off     | `eslint.config.js`                      | IDE + commit + CI |
-| Вложенность функций (порог 4)                          | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
+| Правило                                               | Закреплено                              | Проверяется       |
+| ----------------------------------------------------- | --------------------------------------- | ----------------- |
+| TS/JS-файл до 250 строк; исключения — с причиной      | `scripts/check-file-length.ts`          | commit + CI       |
+| Шаблоны рендерятся чисто: render -> eslint -> tsc     | `scripts/check-templates.ts`            | CI                |
+| docs согласованы с конфигами                          | `scripts/check-docs.ts`                 | CI                |
+| ESLint-правила кода (в т.ч. без `warn`)               | `eslint.config.js`                      | IDE + commit + CI |
+| Промисы: no-floating/misused-promises                 | `eslint.config.js` (type-aware)         | IDE + CI          |
+| Юникод в коде и сниппетах (проза - вручную)           | `eslint-rules`                          | IDE + commit + CI |
+| Markdown не длиннее 120                               | markdownlint MD013, `.editorconfig`     | IDE + commit + CI |
+| Метрики: 60/15/4/4                                    | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
+| TS-типы (tsc), тесты                                  | `tsconfig.json`, `vitest.config.ts`     | push + CI         |
+| Prod-аудит зависимостей (high+)                       | `.github/workflows/ci.yml`              | CI                |
+| Ревью-сигналы (размер, состав, `useState`)            | `AGENTS.md` §4.2                        | ревью             |
+| Согласованность .editorconfig/.prettierrc/Project.xml | `scripts/check-style-consistency.ts`    | commit + CI       |
+| Рабочие зоны игнорируются всеми инструментами         | `scripts/check-workspace-zones.ts`      | CI                |
+| Схемы и указатели IDE совпадают с репозиторием        | `scripts/check-ide-state.ts`            | pre-push + CI     |
+| `no-console`: приложение error, скрипты/сервер off    | `eslint.config.js`                      | IDE + commit + CI |
+| Вложенность функций (порог 4)                         | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 
 ## Windows
 

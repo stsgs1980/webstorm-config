@@ -63,7 +63,7 @@ source of truth for strictness; do not restate them here.
 - Markdown: follow `docs/markdown.md`: 120 chars per line, aligned tables,
   `npm run lint:md`. Fenced blocks must declare a language; JSX in fenced blocks
   uses `tsx`, not `typescript` (WebStorm injection).
-- WebStorm IDE setup: `docs/webstorm.md` (code style import and on-save tools are manual).
+- WebStorm IDE setup: `docs/webstorm.md` (what ships in `.idea/` vs which steps are manual).
 
 ## 4. Anti-Monolith
 

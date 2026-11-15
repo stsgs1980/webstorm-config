@@ -12,8 +12,8 @@
 | Второй аудит      | 385cb7f            | P1 x1, P2 x1, P3 x2, INFO x3 |
 | Сравнение аудитов | 84d21a6 -> 385cb7f | перекрёстная проверка        |
 
-- Файлы-источники:
-  - `Отчёт проверка файла.md` (Рабочий стол\Текущие задачи);
+- Файлы-источники (локальные материалы автора, не в репозитории):
+  - `Отчёт проверка файла.md`;
   - `Аудит webstorm-config от Zai.md` (первый);
   - `Аудит webstorm-config от Zai от 08 ноября 2026.md` (второй);
   - `Сравнение двух аудитов webstorm-config.md`.
@@ -34,7 +34,7 @@
 | Снапшот `npm audit`                   | 9 moderate на 84d21a6       | [OK] исправлено: 0 vuln в тексте и факте |
 | README broken link                    | P2 во втором аудите         | [OK] не подтвердилось: ссылка валидна    |
 | Unicode-стрелки                       | не было в отчёте            | [OK] исправлено: -> вместо -> в 22 места |
-| `.iml` project-name-locked            | не было в отчёте            | [TODO] новая: нет шага переименования    |
+| `.iml` project-name-locked            | не было в отчёте            | [OK] закрыто: шаг добавлен (см. A9)      |
 | minimatch / Dependabot #26            | 9 moderate                  | [OK] закрыто: 0 vuln всех уровней        |
 
 ## 3. Проверка фактов по репозиторию (HEAD 385cb7f)
@@ -97,7 +97,8 @@
   `.editorconfig`/`.prettierrc`/`Project.xml`.
 - Сделано: строка добавлена в таблицу скриптов `README.template.md`, в
   `AGENTS.md` §11, в Step 5 и Verify `getting-started.md`, строку в таблицу
-  «Где проверяется каждое правило» `docs/webstorm.md` §17.
+  «Где проверяется каждое правило» `docs/webstorm.md` (раздел
+  «Согласованность IDE и CI»).
 - Проверено: `npm run check:style-consistency` зелёный (24 языка),
   `markdownlint` по всем правленым файлам — чисто, `check:docs` — `[OK]`.
 - Приёмка: `grep` находит все места; `npm run check:docs` зелёный.
@@ -346,8 +347,9 @@
 ## 7. Слепые зоны
 
 - Поведение IDE: on-save Prettier/ESLint, инспекции, Tab для live templates.
-- Глобальные схемы code style в `%APPDATA%\JetBrains\...`: вне репозитория,
-  проверяются вручную.
+- Глобальные схемы code style в `%APPDATA%\JetBrains\...`: вне репозитория;
+  машинная часть гейтится локально (`npm run check:ide-state`, pre-push),
+  CI гейтит только репозиторную (см. `AGENTS.md` §12).
 - File templates: применимость через `File -> New` не проверяется скриптом.
 - Соответствие inspection profile правилам `AGENTS.md`.
 - Настройки GitHub: secret scanning, push protection, branch protection.
