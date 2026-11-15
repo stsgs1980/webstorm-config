@@ -5,8 +5,10 @@
  *
  * The machine keeps two levels of the same settings:
  * - `<JetBrains base>/WebStorm<version>/codestyles|inspection/` holds the
- *   named schemes, copied from the repository so other projects inherit them.
- *   The base directory is platform-dependent (`resolveJetbrainsRoot`).
+ *   named schemes, derivatives of the repository: other projects on the
+ *   machine inherit the same style through them and do not pull the scheme
+ *   from the repository themselves. The base directory is platform-dependent
+ *   (`resolveJetbrainsRoot`).
  * - `options/project.default.xml` and `options/editor.xml` hold the pointers
  *   that select those schemes. A stale pointer is what made WebStorm overwrite
  *   the project file with an outdated global scheme; the phantom

@@ -1,5 +1,6 @@
 # Гейты перед пушем: типы, тесты и состояние IDE
 npm run typecheck
 npm run test
-# Ловит затирание .idea/ WebStorm'ом до пуша, а не в CI.
+# Машинные проверки IDE выполняются локально (pre-push); CI проверяет
+# только репозиторную часть.
 npm run check:ide-state
