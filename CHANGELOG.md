@@ -14,6 +14,7 @@
 - **check-templates:** stop swallowing tsc stderr and warn on unknown vars ([065c18c](https://github.com/stsgs1980/webstorm-config/commit/065c18cc1c7eaf06d076ac58224b5c81ccc17fed))
 - **deps:** unblock stylelint 18 and pin the React version for ESLint 10 ([ca18879](https://github.com/stsgs1980/webstorm-config/commit/ca188791f9baf8a90b78e2e166c3b398bd06f84e)), closes [jsx-eslint/eslint-plugin-react#4022](https://github.com/jsx-eslint/eslint-plugin-react/issues/4022)
 - **docs:** add placeholder screenshot referenced from README.template.md ([23ee4aa](https://github.com/stsgs1980/webstorm-config/commit/23ee4aa549142af4fc0bfe7fce48a14f798dc2e1))
+- **docs:** badges, install and scripts match package.json ([6496312](https://github.com/stsgs1980/webstorm-config/commit/6496312fe3dc03194d04320fc215798556e5dec5))
 - **eslint:** align the type-aware scope with the tsconfig program ([6bfe809](https://github.com/stsgs1980/webstorm-config/commit/6bfe80965c7e1b1158bef8dd2e94cbe494217158))
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **fork:** make Step 1 gate-safe and keep the renamed iml ([9d6930c](https://github.com/stsgs1980/webstorm-config/commit/9d6930c5a9c664677c2908681096b084a32c6b18))
@@ -28,6 +29,7 @@
 ### Features
 
 - **check-docs:** validate markdown links and anchors ([e28eddc](https://github.com/stsgs1980/webstorm-config/commit/e28eddced04e3d885e3c10a3872e7c786330a1a9))
+- **check-docs:** wiring-table and list verification ([63c738c](https://github.com/stsgs1980/webstorm-config/commit/63c738c3af411ae4e52359a902faeb1d6f876f14))
 - **ide:** derive machine schemes from .idea via generated/ide-reference ([c7a1be8](https://github.com/stsgs1980/webstorm-config/commit/c7a1be8d5503f479bd626f37dd2dc5ddaad61587))
 - **ide:** gate the IDE state against the repository ([e898095](https://github.com/stsgs1980/webstorm-config/commit/e898095439f68f2db0ae7a8d7ee9562067fd468d))
 - **lint:** block exhaustive-deps, add advisory lint:metrics lane ([e9d4aeb](https://github.com/stsgs1980/webstorm-config/commit/e9d4aeb2cf304bb3ab9e9e0d4e5629d7e1bd89ed))
