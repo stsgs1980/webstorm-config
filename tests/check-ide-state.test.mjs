@@ -15,9 +15,11 @@ import {
   isNewer,
   readComponentAttribute,
   readOptionValue,
+  resolveJetbrainsRoot,
   SCHEME_FILE,
   SCHEME_NAME,
 } from "../scripts/lib/ide-state.ts";
+import { jetbrainsEnv, jetbrainsRoot } from "./lib/ide-env.mjs";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/check-ide-state.ts", import.meta.url));
 const REPO = fileURLToPath(new URL("..", import.meta.url));
@@ -52,7 +54,7 @@ const run = (base, root) => {
     const args = root === undefined ? [SCRIPT] : [SCRIPT, root];
     const stdout = execFileSync(process.execPath, args, {
       encoding: "utf8",
-      env: { ...process.env, APPDATA: base },
+      env: { ...process.env, ...jetbrainsEnv(base) },
       cwd: REPO,
     });
     return { status: 0, stdout, stderr: "" };
@@ -70,14 +72,14 @@ const reference = (group) => readFileSync(join(REPO, "generated", "ide-reference
 
 /**
  * Create a fixture WebStorm directory with schemes and correct pointers.
- * The real layout is `%APPDATA%/JetBrains/WebStorm<version>`, and the gate
- * reads APPDATA from the environment.
- * @param {string} base - fixture JetBrains base directory
+ * The real layout is `<platform base>/JetBrains/WebStorm<version>`; the
+ * fixture base is what `jetbrainsEnv(base)` resolves it from.
+ * @param {string} base - fixture base directory hosting the JetBrains config
  * @param {string} version - version suffix, e.g. "2026.3"
  * @returns {string} path to the created WebStorm directory
  */
 const makeIdeDir = (base, version) => {
-  const dir = join(base, "JetBrains", `WebStorm${version}`);
+  const dir = join(jetbrainsRoot(base), `WebStorm${version}`);
   for (const group of ["codestyles", "inspection"]) {
     mkdirSync(join(dir, group), { recursive: true });
     writeFileSync(join(dir, group, SCHEME_FILE), reference(group));
@@ -146,6 +148,11 @@ describe("ide-state helpers", () => {
     assert.equal(readOptionValue('<option name="X" value="v" />', "Y"), null);
     assert.equal(readComponentAttribute('<component name="Daemon" profile="p" />', "Daemon", "profile"), "p");
     assert.equal(readComponentAttribute('<component name="Daemon" />', "Daemon", "profile"), null);
+  });
+
+  it("jetbrainsEnv and jetbrainsRoot agree with resolveJetbrainsRoot", () => {
+    const env = jetbrainsEnv("/fixture");
+    assert.equal(resolveJetbrainsRoot(env, process.platform), jetbrainsRoot("/fixture"));
   });
 });
 

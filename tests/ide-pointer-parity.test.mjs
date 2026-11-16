@@ -9,6 +9,7 @@ import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { afterEach, describe, it } from "vitest";
 import { EDITOR_POINTER, SCHEME_FILE, SCHEME_NAME } from "../scripts/lib/ide-state.ts";
+import { jetbrainsEnv, jetbrainsRoot } from "./lib/ide-env.mjs";
 
 const CHECK = fileURLToPath(new URL("../scripts/check-ide-state.ts", import.meta.url));
 const SYNC = fileURLToPath(new URL("../scripts/sync-ide-settings.ts", import.meta.url));
@@ -72,7 +73,7 @@ const correctEditor = () =>
  * @returns {string} path to the WebStorm directory
  */
 const makeIdeDir = (base, pointers) => {
-  const dir = join(base, "JetBrains", VERSION);
+  const dir = join(jetbrainsRoot(base), VERSION);
   for (const group of ["codestyles", "inspection"]) {
     mkdirSync(join(dir, group), { recursive: true });
     writeFileSync(join(dir, group, SCHEME_FILE), reference(group));
@@ -106,18 +107,19 @@ const run = (script, args, env = {}) => {
 };
 
 /**
- * Run the repository gate; it reads the JetBrains base from APPDATA.
- * @param {string} base - fixture JetBrains base directory
+ * Run the repository gate; it resolves the JetBrains base from the
+ * platform environment entries (jetbrainsEnv).
+ * @param {string} base - fixture base directory hosting the JetBrains config
  * @returns {{status: number, stdout: string, stderr: string}} run result
  */
-const gate = (base) => run(CHECK, [], { APPDATA: base });
+const gate = (base) => run(CHECK, [], jetbrainsEnv(base));
 
 /**
  * Run the repair command in check mode.
- * @param {string} base - fixture JetBrains base directory
+ * @param {string} base - fixture base directory hosting the JetBrains config
  * @returns {{status: number, stdout: string, stderr: string}} run result
  */
-const check = (base) => run(SYNC, ["--check", "--jetbrains-root", join(base, "JetBrains")]);
+const check = (base) => run(SYNC, ["--check", "--jetbrains-root", jetbrainsRoot(base)]);
 
 /**
  * Join both output streams and normalize Windows separators for assertions.
