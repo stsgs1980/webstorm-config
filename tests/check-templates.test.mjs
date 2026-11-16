@@ -40,6 +40,30 @@ const run = (dir) => {
 };
 
 /**
+ * Run the checker with explicit live- and file-template directories.
+ * @param {string} liveDir - directory with *.xml template sets
+ * @param {string} fileDir - directory with file templates
+ * @returns {{ status: number, stdout: string, stderr: string }} run result
+ */
+const runDirs = (liveDir, fileDir) => {
+  const result = spawnSync(process.execPath, [SCRIPT, liveDir, fileDir], { encoding: "utf8" });
+  return { status: result.status ?? 1, stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
+};
+
+/**
+ * Create a throwaway file-templates directory.
+ * @param {Record<string, string>} files - file name to content
+ * @returns {string} directory path
+ */
+const makeFileFixture = (files) => {
+  const dir = mkdtempSync(join(tmpdir(), "wsc-check-file-templates-"));
+  for (const [name, content] of Object.entries(files)) {
+    writeFileSync(join(dir, name), content);
+  }
+  return dir;
+};
+
+/**
  * Run a fixture and clean it up afterward.
  * @param {{name: string, xml: string}[]} sets - template set files
  * @returns {{ status: number, stdout: string, stderr: string }} run result
@@ -54,6 +78,9 @@ const runFixture = (sets) => {
 };
 
 const xmlOf = (group, templates) => `<templateSet group="${group}">\n${templates.join("\n")}\n</templateSet>\n`;
+
+/** A live template that renders, lints and typechecks cleanly. */
+const VALID_TS_TEMPLATE = '<template name="real" value="const $NAME$ = 1;"></template>';
 
 describe("check-templates", () => {
   it("валидный шаблон отвечает [OK] с прогонами lint и tsc", { timeout: 120000 }, () => {
@@ -173,5 +200,32 @@ describe("check-templates", () => {
     assert.equal(result.status, 0);
     assert.match(result.stdout, /\[OK\] react\/rafce/);
     assert.match(result.stdout, /templates checked: 18/);
+    assert.match(result.stdout, /\[OK\] file templates checked: 3/);
+  });
+
+  it("live-синтаксис $NAME$ в file template валит гейт и называет файл", { timeout: 120000 }, () => {
+    const liveDir = makeFixture([{ name: "typescript.xml", xml: xmlOf("TSx", [VALID_TS_TEMPLATE]) }]);
+    const fileDir = makeFileFixture({ "Vitest Test.test.ts": 'describe("$NAME$");\n' });
+    try {
+      const result = runDirs(liveDir, fileDir);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Vitest Test\.test\.ts: \$NAME\$ is live-template syntax/);
+    } finally {
+      rmSync(liveDir, { recursive: true, force: true });
+      rmSync(fileDir, { recursive: true, force: true });
+    }
+  });
+
+  it("Velocity-переменная и маркер $END$ проходят", { timeout: 120000 }, () => {
+    const liveDir = makeFixture([{ name: "typescript.xml", xml: xmlOf("TSx", [VALID_TS_TEMPLATE]) }]);
+    const fileDir = makeFileFixture({ "Component.tsx": "export const ${NAME} = 1;\n$END$\n" });
+    try {
+      const result = runDirs(liveDir, fileDir);
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, /\[OK\] file templates checked: 1/);
+    } finally {
+      rmSync(liveDir, { recursive: true, force: true });
+      rmSync(fileDir, { recursive: true, force: true });
+    }
   });
 });

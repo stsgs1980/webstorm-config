@@ -233,7 +233,8 @@ actually exist there.
 
 - `npm run check:file-length` - file-length hard gate (`scripts/check-file-length.ts`).
 - `npm run check:style-consistency` - согласованность .editorconfig/.prettierrc/Project.xml
-- `npm run check:templates` - live templates renderer (`scripts/check-templates.ts`).
+- `npm run check:templates` - live templates renderer and file-template
+  syntax check (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
 - `npm run gen:ide-reference` - build `generated/ide-reference/` from `.idea/`
   (the single hand-edit source) after every `.idea/` change; commit both.
@@ -279,7 +280,8 @@ hypotheses until someone checks them in the named environment.
   a Windows machine were not reproduced. [ENV-LOCKED]
 - Import of live templates through the WebStorm UI: one manual path,
   unverified in this environment. [ENV-LOCKED]
-- File templates (`.idea/fileTemplates/`): no automatic gate; verified
-  manually in WebStorm only. [ENV-LOCKED]
+- File templates (`.idea/fileTemplates/`): `check:templates` rejects
+  live-template syntax (`$NAME$` instead of `${NAME}`); how the IDE expands a
+  template is verified manually only. [ENV-LOCKED]
 - Coverage gate (80% lines per changed file): decided, not wired into CI yet;
   see Section 8.

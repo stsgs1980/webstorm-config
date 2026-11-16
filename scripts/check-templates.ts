@@ -9,6 +9,7 @@
 
 import { join } from "node:path";
 import process from "node:process";
+import { checkFileTemplates } from "./lib/file-templates.ts";
 import { collectTemplates } from "./lib/live-templates.ts";
 import { checkTemplates, removeRenderDir } from "./lib/templates-check.ts";
 
@@ -18,6 +19,16 @@ import { checkTemplates, removeRenderDir } from "./lib/templates-check.ts";
  */
 async function main(): Promise<void> {
   const dir = process.argv[2] ?? join(".idea", "liveTemplates");
+  const fileDir = process.argv[3] ?? join(".idea", "fileTemplates");
+  const fileTemplates = checkFileTemplates(fileDir);
+  if (fileTemplates.failures.length > 0) {
+    for (const failure of fileTemplates.failures) {
+      console.error(failure);
+    }
+    console.error(`[Anti-Drift] file templates checked: 0 of ${fileTemplates.checked} passed.`);
+    process.exitCode = 1;
+    return;
+  }
   let templates;
   try {
     templates = collectTemplates(dir);
@@ -44,6 +55,7 @@ async function main(): Promise<void> {
     process.stdout.write(`[OK] ${label}: rendered, eslint OK, tsc OK\n`);
   }
   process.stdout.write(`[OK] templates checked: ${files.length}\n`);
+  process.stdout.write(`[OK] file templates checked: ${fileTemplates.checked}\n`);
 }
 
 try {
