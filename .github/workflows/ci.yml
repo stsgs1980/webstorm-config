@@ -36,8 +36,12 @@ jobs:
           else
             FROM="${{ github.event.before }}"
             TO="${{ github.sha }}"
+            # A first push to a new branch has no previous tip. Linting from
+            # the root commit re-runs the whole history and fails on old
+            # non-conventional messages; lint only what the branch adds
+            # over the default branch.
             if [ "$FROM" = "0000000000000000000000000000000000000000" ]; then
-              FROM="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+              FROM="$(git merge-base "origin/${{ github.event.repository.default_branch }}" HEAD)"
             fi
           fi
           if [ "$FROM" = "$TO" ]; then
@@ -145,4 +149,18 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run changelog
+      # chore/docs/ci commits need no entry (AGENTS.md #6); without the skip
+      # a dependabot version bump fails the freshness gate.
+      - name: Skip the entry gate for PRs without fix/feat/perf commits
+        if: github.event_name == 'pull_request'
+        run: |
+          RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          if git log --format=%s "$RANGE" | grep -Eq '^(feat|fix|perf)(\([^)]*\))?!?:' \
+            || git log --format=%B "$RANGE" | grep -q 'BREAKING CHANGE'; then
+            echo "Entry-required commits found; the diff gate below applies."
+          else
+            echo "No fix/feat/perf/breaking commits; skipping the changelog diff gate."
+            echo "SKIP_CHANGELOG_GATE=true" >> "$GITHUB_ENV"
+          fi
       - run: git diff --exit-code CHANGELOG.md
+        if: env.SKIP_CHANGELOG_GATE != 'true'
