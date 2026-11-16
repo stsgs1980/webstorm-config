@@ -10,6 +10,7 @@
 *.jsx text eol=lf
 *.mjs text eol=lf
 *.cjs text eol=lf
+*.astro text eol=lf
 
 # Enforce LF for config files
 *.json text eol=lf
@@ -37,6 +38,8 @@
 .editorconfig text eol=lf
 .prettierrc text eol=lf
 .prettierignore text eol=lf
+.markdownlintignore text eol=lf
+.stylelintignore text eol=lf
 .nvmrc text eol=lf
 .npmrc text eol=lf
 .env.example text eol=lf
