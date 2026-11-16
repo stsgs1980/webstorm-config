@@ -14,7 +14,7 @@
  *   the `profile` attribute of `DaemonCodeAnalyzerSettings` in
  *   `options/editor.xml`;
  * - the phantom `codestyles/codeStyleConfig.xml` is absent;
- * - the project files in `.idea/` are not modified against HEAD, so an IDE
+ * - every tracked `.idea` file is unchanged against HEAD, so an IDE
  *   overwrite is caught before it reaches a commit.
  *
  * On a machine without the IDE (CI, a fresh clone) the machine checks are
@@ -135,34 +135,57 @@ const checkPhantom = (ideRoot: string): IdeStateFailure[] => {
 };
 
 /**
- * Check that the project files were not modified against HEAD.
- * @returns list of mismatches
+ * Check every tracked `.idea` file, not a hand-kept shortlist. The tracked
+ * set comes from `git ls-files`, so a project file added to the repository is
+ * covered from that commit on. Three outcomes are distinct on purpose: a
+ * missing `.git` is a documented skip (a source tarball has no baseline),
+ * while a `.git` that git cannot read is a failure - silence there would
+ * report green on a corrupt repository.
+ * @returns failures, covered file count and whether the check was skipped
  */
-const checkProjectFiles = (): IdeStateFailure[] => {
-  const failures: IdeStateFailure[] = [];
-  const tracked = [".idea/codeStyles/Project.xml", ".idea/inspectionProfiles/Project_Default.xml"];
+const checkProjectFiles = (): { failures: IdeStateFailure[]; trackedCount: number; skipped: boolean } => {
+  const gitDir = join(root, ".git");
+  if (!existsSync(gitDir)) {
+    console.log(`[SKIP] project files: ${root} is not a git work tree; the check did not run.`);
+    return { failures: [], trackedCount: 0, skipped: true };
+  }
+  const git = (args: string[]): string => execFileSync("git", args, { cwd: root, encoding: "utf8" });
+  let tracked: string[];
   let changed: string;
   try {
-    changed = execFileSync("git", ["diff", "--name-only", "HEAD", "--", ...tracked], {
-      cwd: root,
-      encoding: "utf8",
-    });
-  } catch {
-    return failures;
+    tracked = git(["ls-files", "--", ".idea"])
+      .split("\n")
+      .filter((line) => line.trim() !== "");
+    changed = git(["status", "--porcelain", "--untracked-files=no", "--", ".idea"]);
+  } catch (error) {
+    const stderr = (error as { stderr?: string | Buffer }).stderr?.toString().trim();
+    const detail = stderr === undefined || stderr === "" ? String(error) : stderr.split("\n")[0];
+    return {
+      failures: [
+        { file: gitDir, problem: `git cannot read the repository (${detail}); the project-file check did not run` },
+      ],
+      trackedCount: 0,
+      skipped: false,
+    };
   }
-  for (const file of changed.split("\n").filter((line) => line.trim() !== "")) {
-    failures.push({
-      file,
-      problem: "modified against HEAD; WebStorm may have overwritten it - review with git diff",
+  const failures: IdeStateFailure[] = changed
+    .split("\n")
+    .filter((line) => line.trim() !== "")
+    .map((line) => {
+      const entry = line.slice(3);
+      const file = entry.includes(" -> ") ? entry.slice(entry.indexOf(" -> ") + 4) : entry;
+      return { file, problem: "changed against HEAD; WebStorm may have overwritten it - review with git status" };
     });
-  }
-  return failures;
+  return { failures, trackedCount: tracked.length, skipped: false };
 };
 
 const failures: IdeStateFailure[] = [];
 let ideChecked = false;
 
 failures.push(...checkFreshness());
+
+const projectFiles = checkProjectFiles();
+failures.push(...projectFiles.failures);
 
 let base = "";
 try {
@@ -179,8 +202,6 @@ if (existsSync(base)) {
   }
 }
 
-failures.push(...checkProjectFiles());
-
 for (const failure of failures) {
   console.error(`[FAIL] ${failure.file}: ${failure.problem}`);
 }
@@ -189,10 +210,14 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
+const projectSummary = projectFiles.skipped
+  ? "project-file check skipped"
+  : `${projectFiles.trackedCount} tracked .idea files`;
+
 if (ideChecked) {
   console.log(
-    `[OK] IDE state matches the repository (scheme ${SCHEME_NAME}, references fresh, pointers, project files).`,
+    `[OK] IDE state matches the repository (scheme ${SCHEME_NAME}, references fresh, pointers, ${projectSummary}).`,
   );
 } else {
-  console.log("[OK] No JetBrains directory found; only the repository checks ran.");
+  console.log(`[OK] No JetBrains directory found; repository checks ran (${projectSummary}).`);
 }

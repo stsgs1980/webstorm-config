@@ -242,8 +242,9 @@ actually exist there.
   write the scheme pointers when WebStorm (or Settings Sync) overwrites them.
 - `npm run check:ide-state` - verify reference freshness against `.idea/`,
   machine bytes against the reference, pointer values, the absent phantom
-  file, and project files not modified against HEAD. Machine scheme names
-  carry the `*-ide` suffix (`webstorm-config-ide`).
+  file, and every tracked `.idea` file unchanged against HEAD (`git ls-files`
+  supplies the set). Machine scheme names carry the `*-ide` suffix
+  (`webstorm-config-ide`).
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
   `docs/markdown.md` (Markdown style), `docs/architecture.md` (module boundaries),

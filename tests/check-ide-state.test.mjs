@@ -104,6 +104,17 @@ const makeIdeDir = (base, version) => {
 };
 
 /**
+ * Turn a fixture directory into a git repository with one commit.
+ * @param {string} repo - fixture repository root
+ */
+const initGit = (repo) => {
+  const git = (args) => execFileSync("git", args, { cwd: repo, encoding: "utf8" });
+  git(["init", "--quiet"]);
+  git(["add", "-A"]);
+  git(["-c", "user.name=Fixture", "-c", "user.email=fixture@example.com", "commit", "--quiet", "-m", "fixture"]);
+};
+
+/**
  * New fixture repository with `.idea/` sources copied from this repo and a
  * generated reference built by the real builder, optionally stale.
  * @param {boolean} stale - write a stale generated reference
@@ -163,6 +174,44 @@ describe("check-ide-state", () => {
     const result = run(base);
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /\[OK\] IDE state matches/);
+  });
+
+  it("covers every tracked .idea file, not a hand-kept shortlist", () => {
+    const base = newBase();
+    const result = run(base);
+    const match = /(\d+) tracked \.idea files/.exec(result.stdout);
+    assert.ok(match !== null, result.stdout);
+    assert.ok(Number(match[1]) >= 20, `expected the whole tracked set, got ${match[1]}`);
+  });
+
+  it("fails when any tracked .idea file is changed, not only the two scheme sources", () => {
+    const base = newBase();
+    const repo = newFixtureRepo(false);
+    const extra = join(repo, ".idea", "liveTemplates");
+    mkdirSync(extra, { recursive: true });
+    writeFileSync(join(extra, "testing.xml"), "<templateSet />\n");
+    initGit(repo);
+    writeFileSync(join(extra, "testing.xml"), '<templateSet group="Testing" />\n');
+    const result = run(base, repo);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /liveTemplates[/\\]testing\.xml/);
+  });
+
+  it("fails when .git exists but git cannot read the repository", () => {
+    const base = newBase();
+    const repo = newFixtureRepo(false);
+    writeFileSync(join(repo, ".git"), "gitdir: /nonexistent/gitdir\n");
+    const result = run(base, repo);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /git cannot read the repository/);
+  });
+
+  it("skips the project-file check out loud outside a git work tree", () => {
+    const base = newBase();
+    const repo = newFixtureRepo(false);
+    const result = run(base, repo);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /\[SKIP\] project files/);
   });
 
   it("fails when a global scheme drifts from the reference", () => {
