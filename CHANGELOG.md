@@ -20,6 +20,7 @@
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **fork:** make Step 1 gate-safe and keep the renamed iml ([9d6930c](https://github.com/stsgs1980/webstorm-config/commit/9d6930c5a9c664677c2908681096b084a32c6b18))
 - **gates:** cover drafts, Air state and dot directories ([0278635](https://github.com/stsgs1980/webstorm-config/commit/0278635653712ae3de0dd911c9eff60a25d1c1ec))
+- **gates:** pin LF for ignore files and astro templates ([c567dd9](https://github.com/stsgs1980/webstorm-config/commit/c567dd95a37674907740a2123d2844647e06beea))
 - **ide-state:** inject the platform JetBrains base in gate fixtures ([7fecf5d](https://github.com/stsgs1980/webstorm-config/commit/7fecf5d2cccb7fff1d4eba880b984676bc0a6a1f))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **ide:** resolve JetBrains config root per platform ([de7c280](https://github.com/stsgs1980/webstorm-config/commit/de7c2803471940e17a4af256f610a4dfbb6f34ce))
