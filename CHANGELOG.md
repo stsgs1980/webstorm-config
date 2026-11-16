@@ -17,6 +17,7 @@
 - **deps:** unblock stylelint 18 and pin the React version for ESLint 10 ([ca18879](https://github.com/stsgs1980/webstorm-config/commit/ca188791f9baf8a90b78e2e166c3b398bd06f84e)), closes [jsx-eslint/eslint-plugin-react#4022](https://github.com/jsx-eslint/eslint-plugin-react/issues/4022)
 - **docs:** add placeholder screenshot referenced from README.template.md ([23ee4aa](https://github.com/stsgs1980/webstorm-config/commit/23ee4aa549142af4fc0bfe7fce48a14f798dc2e1))
 - **docs:** badges, install and scripts match package.json ([6496312](https://github.com/stsgs1980/webstorm-config/commit/6496312fe3dc03194d04320fc215798556e5dec5))
+- **docs:** keep toolchain test roots in vitest recipe ([d43bd3c](https://github.com/stsgs1980/webstorm-config/commit/d43bd3c3cab65f0c18b5a43e185b4f994a66e17a))
 - **eslint:** align the type-aware scope with the tsconfig program ([6bfe809](https://github.com/stsgs1980/webstorm-config/commit/6bfe80965c7e1b1158bef8dd2e94cbe494217158))
 - **eslint:** enforce the src/node boundary for TypeScript ([73567a9](https://github.com/stsgs1980/webstorm-config/commit/73567a9069541e899568e3d4730c3fd3a476496f))
 - **fork:** make Step 1 gate-safe and keep the renamed iml ([9d6930c](https://github.com/stsgs1980/webstorm-config/commit/9d6930c5a9c664677c2908681096b084a32c6b18))
