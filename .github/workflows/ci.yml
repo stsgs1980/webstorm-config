@@ -36,11 +36,10 @@ jobs:
           else
             FROM="${{ github.event.before }}"
             TO="${{ github.sha }}"
-            # A first push to a new branch has no previous tip. Linting from
-            # the root commit re-runs the whole history and fails on old
-            # non-conventional messages; lint only what the branch adds
-            # over the default branch.
-            if [ "$FROM" = "0000000000000000000000000000000000000000" ]; then
+            # No previous tip (new branch) or the previous tip was rebased
+            # away (dependabot force-push): lint only what the branch adds
+            # over the default branch, not the whole history.
+            if [ "$FROM" = "0000000000000000000000000000000000000000" ] || ! git merge-base --is-ancestor "$FROM" "$TO"; then
               FROM="$(git merge-base "origin/${{ github.event.repository.default_branch }}" HEAD)"
             fi
           fi
