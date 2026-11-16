@@ -59,16 +59,33 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     globals: true,
+    // Project addition: browser environment for DOM tests.
     environment: "jsdom",
     setupFiles: ["src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    // Keep: template keys. An empty suite must not look green, and fixture
+    // tests spawn git/npx/tsc and need the raised timeout.
+    passWithNoTests: false,
+    testTimeout: 30_000,
+    // Extend, never remove: tests/** and scripts/** are the toolchain tests
+    // shipped with the template; dropping them silently disables the gates.
+    include: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      "tests/**/*.{test,spec}.{ts,tsx,mjs}",
+      "scripts/**/*.{test,spec}.{ts,mjs}",
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
+      include: ["eslint-rules/**", "eslint-parsers/**", "eslint-processors/**", "tests/lib/**"],
     },
   },
 });
 ```
+
+Не удаляйте из этого конфига поставляемые ключи: `passWithNoTests: false` и
+`testTimeout: 30_000` отвечают за честный набор и медленные fixture-тесты, а корни
+`tests/**` и `scripts/**` в `include` — за тесты тулчейна шаблона. Расширяйте
+`include`, а не заменяйте его.
 
 **3. Создайте `src/test/setup.ts`:**
 
