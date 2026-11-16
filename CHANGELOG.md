@@ -30,6 +30,7 @@
 - **release:** derive version from tag and stabilize changelog headers ([3832489](https://github.com/stsgs1980/webstorm-config/commit/383248957c247d45d334ed4080a0eaadf6f7d45e))
 - **release:** keep the untagged changelog header stable ([8d31776](https://github.com/stsgs1980/webstorm-config/commit/8d31776f2c666457e4a038365b3387c3786451f4))
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
+- **tooling:** check workspace zones in both directions ([d0d71ad](https://github.com/stsgs1980/webstorm-config/commit/d0d71ad1508385bfc242401a4306ac0e3f7b14a9))
 - **tsconfig:** scope the compiler program to explicit roots ([396c8c1](https://github.com/stsgs1980/webstorm-config/commit/396c8c1cc704f12286149b7f5e6a045e2d34f1a5))
 
 ### Features
