@@ -275,7 +275,7 @@ npx husky init
     "typecheck": "tsc --noEmit",
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:md": "markdownlint \"**/*.md\" --dot --ignore-path .markdownlintignore",
-    "lint:prettier-conflicts": "eslint-config-prettier eslint.config.js eslint.metrics.config.js scripts/check-docs.ts tests/check-docs.test.mjs",
+    "lint:prettier-conflicts": "node scripts/check-prettier-conflicts.ts",
     "lint:metrics": "eslint . --config eslint.metrics.config.js --no-warn-ignored",
     "check:style-consistency": "node scripts/check-style-consistency.ts",
     "check:workspace-zones": "node scripts/check-workspace-zones.ts",

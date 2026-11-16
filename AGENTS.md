@@ -236,6 +236,10 @@ actually exist there.
 - `npm run check:templates` - live templates renderer and file-template
   syntax check (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).
+- `npm run lint:prettier-conflicts` - conflict gate over one representative
+  path per `eslint.config.js` zone; a representative that resolves to no
+  enabled rules fails before the detector runs
+  (`scripts/check-prettier-conflicts.ts`).
 - `npm run gen:ide-reference` - build `generated/ide-reference/` from `.idea/`
   (the single hand-edit source) after every `.idea/` change; commit both.
 - `npm run sync:ide` - deploy `generated/ide-reference/` to the machine and
