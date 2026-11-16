@@ -32,6 +32,7 @@
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
 - **templates:** use Velocity syntax in the Vitest file template ([0e12a4b](https://github.com/stsgs1980/webstorm-config/commit/0e12a4bdbf6a6ae53973d6d18699bea15709d59e))
 - **tooling:** check workspace zones in both directions ([d0d71ad](https://github.com/stsgs1980/webstorm-config/commit/d0d71ad1508385bfc242401a4306ac0e3f7b14a9))
+- **tooling:** cover every tracked .idea file in check:ide-state ([4f4eb57](https://github.com/stsgs1980/webstorm-config/commit/4f4eb5768e7108a30c483713294d28dc598ae09e))
 - **tsconfig:** scope the compiler program to explicit roots ([396c8c1](https://github.com/stsgs1980/webstorm-config/commit/396c8c1cc704f12286149b7f5e6a045e2d34f1a5))
 
 ### Features
