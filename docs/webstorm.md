@@ -432,11 +432,17 @@ git diff .idea/codeStyles/Project.xml
 Форк получает те же правила: его исходники лежат в `src/` или `server/`, оба
 каталога в списке.
 
-Гейт `npm run check:workspace-zones` следит, чтобы списки игнорируемых зон у
-`.gitignore`, `.prettierignore`, `.stylelintignore`, `eslint.config.js` и
-`tsconfig` не разошлись. Если зона появилась в одном списке и пропала из
-другого, гейт падает с именем зоны и списком инструментов, которые её не
-игнорируют.
+Гейт `npm run check:workspace-zones` сверяет списки игнорируемых зон в двух
+направлениях. Прямое: зона из `scripts/lib/workspace-zones.ts` должна быть у
+каждого инструмента - `.gitignore`, `.prettierignore`, `.stylelintignore`,
+`.markdownlintignore`, `eslint.config.js`, `eslint.metrics.config.js` и
+`exclude` в `tsconfig.base.json`. Обратное: каталог, который список объявил,
+должен быть в списке владельца; иначе гейт падает с именем записи и
+инструментом. Дополнительно гейт требует, чтобы globs в `include` у
+`vitest.config.ts` были привязаны к каталогу (`src/**`, а не `**`), а паттерны
+`lint-staged` в `package.json` не накрывали рабочую зону. Обратная сверка
+разбирает только простые записи-каталоги (`dir/` и `dir/**`): исключения по
+файлам, вложенные пути и правила со `*` внутри имени она не читает.
 
 ## Согласованность IDE и CI
 

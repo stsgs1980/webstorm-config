@@ -38,6 +38,7 @@ export default [
       ".astro/**",
       ".output/**",
       ".vite/**",
+      ".cache/**",
       // File templates use ${NAME} placeholders, they are not valid source files.
       ".idea/**",
       // Agent workspace (superpowers briefs/ledger; never present in CI).

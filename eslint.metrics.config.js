@@ -26,6 +26,7 @@ const EXEMPT = [
   ".astro/**",
   ".output/**",
   ".vite/**",
+  ".cache/**",
   ".idea/**",
   ".superpowers/**",
   ".opencode/**",

@@ -21,6 +21,8 @@ const CONFIG_FILES = [
   "eslint.config.js",
   "eslint.metrics.config.js",
   "tsconfig.base.json",
+  "vitest.config.ts",
+  "package.json",
 ];
 
 /** Temp directories created by the current test, removed in afterEach. */
@@ -72,11 +74,36 @@ const dropLine = (root, file, line) => {
   writeFileSync(path, content.replace(line, ""));
 };
 
+/**
+ * Append one line to a fixture file.
+ * @param {string} root - fixture root
+ * @param {string} file - repo-relative file name
+ * @param {string} line - line to append including its trailing newline
+ */
+const appendLine = (root, file, line) => {
+  const path = join(root, file);
+  writeFileSync(path, readFileSync(path, "utf8") + line);
+};
+
+/**
+ * Replace one exact line in a fixture file.
+ * @param {string} root - fixture root
+ * @param {string} file - repo-relative file name
+ * @param {string} from - exact line including its trailing newline
+ * @param {string} to - replacement line including its trailing newline
+ */
+const replaceLine = (root, file, from, to) => {
+  const path = join(root, file);
+  const content = readFileSync(path, "utf8");
+  assert.ok(content.includes(from), `fixture ${file} has no line ${from.trim()}`);
+  writeFileSync(path, content.replace(from, to));
+};
+
 describe("check-workspace-zones gate", () => {
   it("копия реальных конфигов проходит", () => {
     const result = runGate(makeRoot());
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /all 12 zones are ignored by every tool/);
+    assert.match(result.stdout, /all 19 zones are ignored by every tool/);
   });
 
   it("зона, выпавшая из .markdownlintignore, валит гейт", () => {
@@ -93,5 +120,47 @@ describe("check-workspace-zones gate", () => {
     const result = runGate(root);
     assert.equal(result.status, 1);
     assert.match(result.stderr, /drafts: not ignored by eslint\.metrics\.config\.js/);
+  });
+
+  it("framework-зона, выпавшая из .stylelintignore, валит гейт", () => {
+    const root = makeRoot();
+    dropLine(root, ".stylelintignore", ".next/\n");
+    const result = runGate(root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /\.next: not ignored by \.stylelintignore/);
+  });
+
+  it("запись вне списка владельца валит гейт двусторонней сверкой", () => {
+    const root = makeRoot();
+    appendLine(root, ".prettierignore", ".turbo/\n");
+    const result = runGate(root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /\.turbo: mentioned by \.prettierignore but absent from the zone list/);
+  });
+
+  it("безкорневой glob в vitest include валит гейт", () => {
+    const root = makeRoot();
+    replaceLine(
+      root,
+      "vitest.config.ts",
+      '      "src/**/*.{test,spec}.{ts,tsx}",\n',
+      '      "**/*.{test,spec}.{ts,tsx}",\n',
+    );
+    const result = runGate(root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /vitest include glob "\*\*\/\*\.\{test,spec\}\.\{ts,tsx\}" is not rooted/);
+  });
+
+  it("lint-staged паттерн, накрывающий зону, валит гейт", () => {
+    const root = makeRoot();
+    replaceLine(
+      root,
+      "package.json",
+      '    "*.md": "markdownlint --fix --ignore node_modules"\n',
+      '    "drafts/**/*.md": "markdownlint --fix"\n',
+    );
+    const result = runGate(root);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /lint-staged pattern "drafts\/\*\*\/\*\.md" covers zone drafts/);
   });
 });

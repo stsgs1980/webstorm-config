@@ -1,8 +1,15 @@
 node_modules/
 dist/
 build/
-coverage/
 out/
+.next/
+.nuxt/
+.svelte-kit/
+.astro/
+.output/
+.vite/
+.cache/
+coverage/
 dev/
 .idea/
 drafts/

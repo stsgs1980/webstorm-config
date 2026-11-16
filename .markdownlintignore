@@ -2,6 +2,13 @@ node_modules/
 dist/
 build/
 out/
+.next/
+.nuxt/
+.svelte-kit/
+.astro/
+.output/
+.vite/
+.cache/
 coverage/
 dev/
 drafts/
