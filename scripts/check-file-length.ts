@@ -148,6 +148,17 @@ function isBarrel(file: string, content: string): boolean {
 function main(): void {
   const candidates = listFiles();
 
+  // An empty list is not a pass: --all is the CI scan and must cover the tree,
+  // while the staged pre-commit run sees docs-only commits by design.
+  if (candidates.length === 0) {
+    if (checkAll) {
+      console.error("[FAIL] No TS/JS files found; the --all scan checked nothing.");
+      process.exit(1);
+    }
+    process.stdout.write("[INFO] No staged TS/JS files; nothing to check.\n");
+    return;
+  }
+
   const skippedTests: string[] = [];
   const exempted: { file: string; reason: string }[] = [];
   let missing = 0;

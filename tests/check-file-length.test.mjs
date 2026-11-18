@@ -177,4 +177,17 @@ describe("check-file-length", () => {
     assert.equal(result.status, 1);
     assert.match(result.stderr, /\[FAIL\] File/);
   });
+
+  it("--all без TS/JS файлов падает, а не рапортует зелёный ноль", () => {
+    const result = runFixture("README.md", "# empty\n", ["--all"]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /\[FAIL\] No TS\/JS files found/);
+    assert.doesNotMatch(result.stdout, /\[OK\] Checked files: 0/);
+  });
+
+  it("staged-режим без TS/JS файлов печатает [INFO] и не падает", () => {
+    const result = runFixture("README.md", "# docs only\n", []);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /\[INFO\] No staged TS\/JS files/);
+  });
 });
