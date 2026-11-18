@@ -211,4 +211,77 @@ describe("check-style-consistency", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("USE_DOUBLE_QUOTES: false ловится для JS и TS", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "codeStyles", "Project.xml");
+      const xml = readFileSync(path, "utf8").replaceAll(
+        'name="USE_DOUBLE_QUOTES" value="true"',
+        'name="USE_DOUBLE_QUOTES" value="false"',
+      );
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Project\.xml:JS: USE_DOUBLE_QUOTES = false, expected true/);
+      assert.match(result.stderr, /Project\.xml:TS: USE_DOUBLE_QUOTES = false, expected true/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("ENFORCE_TRAILING_COMMA: Never ловится для JS и TS", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "codeStyles", "Project.xml");
+      const xml = readFileSync(path, "utf8").replaceAll(
+        'name="ENFORCE_TRAILING_COMMA" value="Always"',
+        'name="ENFORCE_TRAILING_COMMA" value="Never"',
+      );
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Project\.xml:JS: ENFORCE_TRAILING_COMMA = Never, expected Always/);
+      assert.match(result.stderr, /Project\.xml:TS: ENFORCE_TRAILING_COMMA = Never, expected Always/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("A17: перезапись Project.xml глобальной схемой ловится, а не проходит молча", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "codeStyles", "Project.xml");
+      // The 09.11.2026 incident: the global scheme lacked the JS/TS quote and
+      // comma options and part of the per-language options.
+      const xml = readFileSync(path, "utf8")
+        .replace(/<JSCodeStyleSettings[\s\S]*?<\/JSCodeStyleSettings>/, "")
+        .replace(/<TypeScriptCodeStyleSettings[\s\S]*?<\/TypeScriptCodeStyleSettings>/, "")
+        .replace(/<option name="SOFT_MARGINS"[^>]*\/>\s*/g, "");
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Project\.xml:JS: USE_DOUBLE_QUOTES = <missing>, expected true/);
+      assert.match(result.stderr, /Project\.xml:TS: ENFORCE_TRAILING_COMMA = <missing>, expected Always/);
+      assert.match(result.stderr, /Project\.xml:HTML: SOFT_MARGINS = <missing>, expected 120/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("значение из секции [*.md] не закрывает опцию секции [*]", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".editorconfig");
+      const moved = readFileSync(path, "utf8")
+        .replace("max_line_length = 120\n", "")
+        .replace("[*.md]\n", "[*.md]\nmax_line_length = 120\n");
+      writeFileSync(path, moved);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /\.editorconfig: max_line_length = <missing>, expected 120/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
 });

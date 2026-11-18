@@ -241,3 +241,44 @@ describe("eslint-config type-aware promises", () => {
     assert.deepEqual(rules, []);
   });
 });
+
+describe("eslint-config jsdoc and return types", () => {
+  const PROBE = "scripts/__jsdoc_probe.ts";
+
+  /**
+   * Lint a real .ts fixture: scripts/** enables the type-aware project
+   * service, and a virtual path cannot resolve a tsconfig project.
+   * @param {string} code - fixture source
+   * @returns {Promise<string[]>} rule ids reported for the fixture
+   */
+  const lintProbe = async (code) => {
+    const path = join(REPO, PROBE);
+    mkdirSync(join(REPO, "scripts"), { recursive: true });
+    writeFileSync(path, code);
+    try {
+      const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });
+      const results = await eslint.lintFiles([path]);
+      return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
+    } finally {
+      rmSync(path, { force: true });
+    }
+  };
+
+  it("экспорт без JSDoc - ошибка jsdoc/require-jsdoc", { timeout: 120000 }, async () => {
+    const rules = await lintProbe("export function probe(): number {\n  return 1;\n}\n");
+    assert.ok(rules.includes("jsdoc/require-jsdoc"), `expected require-jsdoc, got: ${rules.join(", ")}`);
+  });
+
+  it("функция без типа возврата - ошибка explicit-function-return-type", { timeout: 120000 }, async () => {
+    const rules = await lintProbe("/** Probe. */\nexport function probe() {\n  return 1;\n}\n");
+    assert.ok(
+      rules.includes("@typescript-eslint/explicit-function-return-type"),
+      `expected explicit-function-return-type, got: ${rules.join(", ")}`,
+    );
+  });
+
+  it("JSDoc и тип возврата вместе проходят", { timeout: 120000 }, async () => {
+    const rules = await lintProbe("/** Probe. */\nexport function probe(): number {\n  return 1;\n}\n");
+    assert.deepEqual(rules, []);
+  });
+});
