@@ -454,7 +454,7 @@ git diff .idea/codeStyles/Project.xml
 ```text
 Save в WebStorm  ->  Prettier + ESLint (Stylelint — подсветка)
 git commit       ->  Husky + lint-staged (те же инструменты из CLI)
-git push         ->  typecheck + тесты (pre-push)
+git push         ->  typecheck + тесты + check:ide-state (pre-push)
 ```
 
 Если при коммите много неожиданных правок — проверьте шаги 2–4.

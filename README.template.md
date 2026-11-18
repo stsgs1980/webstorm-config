@@ -58,7 +58,8 @@
   останавливает `npm ci`.
 
 Pre-commit останавливается на первой ошибке: сначала `lint-staged`, затем проверка длины файлов.
-Перед пушем pre-push дополнительно прогоняет `npm run typecheck` и `npm test`.
+Перед пушем pre-push дополнительно прогоняет `npm run typecheck`, `npm test` и
+`npm run check:ide-state`.
 
 ### Installation
 

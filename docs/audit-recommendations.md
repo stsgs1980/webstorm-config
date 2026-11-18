@@ -165,10 +165,10 @@
   оставались U+2192:
   - `docs/webstorm.md` — 17 строк;
   - `docs/live-templates/README.md` — 5 строк.
-- Сделано: все `→` заменены на `->` в обоих файлах (37 + 9 вхождений).
+- Сделано: все U+2192 заменены на `->` в обоих файлах (37 + 9 вхождений).
 - Важно: `docs/markdown.md` (строка 69) — намеренный контрпример, не тронут.
-- Регресс: агент песочницы 2026-11-10 нашёл в `webstorm.md` пять `→`
-  (строка 244), `⚙` (строка 176), катакану и латинский гомоглиф. Исправлено
+- Регресс: агент песочницы 2026-11-10 нашёл в `webstorm.md` пять U+2192
+  (строка 244), U+2699 (строка 176), катакану и латинский гомоглиф. Исправлено
   коммитом `267ebcb`; заодно убран хардкод версии `.nvmrc` из
   `README.template.md` и починено это же место (`stood`).
 - Остаточный риск: проза не гейтится на Unicode (известное ограничение,
@@ -195,11 +195,12 @@
 
 - Источник: второй аудит INFO №5-6; сравнение №11-12.
 - Факт: `.husky/pre-commit` = `lint-staged` + `check-file-length`;
-  `.husky/pre-push` = `typecheck` + `test`. Локально не запускаются
-  `check:docs`, `check:templates`, `check:style-consistency`, `lint:css`,
-  `lint:md`, `lint:metrics`, `format:check`, `npm audit`.
+  `.husky/pre-push` = `typecheck` + `test` + `check:ide-state`. Локально не
+  запускаются `check:docs`, `check:templates`, `check:style-consistency`,
+  `lint:css`, `lint:md`, `lint:metrics`, `format:check`, `npm audit`.
 - CHANGELOG (строка 83) говорит «add pre-push changelog guard hook», но
-  текущий `.husky/pre-push` — typecheck + test; запись историческая.
+  текущий `.husky/pre-push` — typecheck + test + check:ide-state; запись
+  историческая.
 - Действие: добавить в `AGENTS.md` §6 или `docs/testing.md` явный перечень
   «локально vs CI»; при желании — строку про историческую запись CHANGELOG.
 - Приёмка: из текста понятно, какие гейты не сработают локально.
@@ -246,9 +247,9 @@
 #### A15. [OK] Гейт-скрипты вынесены из-под лимита 250 строк
 
 - Источник: `Отчёт проверка файла.md`, дополнительное наблюдение §7.
-- Факт: `DEFAULT_MAX_LINES = 250` в `scripts/check-file-length.ts`;
-  `check-docs.ts` — 238 строк, `check-style-consistency.ts` — 238,
-  `check-templates.ts` — 236.
+- Факт на дату аудита: `DEFAULT_MAX_LINES = 250` в
+  `scripts/check-file-length.ts`; `check-docs.ts` — 238 строк,
+  `check-style-consistency.ts` — 238, `check-templates.ts` — 236.
 - Риск: один содержательный PR в любом из них уронит hard gate. Общая логика
   уже вынесена в `scripts/lib/` (4 модуля), но сами гейты остаются крупными.
 - Действие: вынести вспомогательные функции в `scripts/lib/`, не дожидаясь
@@ -257,9 +258,10 @@
 - Сделано: коммит `fb11830` — логика проверок перенесена в
   `scripts/lib/style-consistency.ts`, `scripts/lib/docs-check.ts`,
   `scripts/lib/templates-check.ts`; скрипты остались CLI-обвязкой
-  (argv, отчёт, exit code). Размеры: 238/238/236 -> 37/24/53 строк,
-  lib-модули 220-235. Поведение не менялось (green-to-green): typecheck,
-  lint, lint:metrics, 129 тестов, все три гейта и file-length зелёные.
+  (argv, отчёт, exit code). Размеры на момент fb11830: 238/238/236 ->
+  37/24/53 строк, lib-модули 220-235. Поведение не менялось
+  (green-to-green): typecheck, lint, lint:metrics, 129 тестов, все три гейта
+  и file-length зелёные.
 
 #### A16. [INFO] Решить видимость гейта `check:style-consistency` в CHANGELOG
 
