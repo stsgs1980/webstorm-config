@@ -36,6 +36,7 @@
 - **tooling:** check workspace zones in both directions ([d0d71ad](https://github.com/stsgs1980/webstorm-config/commit/d0d71ad1508385bfc242401a4306ac0e3f7b14a9))
 - **tooling:** cover every eslint zone in lint:prettier-conflicts ([9319574](https://github.com/stsgs1980/webstorm-config/commit/931957455f95d87cdd10fdac9bedc578464a1834))
 - **tooling:** cover every tracked .idea file in check:ide-state ([4f4eb57](https://github.com/stsgs1980/webstorm-config/commit/4f4eb5768e7108a30c483713294d28dc598ae09e))
+- **tooling:** fail the full file-length scan on an empty file set ([fbee5e9](https://github.com/stsgs1980/webstorm-config/commit/fbee5e9733ae77da0c25429df7845b2116c7f634))
 - **tooling:** verify threshold mirrors and style values ([74075e4](https://github.com/stsgs1980/webstorm-config/commit/74075e4661fa0e11c6efd6c2510cb79c85e22082))
 - **tsconfig:** scope the compiler program to explicit roots ([396c8c1](https://github.com/stsgs1980/webstorm-config/commit/396c8c1cc704f12286149b7f5e6a045e2d34f1a5))
 
