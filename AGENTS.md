@@ -263,14 +263,19 @@ actually exist there.
 ## 12. Known limits (not automated)
 
 Claims the audits marked as unverifiable in this environment, per invariant I6.
-Each has an owner here so a green CI cannot be read as "verified". These stay
-hypotheses until someone checks them in the named environment.
+The maintainer owns every item on this list, so a green CI cannot be read as
+"verified". These stay hypotheses until someone checks them in the named
+environment.
 
 - WebStorm behavior on a real machine: on-save tools, inspections, live
   templates by Tab, File templates, import paths, the pointer roles of
   `options/project.default.xml` and `options/editor.xml`, the
   `generated_changelog` scope in the IDE, project-overwrite cases.
   [ENV-LOCKED]
+- Priority of `.editorconfig` over the IDE code style scheme
+  (`docs/webstorm.md` section 6 says the keys act on top of the scheme): both
+  agree today, so a wrong precedence stays invisible; not probed on a real
+  machine. [ENV-LOCKED]
 - Machine paths and files under `%APPDATA%\JetBrains\WebStorm<version>\`
   (scheme copies, pointers, the phantom `codestyles/codeStyleConfig.xml`):
   covered by `check:ide-state` and fixture tests, not observed on a second
