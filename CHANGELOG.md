@@ -13,6 +13,7 @@
 - **check-templates:** render templates whose values contain '>' ([273ac68](https://github.com/stsgs1980/webstorm-config/commit/273ac68578767a30ff8dcef997176d6ee35609ed))
 - **check-templates:** stop swallowing tsc stderr and warn on unknown vars ([065c18c](https://github.com/stsgs1980/webstorm-config/commit/065c18cc1c7eaf06d076ac58224b5c81ccc17fed))
 - **ci:** fall back to the default-branch base when the old tip vanishes ([75fad22](https://github.com/stsgs1980/webstorm-config/commit/75fad2287c4364825807481e40e56146307831ab))
+- **ci:** require a changelog entry for revert commits ([5417190](https://github.com/stsgs1980/webstorm-config/commit/54171903c51a997fa8f8e537ef543d359cf9e4eb))
 - **ci:** scope commit linting and the changelog gate to the branch ([d15708e](https://github.com/stsgs1980/webstorm-config/commit/d15708e712ecebeee7a698d38579f8941f94dde6)), closes [#6](https://github.com/stsgs1980/webstorm-config/issues/6)
 - **deps:** unblock stylelint 18 and pin the React version for ESLint 10 ([ca18879](https://github.com/stsgs1980/webstorm-config/commit/ca188791f9baf8a90b78e2e166c3b398bd06f84e)), closes [jsx-eslint/eslint-plugin-react#4022](https://github.com/jsx-eslint/eslint-plugin-react/issues/4022)
 - **docs:** add placeholder screenshot referenced from README.template.md ([23ee4aa](https://github.com/stsgs1980/webstorm-config/commit/23ee4aa549142af4fc0bfe7fce48a14f798dc2e1))
