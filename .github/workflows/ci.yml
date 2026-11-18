@@ -150,15 +150,15 @@ jobs:
       - run: npm run changelog
       # chore/docs/ci commits need no entry (AGENTS.md #6); without the skip
       # a dependabot version bump fails the freshness gate.
-      - name: Skip the entry gate for PRs without fix/feat/perf commits
-        if: github.event_name == 'pull_request'
-        run: |
+      - run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            exit 0
+          fi
           RANGE="${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
-          if git log --format=%s "$RANGE" | grep -Eq '^(feat|fix|perf)(\([^)]*\))?!?:' \
-            || git log --format=%B "$RANGE" | grep -q 'BREAKING CHANGE'; then
+          if [ "$(node scripts/check-changelog-entry.ts "$RANGE")" = "entry-required" ]; then
             echo "Entry-required commits found; the diff gate below applies."
           else
-            echo "No fix/feat/perf/breaking commits; skipping the changelog diff gate."
+            echo "No fix/feat/perf/revert/breaking commits; skipping the changelog diff gate."
             echo "SKIP_CHANGELOG_GATE=true" >> "$GITHUB_ENV"
           fi
       - run: git diff --exit-code CHANGELOG.md
