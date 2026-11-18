@@ -412,7 +412,9 @@ git diff .idea/codeStyles/Project.xml
 ```
 
 `check:style-consistency` сравнивает `.editorconfig`, `.prettierrc` и
-`Project.xml` и падает при расхождении. После обновления IDE или смены схемы
+`Project.xml` на формат (включая `semi`, `bracketSpacing` и EOL), а
+`Project_Default.xml` - с порогами из `scripts/lib/thresholds.ts`; любое
+расхождение валит гейт. После обновления IDE или смены схемы
 запустите `npm run gen:ide-reference` и закоммитьте обновлённый
 `generated/ide-reference/` вместе с `.idea/`, затем `npm run sync:ide` -
 глобальная копия останется производной от проектного `Project.xml`.
@@ -463,24 +465,24 @@ git push         ->  typecheck + тесты (pre-push)
 Канал «commit» — husky pre-commit, «CI» — `.github/workflows/ci.yml`, «IDE» —
 инспекции WebStorm, «advisory» — `npm run lint:metrics` (CI-шаг не блокирует).
 
-| Правило                                               | Закреплено                              | Проверяется       |
-| ----------------------------------------------------- | --------------------------------------- | ----------------- |
-| TS/JS-файл до 250 строк; исключения — с причиной      | `scripts/check-file-length.ts`          | commit + CI       |
-| Шаблоны рендерятся чисто: render -> eslint -> tsc     | `scripts/check-templates.ts`            | CI                |
-| docs согласованы с конфигами                          | `scripts/check-docs.ts`                 | CI                |
-| ESLint-правила кода (в т.ч. без `warn`)               | `eslint.config.js`                      | IDE + commit + CI |
-| Промисы: no-floating/misused-promises                 | `eslint.config.js` (type-aware)         | IDE + CI          |
-| Юникод в коде и сниппетах (проза - вручную)           | `eslint-rules`                          | IDE + commit + CI |
-| Markdown не длиннее 120                               | markdownlint MD013, `.editorconfig`     | IDE + commit + CI |
-| Метрики: 60/15/4/4                                    | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
-| TS-типы (tsc), тесты                                  | `tsconfig.json`, `vitest.config.ts`     | push + CI         |
-| Prod-аудит зависимостей (high+)                       | `.github/workflows/ci.yml`              | CI                |
-| Ревью-сигналы (размер, состав, `useState`)            | `AGENTS.md` §4.2                        | ревью             |
-| Согласованность .editorconfig/.prettierrc/Project.xml | `scripts/check-style-consistency.ts`    | commit + CI       |
-| Рабочие зоны игнорируются всеми инструментами         | `scripts/check-workspace-zones.ts`      | CI                |
-| Схемы и указатели IDE совпадают с репозиторием        | `scripts/check-ide-state.ts`            | pre-push + CI     |
-| `no-console`: приложение error, скрипты/сервер off    | `eslint.config.js`                      | IDE + commit + CI |
-| Вложенность функций (порог 4)                         | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
+| Правило                                            | Закреплено                              | Проверяется       |
+| -------------------------------------------------- | --------------------------------------- | ----------------- |
+| TS/JS-файл до 250 строк; исключения — с причиной   | `scripts/check-file-length.ts`          | commit + CI       |
+| Шаблоны рендерятся чисто: render -> eslint -> tsc  | `scripts/check-templates.ts`            | CI                |
+| docs согласованы с конфигами                       | `scripts/check-docs.ts`                 | CI                |
+| ESLint-правила кода (в т.ч. без `warn`)            | `eslint.config.js`                      | IDE + commit + CI |
+| Промисы: no-floating/misused-promises              | `eslint.config.js` (type-aware)         | IDE + CI          |
+| Юникод в коде и сниппетах (проза - вручную)        | `eslint-rules`                          | IDE + commit + CI |
+| Markdown не длиннее 120                            | markdownlint MD013, `.editorconfig`     | IDE + commit + CI |
+| Метрики: 60/15/4/4, IDE-only 25/30                 | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
+| TS-типы (tsc), тесты                               | `tsconfig.json`, `vitest.config.ts`     | push + CI         |
+| Prod-аудит зависимостей (high+)                    | `.github/workflows/ci.yml`              | CI                |
+| Ревью-сигналы (размер, состав, `useState`)         | `AGENTS.md` §4.2                        | ревью             |
+| Согласованность формата и порогов профиля IDE      | `scripts/check-style-consistency.ts`    | CI                |
+| Рабочие зоны игнорируются всеми инструментами      | `scripts/check-workspace-zones.ts`      | CI                |
+| Схемы и указатели IDE совпадают с репозиторием     | `scripts/check-ide-state.ts`            | pre-push + CI     |
+| `no-console`: приложение error, скрипты/сервер off | `eslint.config.js`                      | IDE + commit + CI |
+| Вложенность функций (порог 4)                      | `eslint.metrics.config.js`, профиль IDE | IDE + advisory    |
 
 ## Windows
 

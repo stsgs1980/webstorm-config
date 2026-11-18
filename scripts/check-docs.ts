@@ -2,7 +2,8 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import process from "node:process";
-import { checkDocFiles, getDocFiles } from "./lib/docs-check.ts";
+import { checkDocFiles } from "./lib/docs-check.ts";
+import { getDocFiles } from "./lib/docs-files.ts";
 import {
   checkBadges,
   checkDocsMap,

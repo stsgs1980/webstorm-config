@@ -36,6 +36,11 @@ const makeFixture = () => {
   cpSync(join(REPO, ".prettierrc"), join(root, ".prettierrc"));
   mkdirSync(join(root, ".idea", "codeStyles"), { recursive: true });
   cpSync(join(REPO, ".idea", "codeStyles", "Project.xml"), join(root, ".idea", "codeStyles", "Project.xml"));
+  mkdirSync(join(root, ".idea", "inspectionProfiles"), { recursive: true });
+  cpSync(
+    join(REPO, ".idea", "inspectionProfiles", "Project_Default.xml"),
+    join(root, ".idea", "inspectionProfiles", "Project_Default.xml"),
+  );
   return root;
 };
 
@@ -90,6 +95,118 @@ describe("check-style-consistency", () => {
       const result = run(root);
       assert.equal(result.status, 1);
       assert.match(result.stderr, /\.prettierrc: printWidth/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("semi: false в .prettierrc ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".prettierrc");
+      const value = JSON.parse(readFileSync(path, "utf8"));
+      value.semi = false;
+      writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /\.prettierrc: semi = false, expected true/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("bracketSpacing: false в .prettierrc ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".prettierrc");
+      const value = JSON.parse(readFileSync(path, "utf8"));
+      value.bracketSpacing = false;
+      writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /\.prettierrc: bracketSpacing = false, expected true/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("end_of_line: crlf в .editorconfig ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".editorconfig");
+      writeFileSync(path, readFileSync(path, "utf8").replace("end_of_line = lf", "end_of_line = crlf"));
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /\.editorconfig: end_of_line = crlf, expected lf/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("FORCE_SEMICOLON_STYLE: false в Project.xml ловится для JS и TS", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "codeStyles", "Project.xml");
+      const xml = readFileSync(path, "utf8").replaceAll(
+        'name="FORCE_SEMICOLON_STYLE" value="true"',
+        'name="FORCE_SEMICOLON_STYLE" value="false"',
+      );
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Project\.xml:JS: FORCE_SEMICOLON_STYLE = false, expected true/);
+      assert.match(result.stderr, /Project\.xml:TS: FORCE_SEMICOLON_STYLE = false, expected true/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("SPACES_WITHIN_IMPORTS: false в Project.xml ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "codeStyles", "Project.xml");
+      const xml = readFileSync(path, "utf8").replaceAll(
+        'name="SPACES_WITHIN_IMPORTS" value="true"',
+        'name="SPACES_WITHIN_IMPORTS" value="false"',
+      );
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Project\.xml:JS: SPACES_WITHIN_IMPORTS = false, expected true/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("зеркало FileLength в профиле инспекций ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "inspectionProfiles", "Project_Default.xml");
+      const xml = readFileSync(path, "utf8").replace(
+        '<option name="limit" value="250" />',
+        '<option name="limit" value="200" />',
+      );
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Project_Default\.xml: FileLength\.limit = 200, expected 250/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("IDE-only пороги 25/30 сверяются с thresholds.ts", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".idea", "inspectionProfiles", "Project_Default.xml");
+      const xml = readFileSync(path, "utf8")
+        .replace('<option name="m_limit" value="25" />', '<option name="m_limit" value="24" />')
+        .replace('<option name="m_limit" value="30" />', '<option name="m_limit" value="20" />');
+      writeFileSync(path, xml);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /MethodCount\.m_limit = 24, expected 25/);
+      assert.match(result.stderr, /StatementsPerFunctionJS\.m_limit = 20, expected 30/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

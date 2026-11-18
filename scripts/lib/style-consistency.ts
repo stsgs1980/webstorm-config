@@ -89,6 +89,7 @@ function checkEditorConfig(root: string, failures: StyleFailure[]): void {
   const path = join(root, ".editorconfig");
   const values = parseEditorConfig(readFileSync(path, "utf8"));
   const checks: Array<[string, string]> = [
+    ["end_of_line", "lf"],
     ["indent_style", "space"],
     ["indent_size", "2"],
     ["tab_width", "2"],
@@ -116,6 +117,8 @@ function checkPrettierRc(root: string, failures: StyleFailure[]): void {
     ["tabWidth", "2"],
     ["printWidth", "120"],
     ["singleQuote", "false"],
+    ["semi", "true"],
+    ["bracketSpacing", "true"],
     ["trailingComma", "all"],
     ["endOfLine", "lf"],
   ];
@@ -183,6 +186,10 @@ function checkProjectXml(root: string, failures: StyleFailure[]): void {
     for (const [key, expected] of [
       ["USE_DOUBLE_QUOTES", "true"],
       ["ENFORCE_TRAILING_COMMA", "Always"],
+      // Prettier `semi` and `bracketSpacing`; the import-brace option is the
+      // IDE side of the same bracket-spacing contract.
+      ["FORCE_SEMICOLON_STYLE", "true"],
+      ["SPACES_WITHIN_IMPORTS", "true"],
     ] as const) {
       const actual = xmlOption(fragment, key);
       if (actual !== expected) {

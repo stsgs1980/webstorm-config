@@ -8,6 +8,7 @@ import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 // noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";
+import { MAX_FILE_LINES } from "../scripts/lib/thresholds.ts";
 import { gitEnv } from "./lib/git-env.mjs";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/check-docs.ts", import.meta.url));
@@ -253,6 +254,31 @@ describe("check-docs", () => {
   it("угловые скобки в inline-пути - placeholder, а не контракт", () => {
     const doc = "# Форк\n\nЗамените `.idea/<ваш-проект>.iml` на своё имя.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/fork.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("устаревшее упоминание лимита длины файла ловится", () => {
+    const doc = "# Лимит\n\nЛимит 999 строк на файл.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/limits.md", content: doc }]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /file-length mention 999 != thresholds\.ts 250/);
+  });
+
+  it("актуальное упоминание лимита длины файла проходит", () => {
+    const doc = `# Лимит\n\nЛимит ${MAX_FILE_LINES} строк на файл.\n`;
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/limits.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("ревью-сигналы про 200/300 строк не считаются лимитом файла", () => {
+    const doc = "# Сигналы\n\n- компонент over 200 lines - сигнал;\n- страница over 300 lines - сигнал.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/signals.md", content: doc }]);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("исторический журнал аудита не сверяется с текущим порогом", () => {
+    const doc = "# Журнал\n\nЛимит 999 строк.\n";
+    const result = runFixture(PKG, "22.22.2", [{ file: "docs/audit-recommendations.md", content: doc }]);
     assert.equal(result.status, 0, result.stderr);
   });
 });

@@ -232,7 +232,8 @@ Fork note: when this template lands in a new project, keep only the entries that
 actually exist there.
 
 - `npm run check:file-length` - file-length hard gate (`scripts/check-file-length.ts`).
-- `npm run check:style-consistency` - согласованность .editorconfig/.prettierrc/Project.xml
+- `npm run check:style-consistency` - согласованность .editorconfig, .prettierrc,
+  Project.xml и порогов профиля инспекций (`scripts/check-style-consistency.ts`).
 - `npm run check:templates` - live templates renderer and file-template
   syntax check (`scripts/check-templates.ts`).
 - `npm run check:docs` - docs/config cross-check (`scripts/check-docs.ts`).

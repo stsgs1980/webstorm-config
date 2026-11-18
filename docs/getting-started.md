@@ -116,7 +116,7 @@ src/
 | `npm run check:file-length`       | lint, floor, windows           | Anti-monolith: лимит длины файла                    |
 | `npm run check:docs`              | lint, floor, windows           | Доки против конфигов                                |
 | `npm run check:templates`         | lint, windows                  | Live: рендер, ESLint, tsc; file: синтаксис          |
-| `npm run check:style-consistency` | lint, windows                  | .editorconfig/.prettierrc/Project.xml согласованы   |
+| `npm run check:style-consistency` | lint, windows                  | Формат и пороги профиля IDE согласованы             |
 | `npm run check:workspace-zones`   | lint, windows                  | Рабочие зоны игнорируются всеми инструментами       |
 | `npm run check:ide-state`         | lint, windows, pre-push        | Схемы и указатели IDE совпадают с репозиторием      |
 | `npm run lint:css`                | lint, windows                  | Stylelint                                           |

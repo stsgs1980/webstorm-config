@@ -5,9 +5,9 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
 import { checkLinks } from "./docs-links.ts";
+import { MAX_FILE_LINES } from "./thresholds.ts";
 
 /**
  * Per-file opt-in for scripts that are documented as future work. Without the
@@ -50,44 +50,21 @@ const NODE_VERSION_PATTERN = /Node\.js-?\s*(?:%3E%3D|>=)\s*(\d+\.\d+\.\d+)/g;
 const FENCE_PATTERN = /```[\s\S]*?```/g;
 
 /**
- * Recursively collect .md files under a directory.
- * @param dir - directory to walk
- * @returns Markdown file paths with forward slashes
+ * Prose forms that name the file-length limit. Reviewer-signal phrases such
+ * as "over 200 lines" describe a different rule and must not match, so each
+ * form keeps its marker: "лимит"/"предел"/"до", a parenthesised count, or
+ * the IDE inspection name. `DEFAULT_MAX_LINES = N` is a code reference to
+ * the owner, not prose, and is not matched.
  */
-export function collectMarkdown(dir: string): string[] {
-  if (!existsSync(dir)) {
-    return [];
-  }
-
-  const out: string[] = [];
-
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const full = join(dir, entry.name).replace(/\\/g, "/");
-
-    if (entry.isDirectory()) {
-      if (full === "docs/superpowers") {
-        continue;
-      }
-      out.push(...collectMarkdown(full));
-    } else if (entry.name.endsWith(".md")) {
-      out.push(full);
-    }
-  }
-
-  return out;
-}
+const FILE_LENGTH_MENTION =
+  /(?:лимит|предел|до)\D{0,10}(\d+)\s*(?:строк|lines)|\((\d+)\s*(?:строк|lines)(?=[;)])|FileLength\D{0,10}(\d+)/gi;
 
 /**
- * Markdown files the verifier scans: root AGENTS/README/SECURITY, the AI rules
- * pointer and docs/. Other agent workspace files are not documentation.
- * @returns list of file paths
+ * The audit journal pins thresholds at the audit date and Step 1 deletes it;
+ * a later threshold change must not force rewriting history. Known blind
+ * spot, stated next to the check (AGENTS.md I5).
  */
-export function getDocFiles(): string[] {
-  const root = ["AGENTS.md", "README.md", "README.template.md", "SECURITY.md", ".aiassistant/rules/AI Rules.md"].filter(
-    (file) => existsSync(file),
-  );
-  return [...root, ...collectMarkdown("docs")];
-}
+const HISTORICAL_DOCS = new Set(["docs/audit-recommendations.md"]);
 
 /**
  * Convert a character offset to a 1-based line number.
@@ -119,6 +96,25 @@ function checkScriptNames(file: string, text: string, scripts: Record<string, st
     }
     if (!(name in scripts)) {
       failures.push(`[FAIL] ${file}:${lineOf(text, at)} npm run ${name} is not in package.json scripts.`);
+    }
+  }
+}
+
+/**
+ * Check that prose names the file-length limit with the owned value.
+ * @param file - doc file being checked
+ * @param text - file content
+ * @param failures - collector for error lines
+ */
+function checkFileLengthMentions(file: string, text: string, failures: string[]): void {
+  if (HISTORICAL_DOCS.has(file)) {
+    return;
+  }
+  for (const match of text.matchAll(FILE_LENGTH_MENTION)) {
+    const value = match[1] ?? match[2] ?? match[3];
+    if (Number(value) !== MAX_FILE_LINES) {
+      const line = lineOf(text, match.index ?? 0);
+      failures.push(`[FAIL] ${file}:${line} file-length mention ${value} != thresholds.ts ${MAX_FILE_LINES}.`);
     }
   }
 }
@@ -232,6 +228,7 @@ export function checkDocFiles(
     const text = readFileSync(file, "utf8");
 
     checkScriptNames(file, text, scripts, failures);
+    checkFileLengthMentions(file, text, failures);
     checkPaths(file, maskFences(text), failures);
     checkLinks(file, text, failures);
     readmeMarkers += checkNodeVersionMarkers(file, text, engineMin, failures);
