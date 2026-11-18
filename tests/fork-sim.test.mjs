@@ -141,4 +141,30 @@ describe("fork simulation", () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+
+  it("rm-рецепт выпадает из индекса, а printf-рецепт остаётся", { timeout: 180000 }, () => {
+    const dir = mkdtempSync(join(tmpdir(), "wsc-fork-rm-"));
+    try {
+      copyTracked(dir);
+      initFixture(dir);
+
+      const readme = readFileSync(join(dir, "README.template.md"), "utf8");
+      assert.doesNotMatch(readme, /^rm CHANGELOG\.md$/m, "README.template.md must not delete the changelog");
+      assert.match(
+        readme,
+        /printf '%s\\n' '<!-- markdownlint-disable -->' > CHANGELOG\.md/,
+        "README.template.md must keep the printf recipe",
+      );
+
+      rmSync(join(dir, "CHANGELOG.md"), { force: true });
+      git(dir, ["add", "-A"], "ignore");
+      git(dir, ["commit", "-q", "-m", "chore: reset changelog for new project"], "ignore");
+      assert.throws(
+        () => git(dir, ["ls-files", "--error-unmatch", "CHANGELOG.md"], "ignore"),
+        "the rm recipe must drop CHANGELOG.md from the index",
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });

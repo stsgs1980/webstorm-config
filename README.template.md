@@ -73,7 +73,7 @@ npm install
 При клонировании шаблона `CHANGELOG.md` содержит историю **webstorm-config**, а не вашего проекта.
 
 ```bash
-rm CHANGELOG.md
+printf '%s\n' '<!-- markdownlint-disable -->' > CHANGELOG.md
 git add CHANGELOG.md
 git commit -m "chore: reset changelog for new project"
 ```
