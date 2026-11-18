@@ -32,6 +32,7 @@
 - **release:** keep the untagged changelog header stable ([8d31776](https://github.com/stsgs1980/webstorm-config/commit/8d31776f2c666457e4a038365b3387c3786451f4))
 - **scripts:** anchor changelog releases to git tags ([f2bd1bb](https://github.com/stsgs1980/webstorm-config/commit/f2bd1bb5181e6e8f18cc4f96f6abeee7c79f84d8))
 - **templates:** use Velocity syntax in the Vitest file template ([0e12a4b](https://github.com/stsgs1980/webstorm-config/commit/0e12a4bdbf6a6ae53973d6d18699bea15709d59e))
+- **tooling:** check the ci node floor against engines.node ([7725a6f](https://github.com/stsgs1980/webstorm-config/commit/7725a6f4f810746970209e7ec916ffe6e245a2d0))
 - **tooling:** check workspace zones in both directions ([d0d71ad](https://github.com/stsgs1980/webstorm-config/commit/d0d71ad1508385bfc242401a4306ac0e3f7b14a9))
 - **tooling:** cover every eslint zone in lint:prettier-conflicts ([9319574](https://github.com/stsgs1980/webstorm-config/commit/931957455f95d87cdd10fdac9bedc578464a1834))
 - **tooling:** cover every tracked .idea file in check:ide-state ([4f4eb57](https://github.com/stsgs1980/webstorm-config/commit/4f4eb5768e7108a30c483713294d28dc598ae09e))
