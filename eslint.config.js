@@ -173,6 +173,9 @@ export default [
     // snippets are virtual files that exist only in the processor, and the
     // type service cannot resolve a file that is not on disk, so they are
     // excluded here and keep the syntax-only parserOptions of the main block.
+    // dev/ is globally lint-ignored and excluded from the root tsconfig, but
+    // the eslint-config tests lint real fixtures there with ignore: false and
+    // a local tsconfig, so the entry is live for them and inert otherwise.
     files: [
       "src/**/*.{ts,tsx}",
       "server/**/*.{ts,tsx}",
