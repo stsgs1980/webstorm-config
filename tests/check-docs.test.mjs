@@ -21,9 +21,10 @@ const PKG_NO_ENGINES = JSON.stringify({ name: "fixture", scripts: {} });
  * @param {string} pkg - package.json content
  * @param {string} nvm - .nvmrc content; an empty string omits the file
  * @param {{file: string, content: string}[]} [docs] - extra Markdown files
+ * @param {string} [ci] - ci.yml content; undefined omits the workflow
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
-const runFixture = (pkg, nvm, docs = []) => {
+const runFixture = (pkg, nvm, docs = [], ci = undefined) => {
   const dir = mkdtempSync(join(tmpdir(), "wsc-check-docs-"));
   writeFileSync(join(dir, "package.json"), pkg);
   writeFileSync(join(dir, "README.md"), `# Fixture\n\n${BADGE}`);
@@ -34,6 +35,10 @@ const runFixture = (pkg, nvm, docs = []) => {
       mkdirSync(parent, { recursive: true });
     }
     writeFileSync(target, content);
+  }
+  if (ci !== undefined) {
+    mkdirSync(join(dir, ".github", "workflows"), { recursive: true });
+    writeFileSync(join(dir, ".github", "workflows", "ci.yml"), ci);
   }
   if (nvm !== "") {
     writeFileSync(join(dir, ".nvmrc"), nvm);
@@ -67,6 +72,26 @@ describe("check-docs", () => {
     const result = runFixture(PKG, "22.22.2");
     assert.equal(result.status, 0);
     assert.match(result.stdout, /\[OK\] check-docs: 1 docs files consistent with configs\./);
+  });
+
+  it("floor-pin node-version совпадает с engines.node", () => {
+    const ci = 'jobs:\n  floor:\n    steps:\n      - with:\n          node-version: "22.22.2"\n';
+    const result = runFixture(PKG, "22.22.2", [], ci);
+    assert.equal(result.status, 0, result.stderr);
+  });
+
+  it("floor-pin ниже engines.node ловится", () => {
+    const ci = 'jobs:\n  floor:\n    steps:\n      - with:\n          node-version: "22.20.0"\n';
+    const result = runFixture(PKG, "22.22.2", [], ci);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /node-version 22\.20\.0 != engines\.node 22\.22\.2/);
+  });
+
+  it("node-version-file не считается floor-pin", () => {
+    const ci = "jobs:\n  lint:\n    steps:\n      - with:\n          node-version-file: .nvmrc\n";
+    const result = runFixture(PKG, "22.22.2", [], ci);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /no literal node-version floor pin/);
   });
 
   it("имя скрипта с цифрой читается целиком", () => {

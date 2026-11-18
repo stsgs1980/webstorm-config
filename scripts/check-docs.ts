@@ -12,7 +12,7 @@ import {
   DOCS_MAP_MARKER,
 } from "./lib/docs-lists.ts";
 import { checkWiringTable, parseCiSources, parseHuskySources } from "./lib/docs-wiring.ts";
-import { checkVersionAlignment } from "./lib/version-alignment.ts";
+import { checkNodeFloorPin, checkVersionAlignment } from "./lib/version-alignment.ts";
 
 /**
  * Verify docs against configs: npm run names, Node.js version markers, real
@@ -31,6 +31,9 @@ function main(): void {
   const files = getDocFiles();
   const failures: string[] = [];
   const engineMin = checkVersionAlignment(nvmRaw, pkg.engines?.node, failures);
+  const ciPath = ".github/workflows/ci.yml";
+  const ciText = existsSync(ciPath) ? readFileSync(ciPath, "utf8") : undefined;
+  checkNodeFloorPin(ciText, engineMin, failures);
   const readmeMarkers = checkDocFiles(files, pkg.scripts, engineMin, failures);
 
   if (readmeMarkers === 0) {
@@ -40,14 +43,8 @@ function main(): void {
   const gettingPath = "docs/getting-started.md";
   if (existsSync(gettingPath)) {
     const gettingText = readFileSync(gettingPath, "utf8");
-    const ciPath = ".github/workflows/ci.yml";
-    if (existsSync(ciPath)) {
-      checkWiringTable(
-        pkg.scripts,
-        [...parseCiSources(readFileSync(ciPath, "utf8")), ...parseHuskySources()],
-        gettingText,
-        failures,
-      );
+    if (ciText !== undefined) {
+      checkWiringTable(pkg.scripts, [...parseCiSources(ciText), ...parseHuskySources()], gettingText, failures);
     }
     checkInstallCoverage(gettingText, pkg, collectConfigPackages(), failures);
   }

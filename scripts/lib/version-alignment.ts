@@ -31,6 +31,36 @@ export function compareVersions(a: string, b: string): number {
   return 0;
 }
 
+// A literal pin, e.g. `node-version: "22.22.2"`; `node-version-file` is not a pin.
+const CI_NODE_PIN = /^\s*node-version:\s*["']?([^"'\s#]+)["']?/gm;
+
+/**
+ * Check the literal node-version pins in ci.yml against the minimum from
+ * engines.node. A workflow with no literal pin has lost its floor job, so that
+ * is a failure too; `node-version-file` entries are intentionally ignored.
+ * @param ciText - ci.yml content, or undefined when the file is absent
+ * @param engineMin - min version from engines.node, when parseable
+ * @param failures - collector for error lines
+ */
+export function checkNodeFloorPin(ciText: string | undefined, engineMin: string | undefined, failures: string[]): void {
+  if (ciText === undefined || engineMin === undefined) {
+    return;
+  }
+
+  const pins = [...ciText.matchAll(CI_NODE_PIN)].map((match) => match[1]);
+
+  if (pins.length === 0) {
+    failures.push("[FAIL] .github/workflows/ci.yml has no literal node-version floor pin.");
+    return;
+  }
+
+  for (const pin of pins) {
+    if (pin !== engineMin) {
+      failures.push(`[FAIL] .github/workflows/ci.yml node-version ${pin} != engines.node ${engineMin}.`);
+    }
+  }
+}
+
 /**
  * Check that the .nvmrc version satisfies engines.node.
  * @param {string | undefined} nvmRaw - raw .nvmrc content, if the file exists
