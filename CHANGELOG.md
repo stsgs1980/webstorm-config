@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+# Unreleased
+
+### Bug Fixes
+
+- **changelog:** clean the temp context file on every exit ([4e85255](https://github.com/stsgs1980/webstorm-config/commit/4e8525547732a1ddc2b69169d8e6a0967bfebe06))
+
 # 1.0.2 (2026-11-19)
 
 ### Bug Fixes
