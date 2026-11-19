@@ -96,15 +96,22 @@ export function selectMeasured(changed: string[], roots: string[]): MeasuredSele
  * are absolute paths; the gate compares repository-relative ones.
  * @param json - raw `coverage-summary.json`
  * @param root - repository root as git prints it
+ * @param resolve - canonicalize an absolute path; identity by default, the CLI
+ * passes `realpath` to unfold Windows short names
  * @returns repository-relative path to line percentage; `total` is dropped
  * @throws when the JSON is malformed or lacks the `total` entry
  */
-export function parseCoverageSummary(json: string, root: string): Map<string, number> {
+export function parseCoverageSummary(
+  json: string,
+  root: string,
+  resolve: (path: string) => string = (path) => path,
+): Map<string, number> {
   const parsed: unknown = JSON.parse(json);
   if (typeof parsed !== "object" || parsed === null || !("total" in parsed)) {
     throw new Error("coverage-summary.json has no 'total' entry; the report is malformed.");
   }
 
+  const resolvedRoot = resolve(root);
   const summary = new Map<string, number>();
   for (const [file, entry] of Object.entries(parsed as Record<string, SummaryEntry>)) {
     if (file === "total") {
@@ -112,7 +119,7 @@ export function parseCoverageSummary(json: string, root: string): Map<string, nu
     }
     const pct = entry.lines?.pct;
     if (typeof pct === "number") {
-      summary.set(toRepoRelative(file, root), pct);
+      summary.set(toRepoRelative(resolve(file), resolvedRoot), pct);
     }
   }
 

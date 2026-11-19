@@ -13,7 +13,7 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 import process from "node:process";
 import { evaluateCoverage, isZeroSha, parseCoverageSummary, selectMeasured } from "./lib/changed-coverage.ts";
@@ -74,6 +74,21 @@ const args = process.argv.slice(2);
  * @returns command output
  */
 const git = (gitArgs: string[]): string => execFileSync("git", gitArgs, { cwd: root, encoding: "utf8" }).trim();
+
+/**
+ * Canonical absolute path. Windows runners hand out 8.3 short names in the
+ * report while git prints the long root, so both sides are unfolded before
+ * the prefix comparison. A missing path stays as given.
+ * @param path - absolute path from the report or the root
+ * @returns canonical path when it exists
+ */
+const canonicalPath = (path: string): string => {
+  try {
+    return realpathSync.native(path);
+  } catch {
+    return path;
+  }
+};
 
 /**
  * Resolve the base commit: explicit flag, CI environment, then the default
@@ -160,7 +175,7 @@ if (!existsSync(absoluteSummary)) {
 
 let summary: Map<string, number>;
 try {
-  summary = parseCoverageSummary(readFileSync(absoluteSummary, "utf8"), root);
+  summary = parseCoverageSummary(readFileSync(absoluteSummary, "utf8"), root, canonicalPath);
 } catch (error) {
   summary = fail(`[FAIL] Cannot read '${summaryPath}': ${error instanceof Error ? error.message : String(error)}`);
 }

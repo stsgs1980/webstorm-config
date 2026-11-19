@@ -59,6 +59,16 @@ describe("parseCoverageSummary", () => {
     assert.equal(summary.has("total"), false);
   });
 
+  it("резолвер снимает Windows-короткое имя корня", () => {
+    const json = JSON.stringify({
+      total: { lines: { pct: 50 } },
+      "C:\\REPO~1\\eslint-rules\\rule.js": { lines: { pct: 88.5 } },
+    });
+    const resolve = (path) => path.replace("C:\\REPO~1", "C:\\repo");
+    const summary = parseCoverageSummary(json, "C:\\repo", resolve);
+    assert.equal(summary.get("eslint-rules/rule.js"), 88.5);
+  });
+
   it("бросает на отчёте без total и на не-JSON", () => {
     assert.throws(() => parseCoverageSummary("{}", "/repo"), /no 'total'/);
     assert.throws(() => parseCoverageSummary("not json", "/repo"), SyntaxError);
