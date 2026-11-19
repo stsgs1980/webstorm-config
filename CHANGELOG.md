@@ -45,6 +45,7 @@
 
 - **check-docs:** validate markdown links and anchors ([e28eddc](https://github.com/stsgs1980/webstorm-config/commit/e28eddced04e3d885e3c10a3872e7c786330a1a9))
 - **check-docs:** wiring-table and list verification ([63c738c](https://github.com/stsgs1980/webstorm-config/commit/63c738c3af411ae4e52359a902faeb1d6f876f14))
+- **ci:** enforce 80% line coverage on changed files ([61d85be](https://github.com/stsgs1980/webstorm-config/commit/61d85beca77f7c18b3a852f208144a1f617e61b0))
 - **ide:** derive machine schemes from .idea via generated/ide-reference ([c7a1be8](https://github.com/stsgs1980/webstorm-config/commit/c7a1be8d5503f479bd626f37dd2dc5ddaad61587))
 - **ide:** gate the IDE state against the repository ([e898095](https://github.com/stsgs1980/webstorm-config/commit/e898095439f68f2db0ae7a8d7ee9562067fd468d))
 - **lint:** block exhaustive-deps, add advisory lint:metrics lane ([e9d4aeb](https://github.com/stsgs1980/webstorm-config/commit/e9d4aeb2cf304bb3ab9e9e0d4e5629d7e1bd89ed))
