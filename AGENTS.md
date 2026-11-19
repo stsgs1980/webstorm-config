@@ -301,10 +301,9 @@ environment.
 - GitHub settings outside the clone: secret scanning, push protection,
   Private Vulnerability Reporting, the 7-day response clock (`SECURITY.md`).
   [ENV-LOCKED]
-- Hooks and scripts under Windows: the `windows` job is green, local runs on
-  a Windows machine were not reproduced. [ENV-LOCKED]
-- Import of live templates through the WebStorm UI: one manual path,
-  unverified in this environment. [ENV-LOCKED]
+- Hooks and scripts under Windows: local runs on this Windows machine were
+  reproduced 19.11.2026 (pre-commit, pre-push, typecheck, tests, gates);
+  the `windows` CI job is green.
 - File templates (`.idea/fileTemplates/`): `check:templates` rejects
   live-template syntax (`$NAME$` instead of `${NAME}`); how the IDE expands a
   template is verified manually only. [ENV-LOCKED]

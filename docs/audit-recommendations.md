@@ -256,7 +256,7 @@
 
 - Источник: второй аудит, план №8.
 - Факт: IDE не читает `.idea/liveTemplates/`; импорт описан в
-  `docs/live-templates/README.md` (строка 13), Step 1 ссылался на
+  `docs/live-templates/README.md` § «Импорт», Step 1 ссылался на
   `webstorm.md`.
 - Сделано (19.11.2026): в Step 1 `docs/getting-started.md` добавлен шаг 7:
   импорт групп `React`, `Testing`, `TypeScript`, `Utilities` через
@@ -264,8 +264,15 @@
   `docs/live-templates/README.md` § «Импорт»; проверка `rafce` + `Tab`.
 - Проверено: `npm run check:docs` и `npm run lint:md` зелёные; ссылка и
   якорь `#импорт` валидны.
-- Приёмка: после Step 1 `rafce` + Tab разворачивает компонент. Само
-  развёртывание в IDE в этой среде не проверялось: [ENV-LOCKED].
+- Приёмка закрыта вручную (19.11.2026): пользователь ввёл `rafce` и нажал
+  `Tab` в `test.tsx`; файл содержал развёрнутый компонент `Test`
+  (`interface TestProps`, `export const Test`, `export default Test`), то есть
+  переменная `NAME` подставилась из имени файла. Наборы на машине:
+  `%APPDATA%\JetBrains\WebStorm2026.3\templates\{React,Testing,TypeScript,Utilities}.xml`
+  побайтово равны репозиторным (`Get-FileHash`); `npm run check:templates` ->
+  `[OK] templates checked: 18`. Черновик `test.tsx` после проверки удалён.
+- Приёмка: после Step 1 `rafce` + Tab разворачивает компонент; подтверждено
+  вручную 19.11.2026, гейты на шаблоны зелёные.
 
 #### A14. [OK] `check:docs` проверяет ссылки и якоря
 
