@@ -27,6 +27,7 @@
 - **ide-state:** inject the platform JetBrains base in gate fixtures ([7fecf5d](https://github.com/stsgs1980/webstorm-config/commit/7fecf5d2cccb7fff1d4eba880b984676bc0a6a1f))
 - **ide:** derive rafce component name, add template contexts and dictionary words ([1a2cf34](https://github.com/stsgs1980/webstorm-config/commit/1a2cf34819bf481dd6ef8f50c87b5d619880968f))
 - **ide:** resolve JetBrains config root per platform ([de7c280](https://github.com/stsgs1980/webstorm-config/commit/de7c2803471940e17a4af256f610a4dfbb6f34ce))
+- **lint:** flag Unicode arrows in the unicode-policy rule ([150c158](https://github.com/stsgs1980/webstorm-config/commit/150c158712b9dbcd1e5a7837407208e4b612da0f))
 - **live-templates:** restore the missing context blocks ([23107d3](https://github.com/stsgs1980/webstorm-config/commit/23107d3290baeb9529aaffbb14544393202b2838))
 - **release:** derive version from tag and stabilize changelog headers ([3832489](https://github.com/stsgs1980/webstorm-config/commit/383248957c247d45d334ed4080a0eaadf6f7d45e))
 - **release:** keep the untagged changelog header stable ([8d31776](https://github.com/stsgs1980/webstorm-config/commit/8d31776f2c666457e4a038365b3387c3786451f4))
