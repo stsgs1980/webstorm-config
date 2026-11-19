@@ -193,24 +193,28 @@
 
 ### INFO
 
-#### A10. [INFO] Зафиксировать разницу pre-commit/pre-push и CI
+#### A10. [OK] Разница pre-commit/pre-push и CI зафиксирована
 
 - Источник: второй аудит INFO №5-6; сравнение №11-12.
-- Факт: `.husky/pre-commit` = `lint-staged` + `check-file-length`;
+- Факт: `.husky/pre-commit` = lint-staged + `check-file-length`;
   `.husky/pre-push` = `typecheck` + `test` + `check:ide-state`. Локально не
   запускаются `check:docs`, `check:templates`, `check:style-consistency`,
   `lint:css`, `lint:md`, `lint:metrics`, `format:check`, `npm audit`.
-- CHANGELOG (строка 83) говорит «add pre-push changelog guard hook», но
-  текущий `.husky/pre-push` — typecheck + test + check:ide-state; запись
-  историческая.
-- Сделано (частично, 19.11.2026): в `docs/webstorm.md` § «Согласованность
+- CHANGELOG, запись `add pre-push changelog guard hook`: историческая; текущий
+  `.husky/pre-push` — typecheck + test + check:ide-state, а CHANGELOG
+  генерируется, поэтому запись не правится вручную.
+- Сделано (19.11.2026): в `docs/webstorm.md` § «Согласованность
   IDE и CI» добавлены цепочка каналов и таблица «Где проверяется каждое
   правило»; у каждого правила назван канал commit / CI / IDE / advisory.
-- Осталось: явного перечня «что не сработает локально» нет; запись
-  CHANGELOG (строка 83) не аннотирована.
-- Действие: добавить перечень «локально vs CI» в `AGENTS.md` §6 или
-  `docs/testing.md`; при желании — строку про историческую запись CHANGELOG.
-- Приёмка: из текста понятно, какие гейты не сработают локально.
+- Сделано (19.11.2026): в `AGENTS.md` §6 добавлен перечень: что покрывают
+  pre-commit, commit-msg и pre-push, и какие гейты остаются только в CI
+  (whole-tree `lint`, `lint:css`, `lint:md`, `format:check`,
+  `lint:prettier-conflicts`, `lint:metrics`, `check:docs`, `check:templates`,
+  `check:style-consistency`, `check:workspace-zones`, `check:coverage`,
+  `npm audit --omit=dev`, CHANGELOG freshness gate, commitlint). Там же
+  зафиксировано, что CI перезапускает локальные гейты, а машинные проверки
+  IDE остаются локальными.
+- Приёмка: из `AGENTS.md` §6 понятно, какие гейты не сработают локально.
 
 #### A11. [OK] Глобальный Markdownlint-watcher оставлен с ограничениями
 

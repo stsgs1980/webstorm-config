@@ -152,6 +152,16 @@ the signal.
   a hook fails for reasons unrelated to the change; state the reason in the commit
   body. CI re-runs every repository check that can run in CI, so skipping
   locally never bypasses a gate; machine-level IDE checks stay local.
+- Local hooks cover part of the gate set: pre-commit runs lint-staged (Prettier
+  on staged files, ESLint on staged code, Stylelint on staged CSS, markdownlint
+  on staged Markdown) plus `check:file-length`; commit-msg runs commitlint;
+  pre-push runs `typecheck`, `test` and `check:ide-state`. The rest are CI-only:
+  whole-tree `lint`, `lint:css`, `lint:md` and `format:check`,
+  `lint:prettier-conflicts`, `lint:metrics` (advisory), `check:docs`,
+  `check:templates`, `check:style-consistency`, `check:workspace-zones`,
+  `check:coverage`, `npm audit --omit=dev`, the CHANGELOG freshness gate and
+  commitlint on pushed commits. Per-rule channels: `docs/webstorm.md`
+  section "Согласованность IDE и CI".
 - Commit messages are linted locally (`commit-msg`) and in CI on branch pushes and
   pull requests; merge commits are exempt.
 - Git environment check: `git rev-parse --show-toplevel` must return this project's
