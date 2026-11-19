@@ -73,6 +73,18 @@ rmSync(DRAFT, { force: true });
 rmSync(CHANGELOG_INPUT, { force: true });
 
 /**
+ * Remove the per-run temporary files. Every exit path calls this, including
+ * the early "up to date" exit: `process.exit` skips the cleanup at the end of
+ * the script, and the leftover context file used to accumulate one per run.
+ * @returns void
+ */
+function cleanupTempFiles(): void {
+  rmSync(DRAFT, { force: true });
+  rmSync(CHANGELOG_INPUT, { force: true });
+  rmSync(CONTEXT_FILE, { force: true });
+}
+
+/**
  * Drop the volatile parts of the unreleased heading. The writer puts the
  * compare link with the current commit and the generation date there, and both
  * differ on every run; the CI freshness check compares the regenerated text
@@ -162,6 +174,7 @@ try {
   if (!hasSections) {
     if (hasTags) {
       process.stdout.write("CHANGELOG.md is up to date.\n");
+      cleanupTempFiles();
       process.exit(0);
     }
     // A fresh untagged project has no released history: the file is just the
@@ -187,14 +200,13 @@ try {
   // The draft has no known extension, so the prettier parser is explicit.
   execSync(`npx --no-install prettier --write --parser markdown ${DRAFT}`, { stdio: "inherit" });
 } catch (error) {
-  rmSync(DRAFT, { force: true });
-  rmSync(CONTEXT_FILE, { force: true });
+  cleanupTempFiles();
   process.stderr.write("Changelog generation failed; CHANGELOG.md was left untouched.\n");
   throw error;
 }
 
 renameSync(DRAFT, CHANGELOG);
-rmSync(CONTEXT_FILE, { force: true });
+cleanupTempFiles();
 
 const updated = readFileSync(CHANGELOG, "utf8").replace(/\r\n/g, "\n");
 

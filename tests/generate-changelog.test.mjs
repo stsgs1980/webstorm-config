@@ -1,7 +1,16 @@
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { platform, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import process from "node:process";
@@ -142,10 +151,11 @@ const makeGeneratedNpx = (content) => {
  * Run the changelog script with the shim first on PATH.
  * @param {string} repo - working directory
  * @param {string} shim - npx shim directory
+ * @param {object} [extraEnv] - environment overrides for the child process
  * @returns {{ status: number, stdout: string, stderr: string }} run result
  */
-const runWithShim = (repo, shim) => {
-  const env = gitEnv();
+const runWithShim = (repo, shim, extraEnv = {}) => {
+  const env = { ...gitEnv(), ...extraEnv };
   const pathKey = Object.keys(env).find((key) => key.toLowerCase() === "path") ?? "PATH";
   env[pathKey] = `${shim}${delimiter}${env[pathKey]}`;
   try {
@@ -222,6 +232,23 @@ describe("generate-changelog", () => {
     } finally {
       rmSync(repo, { recursive: true, force: true });
       rmSync(shim, { recursive: true, force: true });
+    }
+  });
+
+  it("не оставляет временный файл контекста, когда CHANGELOG уже актуален", () => {
+    const repo = makeTaggedRepo();
+    const shim = makeGeneratedNpx("");
+    const temp = mkdtempSync(join(tmpdir(), "wsc-changelog-tmp-"));
+    try {
+      const result = runWithShim(repo, shim, { TEMP: temp, TMP: temp, TMPDIR: temp });
+      assert.equal(result.status, 0);
+      assert.match(result.stdout, /up to date/);
+      const leaked = readdirSync(temp).filter((name) => name.startsWith("wsc-changelog-context-"));
+      assert.deepEqual(leaked, [], "временный файл контекста должен удаляться на любом выходе");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(shim, { recursive: true, force: true });
+      rmSync(temp, { recursive: true, force: true });
     }
   });
 
