@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { COVERAGE_INCLUDE } from "./scripts/lib/coverage-scope.ts";
 
 export default defineConfig({
   test: {
@@ -23,7 +24,9 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
       // Scripts run in child processes (execFileSync), so v8 cannot instrument
       // them; their behavior is covered by fixture tests, not line coverage.
-      include: ["eslint-rules/**", "eslint-parsers/**", "eslint-processors/**", "tests/lib/**"],
+      // Scope owner: the changed-file gate filters the same list, so a fork
+      // adds application code once in scripts/lib/coverage-scope.ts.
+      include: COVERAGE_INCLUDE,
     },
   },
 });

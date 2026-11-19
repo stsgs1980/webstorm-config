@@ -113,6 +113,7 @@ src/
 | `npm run lint:metrics`            | lint, windows                  | Advisory-метрики, warning не роняет сборку          |
 | `npm run typecheck`               | lint, floor, windows, pre-push | TypeScript (`tsc --noEmit`)                         |
 | `npm test`                        | floor, test, windows, pre-push | Vitest (пустой набор - ошибка)                      |
+| `npm run check:coverage`          | coverage                       | 80% строк на изменённых файлах                      |
 | `npm run check:file-length`       | lint, floor, windows           | Anti-monolith: лимит длины файла                    |
 | `npm run check:docs`              | lint, floor, windows           | Доки против конфигов                                |
 | `npm run check:templates`         | lint, windows                  | Live: рендер, ESLint, tsc; file: синтаксис          |

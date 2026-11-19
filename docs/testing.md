@@ -28,11 +28,12 @@
 
 ## Скрипты
 
-| Команда                 | Описание                      |
-| ----------------------- | ----------------------------- |
-| `npm test`              | Запуск тестов (один прогон)   |
-| `npm run test:watch`    | Тесты в watch-режиме          |
-| `npm run test:coverage` | Тесты с отчётом покрытия (v8) |
+| Команда                  | Описание                            |
+| ------------------------ | ----------------------------------- |
+| `npm test`               | Запуск тестов (один прогон)         |
+| `npm run test:watch`     | Тесты в watch-режиме                |
+| `npm run test:coverage`  | Тесты с отчётом покрытия (v8)       |
+| `npm run check:coverage` | 80% строк на изменённых файлах (CI) |
 
 ## Когда менять конфиг
 
@@ -55,6 +56,7 @@ npm install -D jsdom @testing-library/react @testing-library/jest-dom \
 
 ```typescript
 import { defineConfig } from "vitest/config";
+import { COVERAGE_INCLUDE } from "./scripts/lib/coverage-scope.ts";
 
 export default defineConfig({
   test: {
@@ -76,7 +78,9 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      include: ["eslint-rules/**", "eslint-parsers/**", "eslint-processors/**", "tests/lib/**"],
+      // Scope owner: add src/** here (scripts/lib/coverage-scope.ts); the
+      // changed-file gate filters the same list.
+      include: COVERAGE_INCLUDE,
     },
   },
 });
@@ -151,22 +155,32 @@ npx playwright install --with-deps chromium
 CSS-классам. В CI e2e идёт отдельной джобой с установленными браузерами; в
 шаблоне её нет, пока нет UI.
 
-## Coverage-гейт: принятое решение
+## Coverage-гейт: 80% строк на изменённых файлах
 
-Порог - 80% строк на изменённых файлах, не глобальный. Схема (ещё не в CI):
+Гейт подключён в CI джобой `coverage` (`npm run check:coverage`). Скоуп и порог
+живут в `scripts/lib/coverage-scope.ts`: `vitest.config.ts` импортирует оттуда
+`COVERAGE_INCLUDE`, поэтому отчёт и гейт меряют один набор файлов.
 
-```bash
-git diff --name-only -- '*.ts' origin/main...HEAD   # изменённые файлы
-npx vitest related <files> --coverage --coverage.reporter=json-summary
-# небольшой скрипт сверяет per-file покрытие из coverage/coverage-summary.json
-```
+`scripts/check-changed-coverage.ts`:
 
-Статус (зафиксировано 02.11.2026): в шаблоне гейт не включаем - здесь нет `src/`,
-измеряются только `eslint-*` и `tests/lib/`. В форке с приложением гейт включается
-по схеме выше: 80% строк на изменённых файлах. Глобальный порог не вводится: пока
-гейта на изменениях нет, общая цифра ничего не гарантирует и стимулирует тесты
-ради процента.
+1. разрешает базу: `--base`, затем `COVERAGE_BASE_SHA` (PR base sha или
+   `github.event.before`), затем merge-base с `origin/main`;
+2. оставляет изменённые `*.{ts,tsx,js,...}` в измеряемых корнях, кроме `*.d.ts`
+   и `*.test.*` / `*.spec.*`;
+3. запускает `vitest related <files> --coverage --coverage.reporter=json-summary`;
+4. падает, если у изменённого файла нет данных покрытия (нет связанного теста)
+   или меньше 80% строк.
 
-Что входит в отчёт: `eslint-rules/`, `eslint-parsers/`, `eslint-processors/` и
-`tests/lib/`. Скрипты `scripts/**` запускаются через `execFileSync`, поэтому v8 их
-не инструментирует; их поведение проверяется фикстурами, а не процентом строк.
+Локально: `npm run check:coverage` (нужен `origin/main`; `--base <ref>` меняет
+базу). `--summary <file>` сверяет готовый `coverage/coverage-summary.json`, не
+запуская Vitest.
+
+Шаблон меряет `eslint-rules/`, `eslint-parsers/`, `eslint-processors/` и
+`tests/lib/`; форк с `src/` добавляет `src/**` в `COVERAGE_INCLUDE` один раз.
+Изменения вне скоупа (доки, `scripts/`, конфиги, сами тесты) гейт печатает как
+`[INFO] ... outside the coverage scope` и не меряет: это задокументированная
+слепая зона, а не зелёный результат покрытия. Глобальный порог не вводится:
+общая цифра ничего не гарантирует и стимулирует тесты ради процента.
+
+Скрипты `scripts/**` запускаются через `execFileSync`, поэтому v8 их не
+инструментирует; их поведение проверяется фикстурами, а не процентом строк.

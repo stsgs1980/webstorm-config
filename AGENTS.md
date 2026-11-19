@@ -203,9 +203,11 @@ the signal.
 - Every bug fix ships with a regression test. Every exported function with branching
   logic gets a unit test. Do not add tests without assertions.
 - No network in unit tests: mock at the module boundary, not by patching globals.
-- Coverage gate (decided, not yet wired into CI): 80% lines per changed file, from
-  `vitest related --coverage`; do not chase global coverage meanwhile. The scheme
-  and its status are recorded in `docs/testing.md`.
+- Coverage gate: 80% lines per changed file, wired into CI as the `coverage` job
+  (`npm run check:coverage`, `vitest related --coverage`). Scope and threshold
+  live in `scripts/lib/coverage-scope.ts`; a changed file with no related test
+  fails. Changed paths outside the scope (docs, `scripts/`, configs, tests) are
+  reported as `[INFO]` and not measured. Do not chase global coverage.
 
 ## 9. Security & Dependencies
 
@@ -250,6 +252,8 @@ actually exist there.
   file, and every tracked `.idea` file unchanged against HEAD (`git ls-files`
   supplies the set). Machine scheme names carry the `*-ide` suffix
   (`webstorm-config-ide`).
+- `npm run check:coverage` - 80% lines on changed files in the `coverage` CI
+  job; the measured scope and threshold live in `scripts/lib/coverage-scope.ts`.
 - Live templates live in `.idea/liveTemplates/`.
 - Docs that travel with the fork: `docs/webstorm.md` (IDE), `docs/testing.md` (tests),
   `docs/markdown.md` (Markdown style), `docs/architecture.md` (module boundaries),
@@ -294,5 +298,3 @@ environment.
 - File templates (`.idea/fileTemplates/`): `check:templates` rejects
   live-template syntax (`$NAME$` instead of `${NAME}`); how the IDE expands a
   template is verified manually only. [ENV-LOCKED]
-- Coverage gate (80% lines per changed file): decided, not wired into CI yet;
-  see Section 8.

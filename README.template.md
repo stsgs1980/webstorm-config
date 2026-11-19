@@ -107,6 +107,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) — какие настройки пр
 | `npm run check:style-consistency` | Согласованность формата и порогов профиля IDE              |
 | `npm run check:workspace-zones`   | Рабочие зоны игнорируются всеми инструментами              |
 | `npm run check:ide-state`         | Схемы и указатели IDE совпадают с репозиторием             |
+| `npm run check:coverage`          | 80% строк на изменённых файлах (CI)                        |
 | `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc; file-шаблоны: синтаксис |
 | `npm run sync:ide`                | Восстановление IDE-профиля и схемы из эталона              |
 | `npm run lint:metrics`            | Метрики (advisory)                                         |
