@@ -1,5 +1,11 @@
 <!-- markdownlint-disable -->
 
+# Unreleased
+
+### Bug Fixes
+
+- **ci:** unfold Windows short paths in the coverage report ([56dd846](https://github.com/stsgs1980/webstorm-config/commit/56dd846881619156155697edf2b63b478ed9ffb5))
+
 # 1.0.1 (2026-11-19)
 
 ### Bug Fixes
