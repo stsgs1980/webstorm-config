@@ -36,6 +36,11 @@
    `webstorm-config.iml` останется мёртвой ссылкой, если не переименовать.
 
 6. Настройте WebStorm — [webstorm.md](webstorm.md) (один раз).
+7. Импортируйте live templates: `.idea/liveTemplates/` IDE не читает, XML-файлы
+   там лежат для ручного импорта. Перенесите группы `React`, `Testing`,
+   `TypeScript`, `Utilities` в `Settings` -> `Editor` -> `Live Templates`
+   (Ctrl+V); пошагово — [live-templates/README.md](live-templates/README.md#импорт).
+   Проверка: в `.tsx` наберите `rafce` и нажмите `Tab` — развернётся компонент.
 
 ## Step 2: Framework dependencies
 

@@ -19,7 +19,7 @@
   - `Сравнение двух аудитов webstorm-config.md`.
 
 - Проверенный HEAD на 09.11.2026: `385cb7f`, совпадает со вторым аудитом.
-- Статусы A10, A12, A14 сверены с кодом на 19.11.2026 (HEAD `e6d4313`).
+- Статусы A10-A14, A16 сверены с кодом на 19.11.2026 (HEAD `e6d4313`).
 - Инцидент 09.11.2026: WebStorm перезаписала `.idea/codeStyles/Project.xml`;
   причина найдена и устранена (A17).
 - Цель: свести находки в один план с приоритетами и критериями приёмки.
@@ -211,7 +211,7 @@
   `docs/testing.md`; при желании — строку про историческую запись CHANGELOG.
 - Приёмка: из текста понятно, какие гейты не сработают локально.
 
-#### A11. [INFO] Решить судьбу глобального Markdownlint-watchera
+#### A11. [OK] Глобальный Markdownlint-watcher оставлен с ограничениями
 
 - Источник: `Отчёт проверка файла.md` §6 пункт 1.
 - Факт: `%APPDATA%\JetBrains\WebStorm2026.3\options\watcherDefaultTasks.xml`
@@ -219,9 +219,17 @@
   `$ProjectFileDir$/node_modules/markdownlint-cli/markdownlint.js --fix`,
   `exitCodeBehavior=ALWAYS`.
 - Риск: в проекте без пакета watcher упадёт; путь к Node абсолютный.
-- Действие: оставить (работает только в проектах с пакетом) или удалить
-  глобальный и держать проектный.
-- Приёмка: решение зафиксировано.
+- Решение (19.11.2026): оставить. Watcher машинно-локальный, в шаблон и
+  форк не входит; в этом репозитории `markdownlint-cli` есть
+  (`package.json`, строка 30), поэтому он работает. Удаление при
+  запущенной WebStorm рискованно (A17.1), а проектный watcher по
+  `docs/webstorm.md` §11 всё равно настраивается вручную.
+- Принятый риск: в другом проекте без `markdownlint-cli` watcher упадёт;
+  абсолютный путь к Node привязан к машине.
+- Условие пересмотра: при первом сбое в другом проекте или после переноса
+  Node удалить глобальный watcher при закрытой IDE и настроить проектный
+  по `docs/webstorm.md` §11.
+- Приёмка: решение зафиксировано; watcher не входит в репозиторий.
 
 #### A12. [OK] Coverage gate 80% подключён в CI
 
@@ -239,14 +247,20 @@
   `npm run check:coverage`; `package.json` (строка 75) -> скрипт есть.
 - Приёмка: решение зафиксировано в `docs/testing.md`; гейт в CI.
 
-#### A13. [INFO] Добавить импорт live templates в Step 1
+#### A13. [OK] Импорт live templates добавлен в Step 1
 
 - Источник: второй аудит, план №8.
 - Факт: IDE не читает `.idea/liveTemplates/`; импорт описан в
-  `docs/live-templates/README.md` (строка 13), Step 1 ссылается на
+  `docs/live-templates/README.md` (строка 13), Step 1 ссылался на
   `webstorm.md`.
-- Действие: добавить явный пункт в Step 1 `getting-started.md`.
-- Приёмка: после Step 1 `rafce` + Tab разворачивает компонент.
+- Сделано (19.11.2026): в Step 1 `docs/getting-started.md` добавлен шаг 7:
+  импорт групп `React`, `Testing`, `TypeScript`, `Utilities` через
+  `Settings` -> `Editor` -> `Live Templates`; ссылка на
+  `docs/live-templates/README.md` § «Импорт»; проверка `rafce` + `Tab`.
+- Проверено: `npm run check:docs` и `npm run lint:md` зелёные; ссылка и
+  якорь `#импорт` валидны.
+- Приёмка: после Step 1 `rafce` + Tab разворачивает компонент. Само
+  развёртывание в IDE в этой среде не проверялось: [ENV-LOCKED].
 
 #### A14. [OK] `check:docs` проверяет ссылки и якоря
 
@@ -285,15 +299,17 @@
   (green-to-green): typecheck, lint, lint:metrics, 129 тестов, все три гейта
   и file-length зелёные.
 
-#### A16. [INFO] Решить видимость гейта `check:style-consistency` в CHANGELOG
+#### A16. [OK] `check:style-consistency` остаётся `chore` без записи в CHANGELOG
 
 - Источник: первый аудит, опциональный пункт 8.
 - Факт: коммит `799512d` — `chore(ci): check code style consistency across all 24 languages`;
   `conventional-changelog -p angular` не включает `chore`,
   поэтому записи о гейте в `CHANGELOG.md` нет.
-- Действие: либо принять, что CI-гейт — это `chore` и в CHANGELOG ему не место,
-  либо провести отдельным `feat`-коммитом, чтобы он попал в changelog.
-- Приёмка: решение зафиксировано; при выборе `feat` запись есть в `CHANGELOG.md`.
+- Решение (19.11.2026): принять `chore`; отдельный `feat`-коммит ради
+  записи не создавать. Гейт внутренний, поведение шаблона для потребителя
+  не меняет; `conventional-changelog` корректно опускает `chore`. Гейт уже
+  виден в `README.template.md` и в таблице Step 5 `docs/getting-started.md`.
+- Приёмка: решение зафиксировано; записи в `CHANGELOG.md` нет.
 
 #### A17. [OK] Глобальная схема code style задокументирована
 
