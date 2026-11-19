@@ -320,5 +320,7 @@ npx husky init
 (\*\*\*) Без плагина Prettier падает (exit 2).
 (\*\*\*\*) A11y нет вовсе — только `svelte-check`/компилятор.
 
-Всем стекам: расширить `lint-staged` (`*.{vue,svelte,astro,scss,mts,cts}`),
-`lint:css` — на `**/*.{css,scss}` + `stylelint-config-standard-scss`.
+Всем стекам: базовый список расширений Prettier задан в `package.json`
+(`lint-staged`); добавьте к нему только расширения нового стека, например
+`*.{vue,svelte,astro,scss,mts,cts}`, и расширьте `lint:css` на
+`**/*.{css,scss}` + `stylelint-config-standard-scss`.

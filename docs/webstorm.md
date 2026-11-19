@@ -104,6 +104,11 @@ WebStorm часть из них **не подхватывает автомати
 
 Использует `.prettierrc` и плагины из `devDependencies`.
 
+Список расширений задан дважды: `myFilesPattern` в `.idea/prettier.xml` (IDE) и
+Prettier-глоб в `package.json` (`lint-staged`). Оперативный список - `package.json`:
+pre-commit форматирует по нему, а IDE-паттерн должен оставаться его надмножеством.
+`docs/getting-started.md` расширяет базовый глоб под добавляемый стек.
+
 ## 3. ESLint
 
 Путь: `Settings -> Languages & Frameworks -> JavaScript -> Code Quality Tools -> ESLint`
