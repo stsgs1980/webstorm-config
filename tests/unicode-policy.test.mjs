@@ -14,7 +14,7 @@ describe("unicode-policy/emoji", () => {
       "export const ok = '[OK]';",
       "const s = '->';",
       "const star = '★';",
-      "const txt = '→ — …';",
+      `const txt = '\u2192 \u2014 \u2026';`,
       "const path = 'docs/live-templates/README.md';",
       "const digit = '1\u{FE0F}';",
     ],
@@ -119,6 +119,11 @@ describe("unicode-policy/unicode-graphics", () => {
           { messageId: "noUnicodeGraphics", line: 1, column: 16 },
         ],
       },
+      {
+        name: "стрелка U+2192 ловится",
+        code: `const arrow = '\u2192';`,
+        errors: [{ messageId: "noUnicodeGraphics", line: 1, column: 16, data: { codePoint: "U+2192" } }],
+      },
     ],
   });
 });
@@ -129,7 +134,7 @@ describe("unicode-policy/meta", () => {
     assert.deepEqual(unicodePolicy.rules.emoji.meta.schema, []);
     assert.equal(
       unicodePolicy.rules["unicode-graphics"].meta.docs.description,
-      "Disallow Unicode box/line drawing characters; use ASCII.",
+      "Disallow Unicode box/line drawing and arrow characters; use ASCII.",
     );
     assert.deepEqual(unicodePolicy.rules["unicode-graphics"].meta.schema, []);
   });

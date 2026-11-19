@@ -6,7 +6,8 @@ const emojiBranches = [String.raw`\p{Extended_Pictographic}`, String.raw`\p{Regi
 
 const emojiPattern = new RegExp(emojiBranches.join("|"), "u");
 
-const unicodeGraphicsPattern = /[\u{2500}-\u{257F}\u{2580}-\u{259F}\u{25A0}-\u{25FF}\u{2800}-\u{28FF}]/u;
+const unicodeGraphicsPattern =
+  /[\u{2190}-\u{21FF}\u{2500}-\u{257F}\u{2580}-\u{259F}\u{25A0}-\u{25FF}\u{2800}-\u{28FF}]/u;
 
 const formatCodePoint = (character) => `U+${character.codePointAt(0).toString(16).toUpperCase().padStart(4, "0")}`;
 
@@ -44,8 +45,8 @@ const emoji = createRule({
 });
 
 const unicodeGraphics = createRule({
-  description: "Disallow Unicode box/line drawing characters; use ASCII.",
-  message: "Unicode box/line drawing characters are prohibited. Use ASCII. Found {{codePoint}}.",
+  description: "Disallow Unicode box/line drawing and arrow characters; use ASCII.",
+  message: "Unicode box/line drawing and arrow characters are prohibited. Use ASCII. Found {{codePoint}}.",
   messageId: "noUnicodeGraphics",
   pattern: unicodeGraphicsPattern,
 });
