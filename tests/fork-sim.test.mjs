@@ -47,8 +47,9 @@ const copyTracked = (target) => {
   const listed = execFileSync("git", ["-c", "core.quotepath=false", "ls-files", "-z"], {
     cwd: REPO_ROOT,
     env: gitEnv(),
+    encoding: "utf8",
   });
-  for (const file of listed.toString("utf8").split("\0")) {
+  for (const file of listed.split("\0")) {
     if (file === "") {
       continue;
     }
