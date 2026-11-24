@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 // noinspection NpmUsedModulesInstalled
 import { readFileSync } from "node:fs";
+// noinspection NpmUsedModulesInstalled
 import { describe, it } from "vitest";
 
 const DOC = readFileSync("docs/testing.md", "utf8");

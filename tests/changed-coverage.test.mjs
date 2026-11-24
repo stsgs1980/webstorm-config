@@ -113,7 +113,7 @@ const git = (cwd, args) => execFileSync("git", args, { cwd, env: gitEnv(), encod
  * Commit the index with a fixture identity.
  * @param {string} cwd - repository path
  * @param {string} message - commit message
- * @returns {void}
+ * @returns {string} stdout of the commit command
  */
 const commit = (cwd, message) =>
   git(cwd, ["-c", "user.name=Fixture", "-c", "user.email=fixture@example.com", "commit", "-q", "-m", message]);

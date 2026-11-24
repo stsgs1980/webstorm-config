@@ -139,6 +139,7 @@ function checkPrettierRc(root: string, failures: StyleFailure[]): void {
  * Check one codeStyleSettings block.
  * @param language - block language
  * @param fragment - block body
+ * @param failures - collected consistency failures
  */
 function checkLanguageBlock(language: string, fragment: string, failures: StyleFailure[]): void {
   const checks: Array<[string, string]> = [

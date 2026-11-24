@@ -35,6 +35,7 @@ export function findLiveSyntaxMarkers(content: string): string[] {
 /**
  * Every file under a directory, relative to it, in traversal order.
  * @param dir - directory to walk
+ * @param prefix - path prefix used by recursive calls
  * @returns relative file paths
  */
 function listFiles(dir: string, prefix = ""): string[] {

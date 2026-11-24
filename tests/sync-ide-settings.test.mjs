@@ -40,7 +40,7 @@ const run = (args) => {
 /**
  * Canonical reference bytes for a group, from the generated repository reference.
  * @param {string} group - generated/ide-reference sub-directory (codestyles, inspection)
- * @returns {Buffer}
+ * @returns {import("node:buffer").Buffer}
  */
 const referenceBytes = (group) => readFileSync(join(REPO, "generated", "ide-reference", group, SCHEME_FILE));
 
@@ -71,7 +71,7 @@ const correctEditor = () =>
  * correct pointers.
  * @param {string} base - fixture JetBrains base directory
  * @param {string} version - version suffix, e.g. "2026.3"
- * @param {(group: string) => string | Buffer} contentFor - content per group
+ * @param {(group: string) => string | import("node:buffer").Buffer} contentFor - content per group
  * @returns {string} path to the created WebStorm directory
  */
 const makeIdeDir = (base, version, contentFor) => {
