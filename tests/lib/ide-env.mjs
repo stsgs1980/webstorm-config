@@ -1,5 +1,5 @@
+import { platform } from "node:os";
 import { join } from "node:path";
-import process from "node:process";
 
 // Fixture tests spawn the IDE-state gate without --jetbrains-root, so the
 // scripts under test resolve the JetBrains base from the environment
@@ -17,7 +17,7 @@ import process from "node:process";
  * @returns {Record<string, string>} environment entries to inject
  */
 export function jetbrainsEnv(base) {
-  switch (process.platform) {
+  switch (platform()) {
     case "win32":
       return { APPDATA: base };
     case "darwin":
@@ -34,7 +34,7 @@ export function jetbrainsEnv(base) {
  * @returns {string} resolved JetBrains base directory
  */
 export function jetbrainsRoot(base) {
-  switch (process.platform) {
+  switch (platform()) {
     case "win32":
       return join(base, "JetBrains");
     case "darwin":

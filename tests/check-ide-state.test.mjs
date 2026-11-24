@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { platform, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
@@ -163,7 +163,7 @@ describe("ide-state helpers", () => {
 
   it("jetbrainsEnv and jetbrainsRoot agree with resolveJetbrainsRoot", () => {
     const env = jetbrainsEnv("/fixture");
-    assert.equal(resolveJetbrainsRoot(env, process.platform), jetbrainsRoot("/fixture"));
+    assert.equal(resolveJetbrainsRoot(env, platform()), jetbrainsRoot("/fixture"));
   });
 });
 
