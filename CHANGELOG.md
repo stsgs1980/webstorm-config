@@ -5,6 +5,7 @@
 ### Bug Fixes
 
 - **changelog:** clean the temp context file on every exit ([4e85255](https://github.com/stsgs1980/webstorm-config/commit/4e8525547732a1ddc2b69169d8e6a0967bfebe06))
+- resolve inspection findings in JSDoc and test helpers ([def4d3a](https://github.com/stsgs1980/webstorm-config/commit/def4d3ae81f25840623b44d4b76a798167f5382d))
 
 # 1.0.2 (2026-11-19)
 
