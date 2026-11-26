@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -53,9 +54,15 @@ const copyTracked = (target) => {
     if (file === "") {
       continue;
     }
+    // A file removed from the working tree can still be listed in the index
+    // until the deletion is committed; the fixture copies disk state only.
+    const source = join(REPO_ROOT, file);
+    if (!existsSync(source)) {
+      continue;
+    }
     const destination = join(target, file);
     mkdirSync(dirname(destination), { recursive: true });
-    copyFileSync(join(REPO_ROOT, file), destination);
+    copyFileSync(source, destination);
   }
 };
 

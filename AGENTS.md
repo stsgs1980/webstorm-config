@@ -144,9 +144,8 @@ the signal.
 
   Solo-maintainer exception (A4): for a single-contributor template repo where CI
   re-runs every check on push, direct commits to main are permitted provided each
-  commit passes pre-commit hooks and CI is green. This exception is logged in
-  `docs/audit-recommendations.md` (A4). If a second contributor joins, revert to
-  PR-only discipline.
+  commit passes pre-commit hooks and CI is green. If a second contributor joins,
+  revert to PR-only discipline.
 
 - Pre-commit hooks (Husky + lint-staged) must pass. `--no-verify` is allowed only when
   a hook fails for reasons unrelated to the change; state the reason in the commit
@@ -273,8 +272,6 @@ actually exist there.
   (vulnerability policy).
 - `docs/kickoff.md` is template-only: the starter prompt runs once, before the
   project exists. In a fork, delete it at Step 1 (getting-started.md).
-- `docs/audit-recommendations.md` is template-only too: it records the template
-  audits and is deleted at Step 1 (getting-started.md).
 
 ## 12. Known limits (not automated)
 
