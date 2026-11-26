@@ -27,13 +27,14 @@ const run = (root) => {
 };
 
 /**
- * Copy the three source files into a temp root.
+ * Copy the config files into a temp root.
  * @returns {string} fixture root
  */
 const makeFixture = () => {
   const root = mkdtempSync(join(tmpdir(), "wsc-style-"));
   cpSync(join(REPO, ".editorconfig"), join(root, ".editorconfig"));
   cpSync(join(REPO, ".prettierrc"), join(root, ".prettierrc"));
+  cpSync(join(REPO, ".markdownlint.json"), join(root, ".markdownlint.json"));
   mkdirSync(join(root, ".idea", "codeStyles"), { recursive: true });
   cpSync(join(REPO, ".idea", "codeStyles", "Project.xml"), join(root, ".idea", "codeStyles", "Project.xml"));
   mkdirSync(join(root, ".idea", "inspectionProfiles"), { recursive: true });
@@ -280,6 +281,36 @@ describe("check-style-consistency", () => {
       const result = run(root);
       assert.equal(result.status, 1);
       assert.match(result.stderr, /\.editorconfig: max_line_length = <missing>, expected 120/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("расхождение MD013.line_length ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".markdownlint.json");
+      const value = JSON.parse(readFileSync(path, "utf8"));
+      value.MD013.line_length = 130;
+      writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /\.markdownlint\.json: MD013\.line_length = 130, expected 120/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("расхождение MD013.heading_line_length ловится", () => {
+    const root = makeFixture();
+    try {
+      const path = join(root, ".markdownlint.json");
+      const value = JSON.parse(readFileSync(path, "utf8"));
+      value.MD013.heading_line_length = 130;
+      writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
+      const result = run(root);
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /\.markdownlint\.json: MD013\.heading_line_length = 130, expected 120/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

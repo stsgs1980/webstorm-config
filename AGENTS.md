@@ -257,6 +257,8 @@ actually exist there.
   (the single hand-edit source) after every `.idea/` change; commit both.
 - `npm run sync:ide` - deploy `generated/ide-reference/` to the machine and
   write the scheme pointers when WebStorm (or Settings Sync) overwrites them.
+  Close WebStorm before you run it: a running IDE rewrites the machine copies
+  on save or exit and can replace the restored files immediately.
 - `npm run check:ide-state` - verify reference freshness against `.idea/`,
   machine bytes against the reference, pointer values, the absent phantom
   file, and every tracked `.idea` file unchanged against HEAD (`git ls-files`

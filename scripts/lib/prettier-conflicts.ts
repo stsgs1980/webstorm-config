@@ -32,8 +32,8 @@ export const PRETTIER_CONFLICT_TARGETS: readonly PrettierConflictTarget[] = [
   { path: "server/app.ts", zone: "server TypeScript" },
   { path: "src/App.tsx", zone: "browser TSX" },
   { path: "docs/testing.md", zone: "Markdown file" },
-  { path: "docs/testing.md/0_0.ts", zone: "Markdown TypeScript snippet" },
-  { path: "docs/testing.md/0_0.bash", zone: "Markdown plain-text snippet" },
+  { path: "docs/testing.md/0.ts", zone: "Markdown TypeScript snippet" },
+  { path: "docs/testing.md/0.bash", zone: "Markdown plain-text snippet" },
 ];
 
 /** The eslint-config-prettier CLI, relative to the repository root. */

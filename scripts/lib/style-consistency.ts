@@ -7,6 +7,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { checkMarkdownlint, EXPECTED_LINE_LENGTH } from "./markdownlint-consistency.ts";
+
 /** Languages every Project.xml must declare a `codeStyleSettings` block for. */
 export const EXPECTED_LANGUAGES = new Set([
   "Angular2 HTML",
@@ -93,9 +95,9 @@ function checkEditorConfig(root: string, failures: StyleFailure[]): void {
     ["indent_style", "space"],
     ["indent_size", "2"],
     ["tab_width", "2"],
-    ["max_line_length", "120"],
+    ["max_line_length", EXPECTED_LINE_LENGTH],
     ["ij_continuation_indent_size", "2"],
-    ["ij_visual_guides", "120"],
+    ["ij_visual_guides", EXPECTED_LINE_LENGTH],
     ["ij_smart_tabs", "false"],
     ["ij_wrap_on_typing", "false"],
   ];
@@ -115,7 +117,7 @@ function checkPrettierRc(root: string, failures: StyleFailure[]): void {
   const values = JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
   const checks: Array<[string, string]> = [
     ["tabWidth", "2"],
-    ["printWidth", "120"],
+    ["printWidth", EXPECTED_LINE_LENGTH],
     ["singleQuote", "false"],
     ["semi", "true"],
     ["bracketSpacing", "true"],
@@ -147,7 +149,7 @@ function checkLanguageBlock(language: string, fragment: string, failures: StyleF
     ["CONTINUATION_INDENT_SIZE", "2"],
     ["TAB_SIZE", "2"],
     ["USE_TAB_CHARACTER", "false"],
-    ["SOFT_MARGINS", "120"],
+    ["SOFT_MARGINS", EXPECTED_LINE_LENGTH],
   ];
   for (const [key, expected] of checks) {
     const actual = xmlOption(fragment, key);
@@ -161,13 +163,15 @@ function checkLanguageBlock(language: string, fragment: string, failures: StyleF
  * Check project code style XML completely: scheme options, JS/TS quote and
  * comma rules, then one linear pass over the language blocks mirroring the
  * file layout.
+ * Advisory signal: this function is over MAX_FUNCTION_LINES, but the single
+ * linear pass over the language blocks mirrors Project.xml and stays cohesive.
  */
 function checkProjectXml(root: string, failures: StyleFailure[]): void {
   const path = join(root, ".idea", "codeStyles", "Project.xml");
   const xml = readFileSync(path, "utf8");
 
   const schemeChecks: Array<[string, string]> = [
-    ["RIGHT_MARGIN", "120"],
+    ["RIGHT_MARGIN", EXPECTED_LINE_LENGTH],
     ["WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN", "false"],
     ["AUTODETECT_INDENTS", "false"],
   ];
@@ -238,6 +242,7 @@ export function checkStyleConsistency(root: string): StyleFailure[] {
   const failures: StyleFailure[] = [];
   checkEditorConfig(root, failures);
   checkPrettierRc(root, failures);
+  checkMarkdownlint(root, failures);
   checkProjectXml(root, failures);
   return failures;
 }

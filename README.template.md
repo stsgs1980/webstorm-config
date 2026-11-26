@@ -109,7 +109,7 @@ IDE: [docs/webstorm.md](docs/webstorm.md) — какие настройки пр
 | `npm run check:ide-state`         | Схемы и указатели IDE совпадают с репозиторием             |
 | `npm run check:coverage`          | 80% строк на изменённых файлах (CI)                        |
 | `npm run check:templates`         | Live-шаблоны: рендер, ESLint, tsc; file-шаблоны: синтаксис |
-| `npm run sync:ide`                | Восстановление IDE-профиля и схемы из эталона              |
+| `npm run sync:ide`                | Разовая установка эталона на машину при закрытой IDE       |
 | `npm run lint:metrics`            | Метрики (advisory)                                         |
 | `npm run changelog`               | Пересборка `CHANGELOG.md`                                  |
 | `npm test`                        | Vitest (пустой набор - ошибка)                             |
@@ -117,6 +117,10 @@ IDE: [docs/webstorm.md](docs/webstorm.md) — какие настройки пр
 | `npm run test:coverage`           | Vitest + coverage                                          |
 | `npm run test:e2e`                | Playwright (план; после установки)                         |
 | `npm run dev`                     | _добавьте после Step 3 в getting-started_                  |
+
+Перед `npm run sync:ide` закройте WebStorm: при работающей IDE она записывает
+глобальные копии на диск при сохранении настроек или выходе и может сразу
+перезаписать восстановленные файлы.
 
 ## Docs
 

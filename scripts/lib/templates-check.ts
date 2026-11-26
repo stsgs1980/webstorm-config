@@ -11,8 +11,8 @@ import { join } from "node:path";
 import process from "node:process";
 // noinspection NpmUsedModulesInstalled
 import { ESLint } from "eslint";
-import { AMBIENT_DECLARATIONS } from "../check-templates-tables.ts";
 import { render, unknownVariables, type LiveTemplate } from "./live-templates.ts";
+import { AMBIENT_DECLARATIONS } from "./templates-tables.ts";
 import { tscFailureText } from "./tsc-output.ts";
 
 const TSC = join("node_modules", "typescript", "lib", "tsc.js");

@@ -3,7 +3,7 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { VAR_OVERRIDES, VAR_SAMPLES } from "../check-templates-tables.ts";
+import { VAR_OVERRIDES, VAR_SAMPLES } from "./templates-tables.ts";
 
 /** One live template expanded from a set file. */
 export interface LiveTemplate {
