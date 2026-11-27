@@ -15,7 +15,7 @@ const BREAKING_FOOTER = /^BREAKING[ -]CHANGE:/m;
 
 /**
  * Whether a commit range must change CHANGELOG.md: any subject with an
- * entry-required type, or a breaking-change footer in any body.
+ * entry-required type, or a breaking-change footer in any commit body.
  * @param subjects - `git log --format=%s` output
  * @param bodies - `git log --format=%B` output
  * @returns true when the changelog freshness gate must run

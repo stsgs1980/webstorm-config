@@ -28,6 +28,34 @@ const reportRules = async (code, filePath) => {
   return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
 };
 
+/**
+ * Lint a real fixture with its own tsconfig, then remove it. No dot segments
+ * in the directory: TS include globs skip dotted dirs, and the type-aware
+ * layer needs the fixture inside the tsconfig program.
+ * @param {string} dirName - scratch directory under dev/
+ * @param {string} include - tsconfig include glob
+ * @param {string} code - fixture source
+ * @param {string} name - fixture file name
+ * @returns {Promise<string[]>} rule ids reported for the fixture
+ */
+const lintIsolatedFixture = async (dirName, include, code, name) => {
+  const dir = join(REPO, "dev", dirName);
+  const path = join(dir, name);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, "tsconfig.json"),
+    `${JSON.stringify({ extends: "../../tsconfig.json", include: [include], exclude: [] }, null, 2)}\n`,
+  );
+  writeFileSync(path, code);
+  try {
+    const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });
+    const results = await eslint.lintFiles([path]);
+    return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+};
+
 describe("eslint-config no-console scopes", () => {
   it("console.log в прикладном коде - ошибка no-console", { timeout: 120000 }, async () => {
     const rules = await reportRules('console.log("debug leftover");\n', "src/app.mjs");
@@ -128,23 +156,7 @@ describe("eslint-config react rules under ESLint 10", () => {
    * @param {string} name - fixture file name
    * @returns {Promise<string[]>} rule ids reported for the fixture
    */
-  const lintTsxFixture = async (code, name) => {
-    const dir = join(REPO, "dev", "eslint-tsx-fixtures");
-    const path = join(dir, name);
-    mkdirSync(dir, { recursive: true });
-    writeFileSync(
-      join(dir, "tsconfig.json"),
-      `${JSON.stringify({ extends: "../../tsconfig.json", include: ["**/*.tsx"], exclude: [] }, null, 2)}\n`,
-    );
-    writeFileSync(path, code);
-    try {
-      const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });
-      const results = await eslint.lintFiles([path]);
-      return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
-  };
+  const lintTsxFixture = (code, name) => lintIsolatedFixture("eslint-tsx-fixtures", "**/*.tsx", code, name);
 
   it("версия React задана явно, а не detect", { timeout: 120000 }, async () => {
     const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO });
@@ -163,6 +175,8 @@ describe("eslint-config react rules under ESLint 10", () => {
   });
 
   it("jsx-a11y правило срабатывает на .tsx", { timeout: 120000 }, async () => {
+    // The missing alt and the fake path are the point of this fixture.
+    // noinspection HtmlRequiredAltAttribute,HtmlUnknownTarget
     const rules = await lintTsxFixture('export const Img = (): JSX.Element => <img src="a.png" />;\n', "img.tsx");
     assert.ok(rules.includes("jsx-a11y/alt-text"), `expected alt-text, got: ${rules.join(", ")}`);
   });
@@ -176,28 +190,7 @@ describe("eslint-config type-aware promises", () => {
    * @param {string} name - fixture file name
    * @returns {Promise<string[]>} rule ids reported for the fixture
    */
-  const lintFixture = async (code, name) => {
-    // No dot segments in the path: TypeScript include globs do not enter
-    // dotted directories, and the type service must find the fixture in
-    // the tsconfig project (include "**/*.ts").
-    const dir = join(REPO, "dev", "eslint-fixtures");
-    const path = join(dir, name);
-    mkdirSync(dir, { recursive: true });
-    // dev/ is excluded by the root tsconfig, so the fixture needs its own
-    // project for the type-aware layer (projectService) to accept it.
-    writeFileSync(
-      join(dir, "tsconfig.json"),
-      `${JSON.stringify({ extends: "../../tsconfig.json", include: ["**/*.ts"], exclude: [] }, null, 2)}\n`,
-    );
-    writeFileSync(path, code);
-    try {
-      const eslint = new ESLint({ overrideConfigFile: CONFIG, cwd: REPO, ignore: false });
-      const results = await eslint.lintFiles([path]);
-      return results.flatMap((result) => result.messages.map((message) => message.ruleId ?? "parse-error"));
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
-  };
+  const lintFixture = (code, name) => lintIsolatedFixture("eslint-fixtures", "**/*.ts", code, name);
 
   it("промис без await или void - ошибка no-floating-promises", { timeout: 120000 }, async () => {
     const floating =

@@ -16,8 +16,10 @@
       <w>markdown</w>
       <w>markdownlint</w>
       <w>markdownlintignore</w>
+      <w>nconst</w>
       <w>nosuchscript</w>
       <w>nvmrc</w>
+      <w>nvoid</w>
       <w>prettier</w>
       <w>prettierignore</w>
       <w>prettierrc</w>

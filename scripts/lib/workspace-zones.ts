@@ -90,7 +90,7 @@ export function mentionsZone(content: string, zone: string): boolean {
   const escaped = zone.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // A zone counts as ignored when it appears as a path segment: at the start
   // of a line, after a slash, or wrapped in quotes.
-  return new RegExp(`(^|[/\\s"'\`])${escaped}([/\\s"'\`/]|$)`, "m").test(content);
+  return new RegExp(`(^|[/\\s"'\`])${escaped}([/\\s"'\`]|$)`, "m").test(content);
 }
 
 /**

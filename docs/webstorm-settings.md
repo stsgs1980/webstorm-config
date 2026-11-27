@@ -1,3 +1,5 @@
+<!-- noinspection GrazieInspection,GrazieStyle -->
+
 # WebStorm: синхронизация машинных настроек
 
 Runbook: как перенести настройки из репозитория на машину за 15-20 минут.

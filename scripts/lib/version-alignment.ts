@@ -1,3 +1,5 @@
+// noinspection GrazieInspection,GrazieStyle
+
 /**
  * Node.js version alignment between .nvmrc and package.json engines.node.
  * Shared by doc/config verifiers that must report drift, not guess it.

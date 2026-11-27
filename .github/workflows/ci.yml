@@ -39,7 +39,8 @@ jobs:
             # No previous tip (new branch) or the previous tip was rebased
             # away (dependabot force-push): lint only what the branch adds
             # over the default branch, not the whole history.
-            if [ "$FROM" = "0000000000000000000000000000000000000000" ] || ! git merge-base --is-ancestor "$FROM" "$TO"; then
+            if [ "$FROM" = "0000000000000000000000000000000000000000" ] || \
+              ! git merge-base --is-ancestor "$FROM" "$TO"; then
               FROM="$(git merge-base "origin/${{ github.event.repository.default_branch }}" HEAD)"
             fi
           fi

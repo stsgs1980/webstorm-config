@@ -1,4 +1,4 @@
-// noinspection SpellCheckingInspection
+// noinspection SpellCheckingInspection,GrazieInspection,GrazieStyle
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";

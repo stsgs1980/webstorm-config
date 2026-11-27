@@ -5,11 +5,13 @@
  * Pure logic over given texts; the CLI script owns reading and output.
  */
 
+// noinspection GrazieInspection,GrazieStyle
+
 import { existsSync, readFileSync } from "node:fs";
 
 /** A tool-version badge: name, N.x value and the link target. */
 const BADGE_PATTERN =
-  /\[!\[(ESLint|TypeScript|Stylelint)\]\(https:\/\/img\.shields\.io\/badge\/\1-(\d+)\.x[^)]*\)\]\(([^)]+)\)/g;
+  /\[!\[(ESLint|TypeScript|Stylelint)]\(https:\/\/img\.shields\.io\/badge\/\1-(\d+)\.x[^)]*\)]\(([^)]+)\)/g;
 
 /** Opt-in marker: README.md claims to hold the docs map. */
 export const DOCS_MAP_MARKER = "<!-- check-docs:docs-map -->";
@@ -64,7 +66,7 @@ export function checkBadges(
 export function checkDocsMap(readmeText: string, docFiles: string[], failures: string[]): void {
   const linked = new Set<string>();
 
-  for (const match of readmeText.matchAll(/\]\((docs\/[^)\s#]+\.md)\)/g)) {
+  for (const match of readmeText.matchAll(/]\((docs\/[^)\s#]+\.md)\)/g)) {
     linked.add(match[1]);
   }
 

@@ -130,7 +130,9 @@ export const syncPointers = (ideRoot: string, check: boolean): number => {
       pointers: [EDITOR_POINTER],
       apply: (content: string): string =>
         withComponentAttribute(content, EDITOR_POINTER.component, EDITOR_POINTER.attribute, SCHEME_NAME),
-      template: `<application>\n  <component name="${EDITOR_POINTER.component}" ${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`,
+      template:
+        `<application>\n  <component name="${EDITOR_POINTER.component}" ` +
+        `${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`,
     },
   ];
   let mismatches = 0;

@@ -1,3 +1,5 @@
+// noinspection GrazieInspection,GrazieStyle
+
 /**
  * Wiring check for the docs gate: the table in docs/getting-started.md must
  * match where every script actually runs - the CI jobs and the git hooks.

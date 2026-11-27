@@ -52,7 +52,7 @@ const FENCE_PATTERN = /```[\s\S]*?```/g;
 /**
  * Prose forms that name the file-length limit. Reviewer-signal phrases such
  * as "over 200 lines" describe a different rule and must not match, so each
- * form keeps its marker: "лимит"/"предел"/"до", a parenthesised count, or
+ * form keeps its marker: "лимит"/"предел"/"до", a parenthesized count, or
  * the IDE inspection name. `DEFAULT_MAX_LINES = N` is a code reference to
  * the owner, not prose, and is not matched.
  */

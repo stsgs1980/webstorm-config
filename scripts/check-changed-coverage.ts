@@ -153,7 +153,8 @@ const { measured, skipped } = selectMeasured(changed, COVERAGE_ROOTS);
 
 if (skipped.length > 0) {
   console.log(
-    `[INFO] ${skipped.length} changed path(s) outside the coverage scope were not measured (docs, scripts, configs, tests).`,
+    `[INFO] ${skipped.length} changed path(s) outside the coverage scope ` +
+      `were not measured (docs, scripts, configs, tests).`,
   );
 }
 
@@ -191,7 +192,8 @@ for (const failure of failures) {
 
 if (failures.length > 0) {
   fail(
-    `[FAIL] Changed-file coverage: ${failures.length} file(s) below ${MIN_CHANGED_LINE_COVERAGE}% lines or without data.`,
+    `[FAIL] Changed-file coverage: ${failures.length} file(s) below ` +
+      `${MIN_CHANGED_LINE_COVERAGE}% lines or without data.`,
   );
 }
 

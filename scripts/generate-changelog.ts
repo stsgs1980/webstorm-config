@@ -63,7 +63,8 @@ const version = releaseVersion();
 const contextFlag = version === "" ? "" : ` -c "${CONTEXT_FILE}"`;
 // -u prints the unreleased chunk, --stdout keeps it off the file system,
 // --no-install never downloads a package, and -c passes the tag version.
-const CHANGELOG_COMMAND = `npx --no-install conventional-changelog -p angular -u --stdout -i "${CHANGELOG_INPUT}"${contextFlag}`;
+const CHANGELOG_COMMAND =
+  `npx --no-install conventional-changelog -p angular -u --stdout -i "${CHANGELOG_INPUT}"` + contextFlag;
 
 rmSync(CONTEXT_FILE, { force: true });
 if (version !== "") {
@@ -94,7 +95,7 @@ function cleanupTempFiles(): void {
  * @returns chunk with a stable "# Unreleased" heading
  */
 function stableHeader(text: string): string {
-  return text.replace(/^# (?:\[Unreleased\]|Unreleased)[^\n]*$/m, "# Unreleased");
+  return text.replace(/^# (?:\[Unreleased]|Unreleased)[^\n]*$/m, "# Unreleased");
 }
 
 /**
@@ -116,7 +117,7 @@ function unreleasedHeader(text: string): string {
  * @returns block key or null
  */
 function blockKey(line: string): string | null {
-  if (/^# (?:\[Unreleased\]|Unreleased)(?:\s|$)/.test(line)) {
+  if (/^# (?:\[Unreleased]|Unreleased)(?:\s|$)/.test(line)) {
     return "unreleased";
   }
 

@@ -105,7 +105,7 @@ export default [
       // a TypeError while the rule loads. eslint-plugin-react 7.37.5 has no
       // ESLint 10 release yet (jsx-eslint/eslint-plugin-react#4022 is open
       // and does not fix this path), so the version is pinned here. Bump it
-      // together with the react dependency.
+      // together with the React dependency.
       react: { version: "19.3" },
     },
     rules: {
