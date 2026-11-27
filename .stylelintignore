@@ -6,7 +6,6 @@
 .vite/
 .cache/
 coverage/
-node_modules/
 dist/
 build/
 out/

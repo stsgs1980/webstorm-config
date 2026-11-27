@@ -87,10 +87,23 @@ const readLintStaged = (): Record<string, unknown> => {
   process.exit(1);
 };
 
+/**
+ * Zones a tool skips by its own defaults, without an ignore-file entry.
+ * Prettier and Stylelint both ignore `node_modules` unconditionally, so their
+ * ignore files need not repeat it.
+ */
+const BUILTIN_IGNORED_ZONES = new Set(["node_modules"]);
+
 const tools: ZoneTool[] = [
   { name: ".gitignore", ignores: (zone: string) => mentionsZone(files.gitignore, zone) },
-  { name: ".prettierignore", ignores: (zone: string) => mentionsZone(files.prettierignore, zone) },
-  { name: ".stylelintignore", ignores: (zone: string) => mentionsZone(files.stylelintignore, zone) },
+  {
+    name: ".prettierignore",
+    ignores: (zone: string) => BUILTIN_IGNORED_ZONES.has(zone) || mentionsZone(files.prettierignore, zone),
+  },
+  {
+    name: ".stylelintignore",
+    ignores: (zone: string) => BUILTIN_IGNORED_ZONES.has(zone) || mentionsZone(files.stylelintignore, zone),
+  },
   { name: ".markdownlintignore", ignores: (zone: string) => mentionsZone(files.markdownlintignore, zone) },
   { name: "eslint.config.js", ignores: (zone: string) => mentionsZone(files.eslintConfig, zone) },
   { name: "eslint.metrics.config.js", ignores: (zone: string) => mentionsZone(files.metricsConfig, zone) },

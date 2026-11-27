@@ -1,5 +1,6 @@
 root = true
 
+# noinspection EditorConfigPartialOverride,EditorConfigOptionRedundancy
 [*]
 end_of_line = lf
 insert_final_newline = true
@@ -14,8 +15,10 @@ ij_visual_guides = 120
 ij_smart_tabs = false
 ij_wrap_on_typing = false
 
+# noinspection EditorConfigOptionRedundancy
 [*.md]
 trim_trailing_whitespace = false
 
+# noinspection EditorConfigOptionRedundancy
 [*.{cmd,bat,ps1}]
 end_of_line = crlf
