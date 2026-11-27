@@ -1,3 +1,4 @@
+// noinspection SpellCheckingInspection,GrazieInspection,GrazieStyle
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -128,20 +129,33 @@ const check = (base) => run(SYNC, ["--check", "--jetbrains-root", jetbrainsRoot(
  */
 const output = (result) => `${result.stdout}\n${result.stderr}`.replaceAll("\\", "/");
 
+/**
+ * Assert both entry points fail on the same pointer problem.
+ * @param {{status: number, stdout: string, stderr: string}} fromGate - gate result
+ * @param {{status: number, stdout: string, stderr: string}} fromSync - sync --check result
+ * @param {RegExp[]} patterns - extra output fragments both must report
+ * @returns {void}
+ */
+const assertBothReport = (fromGate, fromSync, patterns) => {
+  assert.equal(fromGate.status, 1);
+  assert.equal(fromSync.status, 1);
+  for (const file of POINTER_FILES) {
+    assert.match(output(fromGate), new RegExp(file), `гейт не назвал ${file}`);
+    assert.match(output(fromSync), new RegExp(file), `sync --check не назвал ${file}`);
+  }
+  for (const pattern of patterns) {
+    assert.match(output(fromGate), pattern);
+    assert.match(output(fromSync), pattern);
+  }
+};
+
 describe("ide pointer parity", () => {
   it("оба входа считают отсутствие файлов указателей расхождением", () => {
     const base = newBase();
     makeIdeDir(base, false);
     const fromGate = gate(base);
     const fromSync = check(base);
-    assert.equal(fromGate.status, 1);
-    assert.equal(fromSync.status, 1);
-    for (const file of POINTER_FILES) {
-      assert.match(output(fromGate), new RegExp(file), `гейт не назвал ${file}`);
-      assert.match(output(fromSync), new RegExp(file), `sync --check не назвал ${file}`);
-    }
-    assert.match(output(fromGate), /file is missing; run npm run sync:ide/);
-    assert.match(output(fromSync), /file is missing; run npm run sync:ide/);
+    assertBothReport(fromGate, fromSync, [/file is missing; run npm run sync:ide/]);
   });
 
   it("оба входа одинаково описывают дрейф значения указателя", () => {
@@ -154,14 +168,7 @@ describe("ide pointer parity", () => {
     writeFileSync(join(dir, "options", "editor.xml"), correctEditor().replaceAll(`="${SCHEME_NAME}"`, '="Default"'));
     const fromGate = gate(base);
     const fromSync = check(base);
-    assert.equal(fromGate.status, 1);
-    assert.equal(fromSync.status, 1);
-    for (const file of POINTER_FILES) {
-      assert.match(output(fromGate), new RegExp(file), `гейт не назвал ${file}`);
-      assert.match(output(fromSync), new RegExp(file), `sync --check не назвал ${file}`);
-    }
     const drift = `is "Default", expected "${SCHEME_NAME}"`;
-    assert.match(output(fromGate), new RegExp(drift));
-    assert.match(output(fromSync), new RegExp(drift));
+    assertBothReport(fromGate, fromSync, [new RegExp(drift)]);
   });
 });

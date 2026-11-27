@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { checkMarkdownlint, EXPECTED_LINE_LENGTH } from "./markdownlint-consistency.ts";
+import { checkLanguageBlocks } from "./style-language-blocks.ts";
 
 /** Languages every Project.xml must declare a `codeStyleSettings` block for. */
 export const EXPECTED_LANGUAGES = new Set([
@@ -138,38 +139,11 @@ function checkPrettierRc(root: string, failures: StyleFailure[]): void {
 }
 
 /**
- * Check one codeStyleSettings block.
- * @param language - block language
- * @param fragment - block body
+ * Check scheme-wide options and the JS/TS quote and comma rules.
+ * @param xml - Project.xml content
  * @param failures - collected consistency failures
  */
-function checkLanguageBlock(language: string, fragment: string, failures: StyleFailure[]): void {
-  const checks: Array<[string, string]> = [
-    ["INDENT_SIZE", "2"],
-    ["CONTINUATION_INDENT_SIZE", "2"],
-    ["TAB_SIZE", "2"],
-    ["USE_TAB_CHARACTER", "false"],
-    ["SOFT_MARGINS", EXPECTED_LINE_LENGTH],
-  ];
-  for (const [key, expected] of checks) {
-    const actual = xmlOption(fragment, key);
-    if (actual !== expected) {
-      failures.push({ file: `Project.xml:${language}`, key, expected, actual });
-    }
-  }
-}
-
-/**
- * Check project code style XML completely: scheme options, JS/TS quote and
- * comma rules, then one linear pass over the language blocks mirroring the
- * file layout.
- * Advisory signal: this function is over MAX_FUNCTION_LINES, but the single
- * linear pass over the language blocks mirrors Project.xml and stays cohesive.
- */
-function checkProjectXml(root: string, failures: StyleFailure[]): void {
-  const path = join(root, ".idea", "codeStyles", "Project.xml");
-  const xml = readFileSync(path, "utf8");
-
+function checkSchemeAndJsTs(xml: string, failures: StyleFailure[]): void {
   const schemeChecks: Array<[string, string]> = [
     ["RIGHT_MARGIN", EXPECTED_LINE_LENGTH],
     ["WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN", "false"],
@@ -202,35 +176,18 @@ function checkProjectXml(root: string, failures: StyleFailure[]): void {
       }
     }
   }
+}
 
-  const blocks = [...xml.matchAll(/<codeStyleSettings language="([^"]+)">([\s\S]*?)<\/codeStyleSettings>/g)];
-  const seen = new Set<string>();
-  for (const [, language, fragment] of blocks) {
-    if (seen.has(language)) {
-      failures.push({
-        file: "Project.xml",
-        key: `duplicate language ${language}`,
-        expected: "one block",
-        actual: "duplicate",
-      });
-      continue;
-    }
-    seen.add(language);
-    if (!EXPECTED_LANGUAGES.has(language)) {
-      failures.push({
-        file: "Project.xml",
-        key: `language ${language}`,
-        expected: "known language",
-        actual: "unexpected",
-      });
-    }
-    checkLanguageBlock(language, fragment, failures);
-  }
-  for (const language of EXPECTED_LANGUAGES) {
-    if (!seen.has(language)) {
-      failures.push({ file: "Project.xml", key: `language ${language}`, expected: "present", actual: "missing" });
-    }
-  }
+/**
+ * Check project code style XML completely: scheme options, JS/TS quote and
+ * comma rules, then one linear pass over the language blocks mirroring the
+ * file layout.
+ */
+function checkProjectXml(root: string, failures: StyleFailure[]): void {
+  const path = join(root, ".idea", "codeStyles", "Project.xml");
+  const xml = readFileSync(path, "utf8");
+  checkSchemeAndJsTs(xml, failures);
+  checkLanguageBlocks(xml, EXPECTED_LANGUAGES, failures);
 }
 
 /**

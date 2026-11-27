@@ -53,25 +53,25 @@ const runFixture = (pkg, nvm, docs = [], ci = undefined) => {
   }
 };
 
-describe("check-docs", () => {
+describe("node-version consistency", () => {
   it("без .nvmrc и docs/ отвечает [FAIL], а не падает с ENOENT", () => {
     const result = runFixture(PKG, "");
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /\[FAIL\] \.nvmrc not found\./);
+    assert.match(result.stderr, /\[FAIL] \.nvmrc not found\./);
     assert.doesNotMatch(result.stderr, /ENOENT/);
   });
 
   it("без engines.node отвечает [FAIL], а не падает с TypeError", () => {
     const result = runFixture(PKG_NO_ENGINES, "22.22.2");
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /\[FAIL\] engines\.node is not set in package\.json\./);
+    assert.match(result.stderr, /\[FAIL] engines\.node is not set in package\.json\./);
     assert.doesNotMatch(result.stderr, /TypeError/);
   });
 
   it("согласованные .nvmrc и engines.node дают [OK]", () => {
     const result = runFixture(PKG, "22.22.2");
     assert.equal(result.status, 0);
-    assert.match(result.stdout, /\[OK\] check-docs: 1 docs files consistent with configs\./);
+    assert.match(result.stdout, /\[OK] check-docs: 1 docs files consistent with configs\./);
   });
 
   it("floor-pin node-version совпадает с engines.node", () => {
@@ -93,7 +93,9 @@ describe("check-docs", () => {
     assert.equal(result.status, 1);
     assert.match(result.stderr, /no literal node-version floor pin/);
   });
+});
 
+describe("npm scripts in docs", () => {
   it("имя скрипта с цифрой читается целиком", () => {
     const pkg = JSON.stringify({
       name: "fixture",
@@ -118,25 +120,27 @@ describe("check-docs", () => {
   });
 
   it("будущий скрипт разрешён только явным маркером", () => {
-    const doc = "# Планы\n\n<!-- check-docs:allow-missing-scripts dev -->\n\n`npm run dev`.\n";
+    const doc = "# Планы\n\n<!-- check-docs:allow-missing-scripts dev -->\n\nЗапускается `npm run dev`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 0);
   });
 
   it("без маркера будущий скрипт считается битой ссылкой", () => {
-    const doc = "# Планы\n\n`npm run dev`.\n";
+    const doc = "# Планы\n\nЗапускается `npm run dev`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 1);
     assert.match(result.stderr, /npm run dev is not in package\.json scripts/);
   });
 
   it("маркер не разрешает скрипты, которых в нём нет", () => {
-    const doc = "# Планы\n\n<!-- check-docs:allow-missing-scripts dev -->\n\n`npm run test:e2e`.\n";
+    const doc = "# Планы\n\n<!-- check-docs:allow-missing-scripts dev -->\n\nЗапускается `npm run test:e2e`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
     assert.equal(result.status, 1);
     assert.match(result.stderr, /npm run test:e2e is not in package\.json scripts/);
   });
+});
 
+describe("links and anchors", () => {
   it("битая относительная ссылка ловится", () => {
     const doc = "# Ссылки\n\n[missing](no-such.md).\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/links.md", content: doc }]);
@@ -168,7 +172,9 @@ describe("check-docs", () => {
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/links.md", content: doc }]);
     assert.equal(result.status, 0, result.stderr);
   });
+});
 
+describe("paths and fences", () => {
   it("путь, снятый с плана, больше не легализован", () => {
     const doc = "# Планы\n\n`scripts/check-unicode-prose.ts`.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/roadmap.md", content: doc }]);
@@ -220,7 +226,9 @@ describe("check-docs", () => {
     assert.equal(result.status, 1);
     assert.match(result.stderr, /path docs\/no-such\.md does not exist/);
   });
+});
 
+describe("gitignored personal files", () => {
   it("ссылка на личный файл из .gitignore не считается несуществующей", { timeout: 120000 }, () => {
     // A checkout (CI) has no personal files like .idea/workspace.xml: the
     // fixture is a git repo whose .gitignore ignores the named path.
@@ -244,7 +252,9 @@ describe("check-docs", () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+});
 
+describe("root rule files", () => {
   it("AGENTS.md в корне сканируется: битый npm run даёт [FAIL]", () => {
     const result = runFixture(PKG, "22.22.2", [
       { file: "AGENTS.md", content: "# Rules\n\nЗапускается `npm run nosuchscript`.\n" },
@@ -265,9 +275,11 @@ describe("check-docs", () => {
       { file: "AGENTS.md", content: "# Rules\n\nAlways read a file before editing it.\n" },
     ]);
     assert.equal(result.status, 0);
-    assert.match(result.stdout, /\[OK\] check-docs: 2 docs files consistent with configs\./);
+    assert.match(result.stdout, /\[OK] check-docs: 2 docs files consistent with configs\./);
   });
+});
 
+describe("fork placeholders", () => {
   it("шаблонные пути не требуют существования после форка", () => {
     const doc =
       "# Форк\n\n`docs/kickoff.md`, `docs/audit-recommendations.md` и " +
@@ -281,7 +293,9 @@ describe("check-docs", () => {
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/fork.md", content: doc }]);
     assert.equal(result.status, 0, result.stderr);
   });
+});
 
+describe("file-length mentions", () => {
   it("устаревшее упоминание лимита длины файла ловится", () => {
     const doc = "# Лимит\n\nЛимит 999 строк на файл.\n";
     const result = runFixture(PKG, "22.22.2", [{ file: "docs/limits.md", content: doc }]);

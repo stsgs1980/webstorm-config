@@ -1,3 +1,5 @@
+// noinspection SpellCheckingInspection
+
 /**
  * Shared logic for the IDE-state gate and the restore script. Both work on
  * the same JetBrains config directory: the gate reports where the machine
@@ -48,7 +50,7 @@ export const versionParts = (name: string): number[] =>
  * Compare two WebStorm version directory names numerically.
  * @param a - first directory name
  * @param b - second directory name
- * @returns true when a is newer
+ * @returns true when the first argument is newer
  */
 export const isNewer = (a: string, b: string): boolean => {
   const left = versionParts(a);

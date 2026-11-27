@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// noinspection SpellCheckingInspection,GrazieInspection,GrazieStyle
+
 /**
  * Deploy the repository IDE settings to the machine's JetBrains config root
  * (`resolveJetbrainsRoot`): `WebStorm<version>\` under it:

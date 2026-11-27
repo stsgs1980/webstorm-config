@@ -1,3 +1,4 @@
+// noinspection SpellCheckingInspection
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -185,6 +186,57 @@ const runScript = (repo) => {
   }
 };
 
+/**
+ * Run a test body and remove its fixture directories afterward.
+ * @param {string[]} dirs - fixture directories to remove
+ * @param {() => void} body - test body
+ * @returns {void}
+ */
+const withFixtures = (dirs, body) => {
+  try {
+    body();
+  } finally {
+    for (const dir of dirs) {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+};
+
+/**
+ * Read the changelog of a fixture repository.
+ * @param {string} repo - fixture repository
+ * @returns {string} CHANGELOG.md content
+ */
+const changelog = (repo) => readFileSync(join(repo, "CHANGELOG.md"), "utf8");
+
+/**
+ * Assert a generated changelog has an Unreleased header without the run date.
+ * @param {string} repo - fixture repository
+ * @param {string} shim - npx shim directory
+ * @returns {void}
+ */
+const assertNormalizedUnreleased = (repo, shim) => {
+  const result = runWithShim(repo, shim);
+  assert.equal(result.status, 0);
+  const content = changelog(repo);
+  assert.match(content, /^# Unreleased$/m);
+  assert.doesNotMatch(content, /2026-11-14/);
+  assert.match(content, /new/);
+};
+
+/**
+ * Assert the real generator reports no work and leaves the changelog unchanged.
+ * @param {string} repo - fixture repository
+ * @returns {void}
+ */
+const assertNoChange = (repo) => {
+  const before = changelog(repo);
+  const result = runScript(repo);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /up to date/);
+  assert.equal(changelog(repo), before);
+};
+
 describe("generate-changelog", () => {
   it("при падении генератора не трогает CHANGELOG.md и убирает черновик", () => {
     const repo = makeRepo();
@@ -255,33 +307,13 @@ describe("generate-changelog", () => {
   it("нормализует заголовок Unreleased с датой", () => {
     const repo = makeTaggedRepo();
     const shim = makeGeneratedNpx("# Unreleased (2026-11-14)\n\n### Features\n\n- new\n");
-    try {
-      const result = runWithShim(repo, shim);
-      assert.equal(result.status, 0);
-      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
-      assert.match(content, /^# Unreleased$/m);
-      assert.doesNotMatch(content, /2026-11-14/);
-      assert.match(content, /new/);
-    } finally {
-      rmSync(repo, { recursive: true, force: true });
-      rmSync(shim, { recursive: true, force: true });
-    }
+    withFixtures([repo, shim], () => assertNormalizedUnreleased(repo, shim));
   });
 
   it("в проекте без тегов заменяет версионный заголовок с датой на Unreleased", () => {
     const repo = makeRepo();
     const shim = makeGeneratedNpx("# 1.0.0 (2026-11-14)\n\n### Features\n\n- new\n");
-    try {
-      const result = runWithShim(repo, shim);
-      assert.equal(result.status, 0);
-      const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
-      assert.match(content, /^# Unreleased$/m);
-      assert.doesNotMatch(content, /2026-11-14/);
-      assert.match(content, /new/);
-    } finally {
-      rmSync(repo, { recursive: true, force: true });
-      rmSync(shim, { recursive: true, force: true });
-    }
+    withFixtures([repo, shim], () => assertNormalizedUnreleased(repo, shim));
   });
 
   it("повторный прогон с тем же чанком заменяет блок, а не дублирует его", () => {
@@ -369,7 +401,7 @@ describe("generate-changelog (real generator)", () => {
       assert.match(content, /- Old entry/);
       assert.ok(content.indexOf("add live generation") < content.indexOf("- Old entry"));
       assert.match(content, /^# Unreleased$/m, "заголовок без ссылки и даты");
-      assert.doesNotMatch(content, /\[Unreleased\]\(/);
+      assert.doesNotMatch(content, /\[Unreleased]\(/);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
@@ -393,30 +425,14 @@ describe("generate-changelog (real generator)", () => {
 
   it("не меняет файл, когда HEAD стоит на теге", { timeout: 180000 }, () => {
     const repo = makeLiveRepo();
-    const before = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
-    try {
-      const result = runScript(repo);
-      assert.equal(result.status, 0, result.stderr);
-      assert.match(result.stdout, /up to date/);
-      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), before);
-    } finally {
-      rmSync(repo, { recursive: true, force: true });
-    }
+    withFixtures([repo], () => assertNoChange(repo));
   });
 
   it("не меняет файл после docs-коммита за тегом", { timeout: 180000 }, () => {
     const repo = makeLiveRepo();
     writeFileSync(join(repo, "note.txt"), "note\n");
     commitAll(repo, "docs: describe");
-    const before = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
-    try {
-      const result = runScript(repo);
-      assert.equal(result.status, 0, result.stderr);
-      assert.match(result.stdout, /up to date/);
-      assert.equal(readFileSync(join(repo, "CHANGELOG.md"), "utf8"), before);
-    } finally {
-      rmSync(repo, { recursive: true, force: true });
-    }
+    withFixtures([repo], () => assertNoChange(repo));
   });
 
   it("свежий форк без тегов получает только маркер markdownlint", { timeout: 180000 }, () => {
@@ -465,7 +481,7 @@ describe("generate-changelog (real generator)", () => {
       assert.equal(result.status, 0, result.stderr);
       const content = readFileSync(join(repo, "CHANGELOG.md"), "utf8");
       assert.match(content, /^# Unreleased$/m);
-      assert.doesNotMatch(content, /\[1\.0\.0\]/);
+      assert.doesNotMatch(content, /\[1\.0\.0]/);
       assert.match(content, /after release/);
       const second = runScript(repo);
       assert.equal(second.status, 0, second.stderr);

@@ -2,38 +2,54 @@
   <dictionary name="project">
     <words>
       <w>IJPL</w>
+      <w>IMAGENAME</w>
       <w>Leijdekkers</w>
       <w>Markdownlint</w>
       <w>TEMP_FILE</w>
       <w>Templ</w>
+      <w>TypeScriptStrictTypeCheckings</w>
       <w>codestyle</w>
+      <w>codestyles</w>
+      <w>dedented</w>
       <w>katex</w>
       <w>lsp4ij</w>
       <w>markdown</w>
       <w>markdownlint</w>
+      <w>markdownlintignore</w>
       <w>nosuchscript</w>
       <w>nvmrc</w>
       <w>prettier</w>
+      <w>prettierignore</w>
       <w>prettierrc</w>
       <w>rafce</w>
+      <w>stylelintignore</w>
+      <w>stylelintrc</w>
       <w>tseslint</w>
       <w>valibot</w>
       <w>webstorm</w>
       <w>Вотчер</w>
+      <w>автодетектом</w>
       <w>автозапрета</w>
       <w>автопроверок</w>
+      <w>безкорневые</w>
       <w>бэктиков</w>
+      <w>версионный</w>
       <w>вотчер</w>
       <w>вотчеров</w>
       <w>вотчеры</w>
+      <w>глоб</w>
       <w>глобали</w>
       <w>джоба</w>
+      <w>джобам</w>
+      <w>джобе</w>
       <w>джобой</w>
+      <w>джобу</w>
       <w>джобы</w>
       <w>доустановка</w>
       <w>кеймап</w>
       <w>контрола</w>
       <w>линтит</w>
+      <w>нелинкованный</w>
       <w>нефальсифицируемо</w>
       <w>пинит</w>
       <w>подресурсом</w>
@@ -41,6 +57,7 @@
       <w>промис</w>
       <w>промт</w>
       <w>репозиторная</w>
+      <w>репозиторную</w>
       <w>репозиторный</w>
       <w>санитизация</w>
       <w>скоуп</w>
@@ -50,6 +67,7 @@
       <w>скоупы</w>
       <w>сопровождаемости</w>
       <w>трекаемые</w>
+      <w>трекаемый</w>
       <w>фенсы</w>
       <w>фикстурный</w>
       <w>хардкодятся</w>

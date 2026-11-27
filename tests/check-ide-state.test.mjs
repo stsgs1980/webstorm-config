@@ -1,3 +1,4 @@
+// noinspection SpellCheckingInspection
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -98,7 +99,8 @@ const makeIdeDir = (base, version) => {
   );
   writeFileSync(
     join(dir, "options", "editor.xml"),
-    `<application>\n  <component name="${EDITOR_POINTER.component}" ${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`,
+    `<application>\n  <component name="${EDITOR_POINTER.component}" ` +
+      `${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`,
   );
   return dir;
 };
@@ -173,7 +175,7 @@ describe("check-ide-state", () => {
     makeIdeDir(base, "2026.3");
     const result = run(base);
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /\[OK\] IDE state matches/);
+    assert.match(result.stdout, /\[OK] IDE state matches/);
   });
 
   it("covers every tracked .idea file, not a hand-kept shortlist", () => {
@@ -206,12 +208,12 @@ describe("check-ide-state", () => {
     assert.match(result.stderr, /git cannot read the repository/);
   });
 
-  it("skips the project-file check out loud outside a git work tree", () => {
+  it("skips the project-file check out loud outside a git worktree", () => {
     const base = newBase();
     const repo = newFixtureRepo(false);
     const result = run(base, repo);
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /\[SKIP\] project files/);
+    assert.match(result.stdout, /\[SKIP] project files/);
   });
 
   it("fails when a global scheme drifts from the reference", () => {
@@ -220,7 +222,7 @@ describe("check-ide-state", () => {
     writeFileSync(join(dir, "codestyles", SCHEME_FILE), "<stale />");
     const result = run(base);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /\[FAIL\].*sync:ide/);
+    assert.match(result.stderr, /\[FAIL].*sync:ide/);
   });
 
   it("fails when a pointer selects another existing scheme by name", () => {
@@ -242,11 +244,12 @@ describe("check-ide-state", () => {
     const dir = makeIdeDir(base, "2026.3");
     writeFileSync(
       join(dir, "options", "editor.xml"),
-      `<application>\n  <component name="${EDITOR_POINTER.component}" ${EDITOR_POINTER.attribute}="Default" />\n</application>\n`,
+      `<application>\n  <component name="${EDITOR_POINTER.component}" ` +
+        `${EDITOR_POINTER.attribute}="Default" />\n</application>\n`,
     );
     const result = run(base);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /\[FAIL\].*editor\.xml/);
+    assert.match(result.stderr, /\[FAIL].*editor\.xml/);
   });
 
   it("fails when the phantom pointer file is present", () => {
@@ -255,7 +258,7 @@ describe("check-ide-state", () => {
     writeFileSync(join(dir, "codestyles", "codeStyleConfig.xml"), "<state />");
     const result = run(base);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /\[FAIL\].*phantom/);
+    assert.match(result.stderr, /\[FAIL].*phantom/);
   });
 
   it("fails when the generated reference is stale against .idea", () => {

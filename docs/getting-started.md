@@ -1,3 +1,5 @@
+<!-- noinspection SpellCheckingInspection -->
+
 # Getting started (after fork)
 
 Чеклист после создания проекта из шаблона `webstorm-config`. Файл остаётся в репозитории
@@ -18,7 +20,7 @@
    ```
 
    Файл должен содержать ровно эту строку. В проекте без тегов генератор
-   считает header-only чанк пустым и оставляет маркер без заголовка.
+   считает header-only блок пустым и оставляет маркер без заголовка.
 
 4. Удалите `docs/kickoff.md` (стартовый промт шаблона): в новом проекте
    он не нужен. Закоммитьте удаление.
@@ -215,7 +217,7 @@ vitest.config.ts
 команды в Verify упадут с `ENOENT`.
 
 `tsconfig.base.json` содержит только `compilerOptions` и `exclude`. Свой
-`tsconfig.json` создайте с явным списком корней, а не с глобом `**/*.ts`:
+`tsconfig.json` создайте с явным списком корней, а не с шаблоном `**/*.ts`:
 
 ```json
 {
@@ -228,7 +230,7 @@ vitest.config.ts
 }
 ```
 
-Глоб подхватывает служебные файлы (отчёты в `drafts/`, покрытие в
+Шаблон подхватывает служебные файлы (отчёты в `drafts/`, покрытие в
 `coverage/`), и тогда `npm run typecheck` падает на чужом файле. Список
 корней расширяйте своими каталогами исходников.
 
@@ -279,7 +281,7 @@ npx husky init
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "lint:css": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
-    "lint:md": "markdownlint \"**/*.md\" --dot --ignore-path .markdownlintignore",
+    "lint:md": "markdownlint \"**/*.md\" --dot",
     "lint:prettier-conflicts": "node scripts/check-prettier-conflicts.ts",
     "lint:metrics": "eslint . --config eslint.metrics.config.js --no-warn-ignored",
     "check:style-consistency": "node scripts/check-style-consistency.ts",

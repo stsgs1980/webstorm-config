@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
+// noinspection SpellCheckingInspection
+
 /**
  * Verifies that every tool which walks the repository skips the same
- * workspace zones. A zone that ESLint skips but the compiler does not makes
+ * workspace zones. A zone that ESLint skips but the compiler does not make
  * `npm run typecheck` fail on a scratch file; a zone that Prettier skips but
- * `format:check` does not makes the formatting gate fail. The list lives in
+ * `format:check` does not make the formatting gate fail. The list lives in
  * `scripts/lib/workspace-zones.ts`, and this gate keeps every tool in sync
  * with it.
  */

@@ -1,3 +1,4 @@
+// noinspection SpellCheckingInspection,GrazieInspection,GrazieStyle
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -64,7 +65,8 @@ const correctProjectOptions = () =>
  * @returns {string}
  */
 const correctEditor = () =>
-  `<application>\n  <component name="${EDITOR_POINTER.component}" ${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`;
+  `<application>\n  <component name="${EDITOR_POINTER.component}" ` +
+  `${EDITOR_POINTER.attribute}="${SCHEME_NAME}" />\n</application>\n`;
 
 /**
  * Create a fixture WebStorm directory with per-group payload contents and
@@ -104,8 +106,8 @@ describe("sync-ide-settings", () => {
     makeIdeDir(base, "2026.3", (group) => referenceBytes(group));
     const result = run(["--check", "--jetbrains-root", base]);
     assert.equal(result.status, 0);
-    assert.match(result.stdout, /\[OK\].*codestyles/);
-    assert.match(result.stdout, /\[OK\].*inspection/);
+    assert.match(result.stdout, /\[OK].*codestyles/);
+    assert.match(result.stdout, /\[OK].*inspection/);
   });
 
   it("check mode fails on stale files and names the restore command", () => {
@@ -113,7 +115,7 @@ describe("sync-ide-settings", () => {
     makeIdeDir(base, "2026.3", () => stale);
     const result = run(["--check", "--jetbrains-root", base]);
     assert.equal(result.status, 1);
-    assert.match(result.stdout, /\[FAIL\].*npm run sync:ide/);
+    assert.match(result.stdout, /\[FAIL].*npm run sync:ide/);
   });
 
   it("apply mode restores overwritten files byte for byte", () => {
@@ -125,7 +127,7 @@ describe("sync-ide-settings", () => {
       const target = join(base, "WebStorm2026.3", group, SCHEME_FILE);
       assert.deepEqual(readFileSync(target), referenceBytes(group));
     }
-    assert.match(result.stdout, /\[OK\] restored/);
+    assert.match(result.stdout, /\[OK] restored/);
   });
 
   it("apply mode creates missing group directories and option files", () => {
@@ -166,7 +168,7 @@ describe("sync-ide-settings", () => {
     const result = run(["--check", "--jetbrains-root", base]);
     assert.equal(result.status, 1);
     assert.equal(readFileSync(join(dir, "options", "editor.xml"), "utf8"), driftedEditor);
-    assert.match(result.stdout, /\[FAIL\].*pointer/);
+    assert.match(result.stdout, /\[FAIL].*pointer/);
   });
 
   it("targets the newest WebStorm directory, comparing versions numerically", () => {
@@ -187,6 +189,6 @@ describe("sync-ide-settings", () => {
     const base = newBase();
     const result = run(["--jetbrains-root", base]);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /\[FAIL\].*no WebStorm/);
+    assert.match(result.stderr, /\[FAIL].*no WebStorm/);
   });
 });

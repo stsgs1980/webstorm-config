@@ -1,3 +1,5 @@
+// noinspection SpellCheckingInspection
+
 /**
  * Derives the machine-level scheme files from the project-level sources in
  * `.idea/`. The project files are the single place where values are edited by
@@ -113,6 +115,23 @@ export const buildCodeStyleScheme = (projectXml: string): string => {
 };
 
 /**
+ * Wrap self-closing inspection_tool tags wider than the code style limit.
+ * @param content - profile text
+ * @returns text with long tool tag attributes moved to a second line
+ */
+const wrapLongTools = (content: string): string =>
+  content
+    .split("\n")
+    .flatMap((line) => {
+      const match = /^(\s*)(<inspection_tool\s+class="[^"]+")(.*)\/>$/.exec(line);
+      if (match === null || line.length <= 120) {
+        return [line];
+      }
+      return [`${match[1]}${match[2]}`, `${match[1]}  ${match[3].trim()} />`];
+    })
+    .join("\n");
+
+/**
  * Build the machine inspection profile from the project `Project_Default.xml`.
  * @param projectXml - content of `.idea/inspectionProfiles/Project_Default.xml`
  * @returns content of the machine `inspection/<scheme>.xml` file
@@ -124,7 +143,7 @@ export const buildInspectionProfile = (projectXml: string): string => {
   if (renamed === profile) {
     throw new Error(`profile name "Project Default" not found in .idea/inspectionProfiles/Project_Default.xml`);
   }
-  return `${dedent(collapseEmptyTools(stripScopes(renamed))).replace(/\n+$/, "")}\n`;
+  return `${wrapLongTools(dedent(collapseEmptyTools(stripScopes(renamed)))).replace(/\n+$/, "")}\n`;
 };
 
 /** Per-group builder from the project source file to the machine file content. */

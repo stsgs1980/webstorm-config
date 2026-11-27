@@ -73,7 +73,8 @@ describe("collectZoneCandidates", () => {
       kind: "globList",
       marker: "ignores: [",
       content:
-        'export default [\n  {\n    ignores: [\n      "node_modules/**",\n      ".next/**",\n    ],\n  },\n  {\n    files: ["src/**"],\n  },\n];\n',
+        'export default [\n  {\n    ignores: [\n      "node_modules/**",\n' +
+        '      ".next/**",\n    ],\n  },\n  {\n    files: ["src/**"],\n  },\n];\n',
     });
     assert.deepEqual(entries, ["node_modules", ".next"]);
   });

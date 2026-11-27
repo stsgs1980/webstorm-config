@@ -22,7 +22,7 @@ of the rule, not of the reader.
   defect of the instruction, not of the user.
 - I5 A known blind spot of a check is documented next to the check, not left
   silent.
-- I6 What cannot be verified in this environment is marked [ENV-LOCKED] and
+- I6 What cannot be verified in this environment is marked `[ENV-LOCKED]` and
   treated as a hypothesis, never stated as fact.
 
 ## 1. Language & Communication
@@ -292,28 +292,28 @@ environment.
   templates by Tab, File templates, import paths, the pointer roles of
   `options/project.default.xml` and `options/editor.xml`, the
   `generated_changelog` scope in the IDE, project-overwrite cases.
-  [ENV-LOCKED]
+  `[ENV-LOCKED]`
 - Priority of `.editorconfig` over the IDE code style scheme
   (`docs/webstorm.md` section 6 says the keys act on top of the scheme): both
   agree today, so a wrong precedence stays invisible; not probed on a real
-  machine. [ENV-LOCKED]
+  machine. `[ENV-LOCKED]`
 - Machine paths and files under `%APPDATA%\JetBrains\WebStorm<version>\`
   (scheme copies, pointers, the phantom `codestyles/codeStyleConfig.xml`):
   covered by `check:ide-state` and fixture tests, not observed on a second
-  machine. [ENV-LOCKED]
+  machine. `[ENV-LOCKED]`
 - `check:ide-state` machine part: the repository part is gated in CI, the
-  machine part runs locally only (pre-push). [ENV-LOCKED]
+  machine part runs locally only (pre-push). `[ENV-LOCKED]`
 - JetBrains tickets (IJPL-101766, IJPL-37162, WEB-79586, IJPL-258594) and
-  their statuses. [ENV-LOCKED]
+  their statuses. `[ENV-LOCKED]`
 - GitHub settings outside the clone: secret scanning, push protection,
   Private Vulnerability Reporting, the 7-day response clock (`SECURITY.md`).
-  [ENV-LOCKED]
+  `[ENV-LOCKED]`
 - Branch protection on `main` (no PR requirement, no approvals, no force-push,
   no deletion): configured in the GitHub UI and invisible in the clone, so a
-  green CI does not prove it is enabled. [ENV-LOCKED]
+  green CI does not prove it is enabled. `[ENV-LOCKED]`
 - Hooks and scripts under Windows: local runs on this Windows machine were
   reproduced 19.11.2026 (pre-commit, pre-push, typecheck, tests, gates);
-  the `windows` CI job is green. [ENV-LOCKED]
+  the `windows` CI job is green. `[ENV-LOCKED]`
 - File templates (`.idea/fileTemplates/`): `check:templates` rejects
   live-template syntax (`$NAME$` instead of `${NAME}`); how the IDE expands a
-  template is verified manually only. [ENV-LOCKED]
+  template is verified manually only. `[ENV-LOCKED]`

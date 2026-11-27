@@ -1,3 +1,4 @@
+// noinspection SpellCheckingInspection
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -148,7 +149,7 @@ describe("check-workspace-zones gate", () => {
     );
     const result = runGate(root);
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /vitest include glob "\*\*\/\*\.\{test,spec\}\.\{ts,tsx\}" is not rooted/);
+    assert.match(result.stderr, /vitest include glob "\*\*\/\*\.\{test,spec}.\{ts,tsx}" is not rooted/);
   });
 
   it("lint-staged паттерн, накрывающий зону, валит гейт", () => {

@@ -1,3 +1,4 @@
+// noinspection SpellCheckingInspection
 // noinspection ES6UnusedImports,JSUnresolvedVariable,JSUnresolvedFunction,NpmUsedModulesInstalled
 import assert from "node:assert/strict";
 // noinspection NpmUsedModulesInstalled
