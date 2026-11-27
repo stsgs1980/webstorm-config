@@ -49,13 +49,16 @@ Automation first: if a style rule is not enforced by Prettier or ESLint, it is a
 convention, not a requirement. The tsconfig flags in `tsconfig.base.json` are the
 source of truth for strictness; do not restate them here.
 
-- TypeScript strict mode. Explicit typing for all parameters and return values.
-  ESLint checks return types only (`@typescript-eslint/explicit-function-return-type`
-  with `allowExpressions`); parameter annotations are a convention, not a lint check.
+- TypeScript strict mode. ESLint enforces return types via
+  `@typescript-eslint/explicit-function-return-type`; its options live in
+  `eslint.config.js`. Parameter annotations are a convention; `strict` rejects
+  implicit `any`.
 - No `any`: prefer `unknown` and narrow. Avoid `as` casts and non-null assertions
-  (`!`) without a comment explaining why the value cannot be absent.
+  (`!`) without a comment explaining why the value cannot be absent. This is a
+  review signal: no automated gate checks the comment.
 - Semicolons required, strings use double quotes, trailing commas required,
-  indentation is 2 spaces, max line length 120 characters.
+  indentation is 2 spaces, `printWidth` 120 (soft for code). The hard 120 limit
+  applies to Markdown only (`docs/markdown.md`, MD013).
 - Max file length: hard-gated; the limit lives in `scripts/lib/thresholds.ts`. See Section 4.
 - JSDoc required for public API (exported functions, methods, React components).
   In TS, `@param`/`@returns` are optional (explicit types are the source of truth);
@@ -79,15 +82,15 @@ Exempt, each printed with its reason:
 - type declarations (`*.d.ts`, `*.d.mts`, `*.d.cts`);
 - barrel files named `index.*` that contain only `export` statements;
 - tool configs (`*.config.*` - wired into their tool, not application logic);
-- `vendor/` - vendored third-party code, copied whole;
+- `vendor/` (when present) - vendored third-party code, copied whole;
 - `generated/`, `__generated__/`, `codegen/` - generated code kept in git;
 - `*.gen.*`, `*.generated.*` - codegen output;
 - `dist/`, `build/`, `third_party/` - build output or vendored tree, not edited by hand;
-- `components/ui/` - shadcn/ui components copied from the registry.
+- `components/ui/` (when present) - shadcn/ui components copied from the registry.
 
 Escape hatch for a legitimately cohesive file: `// file-length-exempt: <reason>` as the
-first line. The reason must also be justified in the PR description. Do not use it to
-avoid splitting.
+first line. The reason must also be justified in the commit body or PR description.
+Do not use it to avoid splitting.
 
 ### 4.2 Advisory signals, two kinds
 
@@ -99,17 +102,17 @@ owned by `scripts/lib/thresholds.ts`:
 - more function parameters than the limit;
 - nesting depth over the limit.
 
-Reviewer judgment only (not machine-checked; name them in the PR description):
+Reviewer judgment only (not machine-checked; name them in the commit body or PR description):
 
 - a small UI component (button, card) over 200 lines: almost always mixing jobs;
-- a behavior component (form, widget) over the hard-gate limit;
+- a behavior component (form, widget) approaching the limit (200-250 lines);
 - page-level composition over 300 lines: check it does not own data or logic;
 - a hook that bundles three or more unrelated jobs.
 
 When a signal fires:
 
-1. State the file's purpose in one sentence without "and". If it fits, leave the file
-   as is.
+1. State the file's purpose in one sentence without "and". If the file is within
+   the limit, leave it as is.
 2. If it does not fit, split by responsibility: UI separate from data fetching, state
    owned by the nearest parent. Do not create wrappers, hooks, or subcomponents to
    lower a line count.
@@ -128,9 +131,11 @@ the signal.
 - Always read a file before editing it, and quote the relevant fragment in the
   response so the user sees what was read.
 - Errors are handled, not swallowed: no empty `catch`, no silent `Promise` rejections.
-  Rethrow or log with the project logger.
+  Rethrow or log with `console.error` (allowed by `no-console`) or the application
+  logger once one exists.
 - One module, one reason to change. Dependencies point inward: UI does not import
-  data-layer internals; the data layer does not import UI components.
+  data-layer internals; the data layer does not import UI components. This is a
+  review-only rule (`docs/architecture.md`); no automated boundary check exists.
 
 ## 6. Git & Commits
 
@@ -201,7 +206,8 @@ the signal.
 - When debugging: reproduce locally, identify root cause (do not patch symptoms),
   write a test that fails before the fix and passes after.
 - Never delete or weaken an existing test to make it pass.
-- Do not skip pre-commit checks (see the `--no-verify` policy in Section 6).
+- Do not bypass pre-commit checks; the only exception is documented in Section 6
+  (`--no-verify` for a failure unrelated to the change, recorded in the commit body).
 - Record the outcome: root cause, fix, and the test that guards it, in the commit
   body or the PR description.
 
@@ -215,8 +221,8 @@ the signal.
 - Coverage gate: 80% lines per changed file, wired into CI as the `coverage` job
   (`npm run check:coverage`, `vitest related --coverage`). Scope and threshold
   live in `scripts/lib/coverage-scope.ts`; a changed file with no related test
-  fails. Changed paths outside the scope (docs, `scripts/`, configs, tests) are
-  reported as `[INFO]` and not measured. Do not chase global coverage.
+  fails. Paths outside that scope (docs, `scripts/`, configs, tests except
+  `tests/lib/**`) are `[INFO]` and not measured. Do not chase global coverage.
 
 ## 9. Security & Dependencies
 
@@ -224,17 +230,18 @@ the signal.
   lists keys with placeholder values only.
 - `npm audit --omit=dev --audit-level=high` runs in CI. A high or critical advisory
   fails the build unless documented in `SECURITY.md` with a mitigation plan.
-- New dependencies require a reason in the PR description: what it replaces, bundle
-  cost, maintenance status. Prefer the platform and existing dependencies.
+- New dependencies require a reason in the commit body or the PR description: what
+  it replaces, bundle cost, maintenance status. Prefer the platform and existing
+  dependencies.
 - Lockfile is committed and updated only by `npm install` / `npm update`, never
   hand-edited.
 
 ## 10. Pull Requests
 
-- One logical change per PR. Target under 400 changed lines; larger changes need a
-  reason in the description.
-- PR description: what changed, why, how it was verified, and any fired advisory
-  signal from Section 4.
+- One logical change per commit or PR. Target under 400 changed lines; larger
+  changes need a reason in the description.
+- PR description (or commit body for direct commits): what changed, why, how it
+  was verified, and any fired advisory signal from Section 4.
 - Draft PRs are fine for early feedback. Merging requires green CI; with one
   contributor the author self-merges (0 approvals, Section 6).
 
@@ -306,7 +313,7 @@ environment.
   green CI does not prove it is enabled. [ENV-LOCKED]
 - Hooks and scripts under Windows: local runs on this Windows machine were
   reproduced 19.11.2026 (pre-commit, pre-push, typecheck, tests, gates);
-  the `windows` CI job is green.
+  the `windows` CI job is green. [ENV-LOCKED]
 - File templates (`.idea/fileTemplates/`): `check:templates` rejects
   live-template syntax (`$NAME$` instead of `${NAME}`); how the IDE expands a
   template is verified manually only. [ENV-LOCKED]

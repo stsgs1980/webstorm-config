@@ -3,7 +3,13 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ]
+    ],
+    "rules": {
+      "scope-empty": [
+        2,
+        "never"
+      ]
+    }
   },
   "description": "WebStorm template with ESLint, Prettier, Stylelint, markdownlint, TypeScript, Husky, and AI rules",
   "devDependencies": {
