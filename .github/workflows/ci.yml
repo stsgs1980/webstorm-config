@@ -48,6 +48,13 @@ jobs:
             exit 0
           fi
           npx --no-install commitlint --from "$FROM" --to "$TO" --verbose
+      # The squash merge takes the PR title as the commit message on main
+      # (AGENTS.md #6), so the title is linted like a commit subject.
+      - name: Lint PR title (squash merge commit message)
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | npx --no-install commitlint --verbose
       - run: npm run lint
       # Formatting rules must stay off: Prettier owns formatting in this repo.
       - run: npm run lint:prettier-conflicts
