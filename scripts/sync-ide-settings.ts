@@ -6,16 +6,16 @@
  * Deploy the repository IDE settings to the machine's JetBrains config root
  * (`resolveJetbrainsRoot`): `WebStorm<version>\` under it:
  *
- * - restore the named scheme files (`codestyles/`, `inspection/`) from
+ * - restore the named IDE scheme files (`codestyles/`, `inspection/`) from
  *   `generated/ide-reference/` - the copies WebStorm and its Settings Sync can
  *   overwrite;
- * - write the scheme pointers so the machine selects exactly that scheme:
+ * - write the scheme pointers so the machine selects exactly that IDE scheme:
  *   `PREFERRED_SCHEME` and `PROJECT_PROFILE` in `options/project.default.xml`
  *   and the `profile` attribute of `DaemonCodeAnalyzerSettings` in
  *   `options/editor.xml`. Restoring bytes without pointers was the blind spot
  *   that left projects silently on stock settings;
  * - delete the phantom `codestyles/codeStyleConfig.xml`, which re-points new
- *   projects at the global scheme.
+ *   projects at the global IDE scheme.
  *
  * The payload source is verified fresh against `.idea/` first; a stale
  * `generated/ide-reference/` aborts the run - regenerate it with
@@ -44,7 +44,7 @@ import {
 /** Repository root, for reading the `.idea/` sources. */
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
-/** Directory holding exact copies of the machine scheme files. */
+/** Directory holding exact copies of the machine IDE scheme files. */
 const REFERENCES_ROOT = fileURLToPath(new URL("../generated/ide-reference/", import.meta.url));
 
 /**
@@ -111,7 +111,7 @@ const syncFiles = (ideRoot: string, check: boolean): number => {
 };
 
 /**
- * Delete the phantom pointer file that re-points new projects at the global scheme.
+ * Delete the phantom pointer file that re-points new projects at the global IDE scheme.
  * @param ideRoot - WebStorm config root
  * @param check - when true, report without writing
  * @returns 1 when the phantom is present, otherwise 0

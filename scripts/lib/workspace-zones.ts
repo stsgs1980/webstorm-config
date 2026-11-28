@@ -1,3 +1,5 @@
+// noinspection GrazieInspection,GrazieStyle
+
 /**
  * Workspace zones shared by the tooling. Every tool that walks the
  * repository must skip these: a file that ESLint never sees must not fail
@@ -160,7 +162,7 @@ export function checkExtraZoneMentions(zones: readonly string[], sources: ZoneCa
 }
 
 /**
- * Check that every vitest include glob is rooted in a directory. A glob
+ * Check that every Vitest include glob is rooted in a directory. A glob
  * starting with `*` matches zone files and pulls them back into the test
  * run, which defeats the include-based isolation.
  * @param content - vitest.config.ts content

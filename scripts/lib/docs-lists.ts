@@ -1,11 +1,11 @@
+// noinspection GrazieInspection,GrazieStyle
+
 /**
  * List checks for the docs gate: the docs map in README.md against the
  * docs/ tree, README badges against package.json majors, and the migration
  * install list against package.json and the packages the configs import.
  * Pure logic over given texts; the CLI script owns reading and output.
  */
-
-// noinspection GrazieInspection,GrazieStyle
 
 import { existsSync, readFileSync } from "node:fs";
 
